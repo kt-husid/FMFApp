@@ -1,0 +1,52 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Phone>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.PhoneNumber,
+        Titles = @Resources.PhoneNumbers
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().CountryCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().AreaCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Number)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrimary)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Extension)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr>
+                <td data-bind="text: CountryCode"></td>
+                <td data-bind="text: AreaCode"></td>
+                <td data-bind="text: Number"></td>
+                <td data-bind="text: IsPrimary"></td>
+                <td data-bind="text: Extension"></td>
+                <td class="edit-details-delete">
+                    @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/Phone", PagedList = @Model })

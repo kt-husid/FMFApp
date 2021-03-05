@@ -1,0 +1,174 @@
+﻿@model BootstrapWebApplication.Models.Company
+@*@section SidebarMenu {
+    <ul class="nav nav-sidebar">
+            <li class="active"><a href="#"></a></li>
+
+    <li><a href="#"></a></li>
+    </ul>
+        }*@
+@{
+    var controllerName = ViewContext.GetControllerName();
+}
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @Resources.Company + " " + @Model.Name;
+}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>@ViewBag.Title</strong>
+                        @if (!@Request.IsAjaxRequest())
+                        {
+                            <span class="pull-right">
+                                @Html.Partial("_BackToListPartial", Model)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Code)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Code)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactPersonName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactPersonName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactCompanyName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactCompanyName)
+                        </dd>
+                    </dl>
+                    @if (@Model.PrimaryPhone != null)
+                    {
+                         @Html.Partial("_PhonePartial", Model.PrimaryPhone);
+                    }
+                    @if (@Model.PrimaryAddress != null)
+                    {
+                        @Html.Partial("_AddressPartial", Model.PrimaryAddress);
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@Resources.Information</strong></h3>
+                </div>
+                <div class="panel-body">
+
+                    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+
+                    @*<hr />
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.AVR_IALT)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.AVR_IALT)
+                            <br />
+                            <span id="TripLineCount"></span>
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.KG_IALT)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.KG_IALT)
+                            <br />
+                            <span id="TripLineWeightCount"></span>
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.LAST_DATO)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.LAST_DATO)
+                        </dd>
+                    </dl>*@
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (!@Request.IsAjaxRequest())
+    {
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#comments" role="tab" data-toggle="tab">@Resources.Comments</a></li>
+            <li><a href="#log" role="tab" data-toggle="tab">@Resources.Log</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="comments">@Html.Action("Comments", "CompanyComment", @Model)</div>
+            <div class="tab-pane" id="log">@Html.Action("Logs", "Log", @Model.Entity)</div>
+        </div>
+    }
+</div>
+
+<script>
+    function GetInfoForAllTrips() {
+        $.getDataAsJson('/api/Company/GetInfoForAllTrips', {
+            'companyId': '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            println(json);
+            $("#TripLineCount").html(kendo.toString(json.TripLineCount, "n"));
+            $("#TripLineWeightCount").html(kendo.toString(json.TripLineWeightCount, "n"));
+        }, function (error) {
+            console.log(error);
+        });
+    }
+
+    $(function () {
+
+        $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+            "<a href='#' class='create-action'  data-toggle='modal' data-controller-name='Company' data-action-name='Edit?id=@Model.Id' data-model-name='Company'>@Resources.Edit</a>"
+        ]);
+
+        $(document).on("modalClosed", function (e, d) {
+            //console.log(d.modelName);
+            //console.log(d.data);
+        });
+
+        $('#tabs a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+
+        //GetInfoForAllTrips();
+
+
+    });
+</script>

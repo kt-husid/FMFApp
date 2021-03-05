@@ -1,0 +1,31 @@
+﻿@model BootstrapWebApplication.Models.CompanyComment
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Details;
+    <h2>@BootstrapResources.Resources.Details</h2>
+}
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        <h4>@Resources.SocialNetwork</h4>
+        <hr />
+    }
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Company.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company.Name)
+        </dd>
+
+    </dl>
+
+    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+</div>
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_EditBackToListPartial", Model)
+}

@@ -1,0 +1,226 @@
+﻿@model BootstrapWebApplication.Models.Ship
+<script>
+    var tripGridHandler;
+    function dataBound() {
+        this.expandRow(this.tbody.find("tr.k-master-row").first());
+    }
+
+    function onTripChange(arg) {
+        tripGridHandler.onChange(arg);
+        var item = tripGridHandler.currentItem();
+        var id = item.Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&shipId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&shipId=" + @Model.Id);
+    }
+
+    function onTripDataBound(e) {
+        tripGridHandler.onDataBound(e);
+    }
+
+    function onTripDataBinding(e) {
+        tripGridHandler.onDataBinding(e);
+    }
+</script>
+@{
+    var tripFrom = new DateTime(DateTime.Now.Year-1, 1, 1).ToString("ddMMyyyy"); //Hans far 1 ár aftur
+    var tripTo = new DateTime(DateTime.Now.Year, 12, 31).ToString("ddMMyyyy");
+}
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipTripViewModel>()
+    .Name("gridShipTrip")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        //columns.Bound(p => p.TripId).ClientTemplate("<text><a href='/Trip/Details/#= Id #'>#= TripId #</a></text>").Title(@Resources.TripNumber);
+        columns.Bound(p => p.TripIdStr).ClientTemplate("<text><a href='/Trip/Details/#= Id #'>#= TripIdStr # </a></text>").Title(@Resources.TripNumber);
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.Days).Title(@Resources.Days);
+        columns.Bound(p => p.Crew).ClientTemplate("<text>#= Crew # (#= CrewWithInsurance # v/trygging)</text>").Title(@Resources.Crew);
+        //columns.Bound(p => p.Crew).Title(@Resources.Crew);
+        //columns.Bound(p => p.CrewWithInsurance).Title(@Resources.CrewWithInsurance);
+        columns.Bound(p => p.CrewSharePercentage).Title(@Resources.CrewSharePercentage);
+        //columns.Bound(p => p.CrewSharePart).Title(@Resources.CrewSharePart);
+        //columns.Bound(p => p.MembershipPayment).ClientTemplate("<text> #= kendo.toString(data.MembershipPayment, 'C2') # (#if(data.MembershipPaymentPaid){#<span>#= kendo.toString(data.MembershipPaymentPaid, 'C2') #</span>#}else{#<span>#= kendo.toString(0, 'C2') #</span>#}# goldið)</text>").Title(@Resources.MembershipPayment);
+        //columns.Bound(p => p.MembershipPayment).ClientTemplate("<text>#= kendo.toString(MembershipPayment, 'C2') # #=kendo.toString(MembershipPaymentPaid, 'C2') #</text>").Title(@Resources.MembershipPayment);
+        columns.Bound(p => p.MembershipPayment).Title(@Resources.MembershipPayment).Format("{0:C2}");
+        columns.Bound(p => p.MembershipPaymentPaid).Title("Limagj. goldið").Format("{0:C2}");
+      //  columns.Bound(p => p.MembershipPaymentTotal).Title("Limagj. seinast").Format("{0:C2}"); //Hans
+        columns.Bound(p => p.MembershipPaymentNr).Title("Skjalanr.").Format("{0:0}"); //Hans, vildi hava skjalanr í staðin fyri
+        //columns.Bound(p => p.LaborInsurance).Title(@Resources.LaborInsurance).Format("{0:C}");
+        columns.Bound(p => p.LaborInsuranceTotal).Title(@Resources.LaborInsuranceTotal).Format("{0:C}");
+        columns.Bound(p => p.TRYG_KRHB).Title("Goldið tils.").Format("{0:C}");
+        //columns.Bound(p => p.TRYG_KRHB_TOTAL).Title("Goldið tils.").Format("{0:C}");
+        //columns.Bound(p => p.LaborInsuranceDifference).Title("Munur").Format("{0:C}");
+        columns.Bound(p => p.TRYG_BILAG).Title("Tryg skjal");//@Resources.InsuranceAnnex);
+        //columns.Bound(p => p.Paid).Title(@Resources.Paid);
+        //columns.Bound(p => p.Document).Title(@Resources.Document);
+        //columns.Bound(p => p.VIDAR).Title("VIDAR");
+        columns.Bound(p => p.CrewSharePerCrewMember).Format("{0:C2}").Title(@Resources.CrewShare);
+        columns.Bound(p => p.TotalWeight).Title(@Resources.TotalWeight).Format("{0:N2}");
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='Trip' data-action-name='Create?shipId=@Model.Id' data-model-name='Trip'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='Trip' data-action-name='' data-model-name='Trip'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='Trip' data-action-name='' data-model-name='Trip'>@Resources.Delete</button>
+                @Resources.From <input id="Trip_From" type="text" class="k-textbox" value="@tripFrom" />
+                @Resources.To <input id="Trip_To" type="text" class="k-textbox" value="@tripTo" />
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+        //.Groupable()
+    .Excel(excel => excel
+        .FileName(@Model.Name + " trips.xlsx")
+        .AllPages(true)
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    //.ClientDetailTemplateId("template")
+    .Events(events => events.Change("onTripChange").DataBound("onTripDataBound").DataBinding("onTripDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("ShipTrip_Create", "Ship"))
+        .Read(read => read.Action("Read", "Trip", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberSignOn_Update", "Member"))
+        //.Destroy(update => update.Action("MemberSignOn_Destroy", "Member"))
+    )
+)
+
+<script id="template" type="text/kendo-tmpl">
+    @(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipSignOnViewModel>()
+        .Name("tripSignOnGrid_#=Id#")
+        .Columns(columns =>
+        {
+            columns.Bound(p => p.Id).Hidden();
+            columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+            columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+            columns.Bound(p => p.ShipCode).Title(@Resources.ShipCode);
+            columns.Bound(p => p.JobCode).Title(@Resources.JobCode);
+            columns.Bound(p => p.DG_IALT).Title(@Resources.Days);
+            columns.Bound(p => p.Birthday).Format("{0:d}").Title(@Resources.Birthday);
+            columns.Bound(p => p.FullName).Title(@Resources.FullName);
+        })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(10)
+            .Read(read => read.Action("ReadTripSignOns", "Trip", new { tripId = "#=Id#" }))
+        )
+        .Pageable(pageable => pageable
+        .Messages(m =>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+            //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+        .Sortable()
+            //.Scrollable()
+        .Navigatable()
+            //.Groupable()
+        .Selectable()
+        .ToClientTemplate())
+</script>
+
+
+<script>
+    $(function () {
+
+        tripGridHandler = new GridHandler("#gridShipTrip");
+        tripGridHandler.onDoubleClick = function (item) {
+            navigate('/Trip/Details/' + item.Id);
+        };
+        tripGridHandler.onItemOpen = function (item) {
+            navigate('/Trip/Details/' + item.Id);
+        };
+        tripGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+        //$(document).on("modalClosed", function (e, d) {
+        //    tripGridHandler.reload();
+        //});
+
+        $("#Trip_From, #Trip_To").change(function (e) {
+            var from = $("#Trip_From").val();
+            var to = $("#Trip_To").val();
+
+            var grid = $("#gridShipTrip").data("kendoGrid");
+            if (from && to) {
+                grid.dataSource.filter([{ field: "from", operator: "eq", value: from }, { field: "to", operator: "eq", value: to }]);
+            } else {
+                grid.dataSource.filter({});
+            }
+        });
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

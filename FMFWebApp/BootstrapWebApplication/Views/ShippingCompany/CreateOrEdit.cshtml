@@ -1,0 +1,95 @@
+﻿@model BootstrapWebApplication.Models.ShippingCompanyCreateOrEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@Resources.Create</h2>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.ShippingCompany</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.CID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CID, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactCompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactCompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactCompanyName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactPersonName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactPersonName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+<script>
+
+    $(function () {
+
+        $("#Code").focus();
+
+    });
+</script>
+
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

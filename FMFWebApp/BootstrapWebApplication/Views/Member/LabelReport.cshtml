@@ -1,0 +1,33 @@
+﻿@model BootstrapWebApplication.Models.MemberLabelReportParameters
+@{
+    //ViewBag.Title = @Resources.ReportFor + " " + @Resources.Member + " " + @Resources.SignOns;
+    Layout = "~/Views/Shared/_LayoutReporting.cshtml";
+}
+@{
+    //var canOpenReport = false;
+    //Boolean.TryParse("" + TempData["CanOpenReport"], out canOpenReport);
+    //if (canOpenReport)
+    @Html.Partial("_ReportHeaderPartial")
+    var reportSource = new UriReportSource() { Uri = "MemberLabels_p1720.trdx" };
+
+    var SignOnFrom = DateTimeHelper.ParseForReport(@Request.QueryString["SignOnFrom"]);
+    var SignOnTo = DateTimeHelper.ParseForReport(@Request.QueryString["SignOnTo"]);
+
+    reportSource.Parameters.Add("PostalFrom", @Request.QueryString["PostalFrom"]);
+    reportSource.Parameters.Add("PostalTo", @Request.QueryString["PostalTo"]);
+    reportSource.Parameters.Add("MemberTypeCode", @Request.QueryString["MemberTypeCode"]);
+    reportSource.Parameters.Add("MemberJobCodeFrom", @Request.QueryString["MemberJobCodeFrom"]);
+    reportSource.Parameters.Add("MemberJobCodeTo", @Request.QueryString["MemberJobCodeTo"]);
+    reportSource.Parameters.Add("SignOnFrom", SignOnFrom);
+    reportSource.Parameters.Add("SignOnTo", SignOnTo);
+    @Html.Partial("_ReportFooterPartial", reportSource)
+
+}
+@*<label>@SignOnFrom.Kind</label>
+<br />
+<label>@SignOnFrom2.ToLocalTime()</label>*@
+<script>
+    function onPrint() {
+        // Optionally implement code to be executed after the print button on the Telerik Report Viewer has been clicked
+    }
+</script>

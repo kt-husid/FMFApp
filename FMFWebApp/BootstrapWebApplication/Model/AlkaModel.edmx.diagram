@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1ec5d4c812944790969d2ab722f99034" Name="Diagram1">
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Ar" Width="1.5" PointX="1.5" PointY="91.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.avgrgjaldsbolkur" Width="1.5" PointX="0.75" PointY="61.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.BokDim" Width="1.5" PointX="5.25" PointY="68.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Bokingar" Width="1.5" PointX="8.25" PointY="66.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.boktekstir" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.BokUpp" Width="1.5" PointX="11.25" PointY="60.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.budget" Width="1.5" PointX="3" PointY="55.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.budgetkonto" Width="1.5" PointX="5.25" PointY="62.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Dimensionir" Width="1.5" PointX="3" PointY="49.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.dk" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.eindir" Width="1.5" PointX="0.75" PointY="69.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.emaillog" Width="1.5" PointX="5.25" PointY="72.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.gjaldoyra" Width="1.5" PointX="0.75" PointY="64.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.heimabankidef" Width="1.5" PointX="8.25" PointY="62.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.hopflyting" Width="1.5" PointX="8.25" PointY="75.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.ilog" Width="1.5" PointX="14.25" PointY="87.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.infoflow_afdelinger" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.infoflow_indkob" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.iusers" Width="1.5" PointX="12" PointY="87.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.kontofeltdef" Width="1.5" PointX="12" PointY="45.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.kontoflokkur" Width="1.5" PointX="9" PointY="85.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Kontolisti" Width="1.5" PointX="3" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.KontoVidmerking" Width="1.5" PointX="5.25" PointY="77" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.MemoStore" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.MvgTypa" Width="1.5" PointX="5.25" PointY="119.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.mvgundantok" Width="1.5" PointX="7.5" PointY="120.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rel_bok_infoflow" Width="1.5" PointX="10.5" PointY="81.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rel_iusers_dimensionir" Width="1.5" PointX="24.25" PointY="70.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rel_iusers_konto" Width="1.5" PointX="14.25" PointY="69.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rel_konto_felt" Width="1.5" PointX="14.25" PointY="66.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rel_konto_flokkar" Width="1.5" PointX="14.25" PointY="72.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rentubolkur" Width="1.5" PointX="0.75" PointY="73" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_columncombination" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_dim" Width="1.5" PointX="19.5" PointY="62" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_dimAnrOr" Width="1.5" PointX="18.5" PointY="83.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_formulaelement" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_grundtol" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_kontogruppa" Width="1.5" PointX="6" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_kontogruppalinjir" Width="1.5" PointX="5.25" PointY="134.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_lyklatol" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_reports" Width="1.5" PointX="0.75" PointY="95.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_reportsColumnCombination" Width="1.5" PointX="18.5" PointY="87.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_reportsLines" Width="1.5" PointX="16.25" PointY="80.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_reportsUsers" Width="1.5" PointX="3" PointY="82.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_slag" Width="1.5" PointX="3.75" PointY="45.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_uppseting" Width="1.5" PointX="3.75" PointY="86.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_uppsetingprbrukara" Width="1.5" PointX="6" PointY="83.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.ryk_aldur_linjur" Width="1.5" PointX="16.5" PointY="49.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Ryk_aldur_ryk" Width="1.5" PointX="19.5" PointY="65.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Ryk_aldur_tmp" Width="1.5" PointX="14.25" PointY="59.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Ryk_koyring" Width="1.5" PointX="12" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Ryk_rykkjarar" Width="1.5" PointX="12" PointY="48.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Saldolisti" Width="1.5" PointX="14.25" PointY="75.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.skuffukonto" Width="1.5" PointX="5.25" PointY="59.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.skuffur" Width="1.5" PointX="8.25" PointY="55.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.skuffurusers" Width="1.5" PointX="13.5" PointY="56.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMAvgreidsluhovd" Width="1.5" PointX="21.75" PointY="69.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMAvgreidslulinjur" Width="1.5" PointX="24" PointY="75.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMBotntekstir" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMGjaldshattur" Width="1.5" PointX="21.75" PointY="76.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMGjaldstreyt" Width="1.5" PointX="0.75" PointY="76" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMKassauppteljing" Width="1.5" PointX="19.5" PointY="70.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMKassi" Width="1.5" PointX="17.25" PointY="63.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMNummarseriur" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMSedlahovd" Width="1.5" PointX="17.25" PointY="54.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMSedlalinjur" Width="1.5" PointX="22.5" PointY="61.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMVorubolkur" Width="1.5" PointX="7.5" PointY="90" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.SMVorur" Width="1.5" PointX="13.75" PointY="80.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.sqlversion" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.subskjol" Width="1.5" PointX="6" PointY="80.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.tekstbokdef" Width="1.5" PointX="10.5" PointY="56.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.Tidarskeid" Width="1.5" PointX="1.5" PointY="85.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.users" Width="1.5" PointX="0.75" PointY="79.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.variablar" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.web_variablar" Width="1.5" PointX="14.25" PointY="90.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_lykla_tmp" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.rokn_roknskapartol" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="lundin_fff_alkaModel.tmp_roknskapartol" Width="1.5" PointX="9.75" PointY="8.75" IsExpanded="true" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_saldolisti_ar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_tidarskeid_ar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_avgrgjaldsbolkur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokdim_bokingar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokdim_dimensionir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokdim_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokdim_tidarskeid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_debit_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_kredit_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_skuffa" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_subskjal" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_tidarskeid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_upprunaskuffa" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokingar_users" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_relbokinfoflow_bokingar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_ryk_Bokingar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontoflokkur_ryk" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontoflokkur_rykinkasso" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_agfaktura" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_agkontoavrit" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_clearing" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_infoflow" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_konvinsert" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_mvgclearing" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_nullboking" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_renta" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_kontolisti_rykrakstur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_skuffur_ag" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_skuffur_infoflow" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_skuffur_ryk" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_skuffur_sildberin" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_bokupp_tidarskeid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_budgetkonto_budget" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reportLines_budget" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_budgetkonto_dimensionir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_budgetkonto_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgundantok_dimensionir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reliusersdimensionir_dimensionir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokndim_dimensionir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_Dim1" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_Dim2" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_Dim3" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_Dim4" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_Dim5" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMSedlalinjur_dim1" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMSedlalinjur_dim2" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMSedlalinjur_dim3" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMSedlalinjur_dim4" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMSedlalinjur_dim5" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_eindir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlalinjur_Eindir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_VorurEindir_eindir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_emaillog_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_emaillog_users" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_gjaldoyra" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_heimabankidef_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_heimabankidef_skuffur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_hopflyting_konto" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_hopflyting_users" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_ilog_iusers" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reliusersdimensionir_iusers" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reliuserskonto_iusers" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_web_variablar_iusers" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_relkontofelt_kontofeltdef" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rel_kontoflokkur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontuFlokkurUtgj" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_Fakturakonto_Kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_Gjaldstreyt_SMGjaldstreytir" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_mvgtypa" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_rentubolkur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_users" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontolisti_vidmerking" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_Leveringskonto_Kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgtypa_kontolisti_kontolistiid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgtypa_kontolisti_minuskontolistiid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgtypa_kontolisti_statuskontolistiid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rel_kontolisti_flokkur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reliuserskonto_konto" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_relkontofelt_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_roknkontogruppalinjir_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rykaldurtmp_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_saldolisti_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_sko_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_skuffur_kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaBanki" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaDankort" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaGavukort" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaKassamunur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaKassi" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaKassiStatus" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaOyramunur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassi_KontaTerminalkort" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlahovd_Kontonr" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlahovd_Lev_KontoNummar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurVoruKeyp_MVG" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurVoruKeyp_MVGFRI" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurVoruSola_MVG" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurVoruSola_MVGFRI" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_VorurVeitaraNummar_Kontolisti" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_kontovidm_users" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgundantok_mvgtypa_mvgtypaid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_mvgundantok_mvgtypa_newmvgtypaid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurMvgTypaId_Keyp" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorubolkurMvgTypaId_Salg" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokndim_reportline" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokndimAndOr_reportline" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokn_Element_Grundtol" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokn_element_lyklatol" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokn_kontogruppa_Grundtol" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokn_kontogruppa_Lyklatol" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_Rokn_kontogruppa_Slag" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rokn_kontogruppa_Uppseting" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_report_lines" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reports" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_report_lines_columnComb" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_report_lines_columnComb_column" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reportLines_fromPeriod" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_reportLines_toPeriod" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_users_reports" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_UppsetingPrBrukara" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_users_rokn_uppseting" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rykaldurlinjur_rykaldurtmp" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rykaldurryk_rykaldurtmp" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rykaldurkoyring_rykkoyring" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_rykaldurtmp_rykrykkjarar" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_sko_skuffur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_skuffur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_skuffur_Tidarskeid" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_tekstbokdef_skuffur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_users_skuffur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMAvgreidsluhovd_KassauppteljingId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMAvgreidsluhovd_KassiId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMAvgreidslulinjur_AvgreidsluId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMAvgreidslulinjur_GjaldsHatturId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMAvgreidslulinjur_VoruId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlahovd_SMGjaldstreyt" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_SMKassauppteljing_KassiId" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlalinjur_SMSedlahovd" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMSedlalinjur_SMVorur" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.FK_SMVorur_SMVorubolk" ManuallyRouted="false" />
+        <AssociationConnector Association="lundin_fff_alkaModel.fk_users_tidarskeid" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

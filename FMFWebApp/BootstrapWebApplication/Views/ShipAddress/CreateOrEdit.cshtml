@@ -1,0 +1,109 @@
+﻿@model BootstrapWebApplication.Models.AddressCreateOrEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@BootstrapResources.Resources.Create</h2>
+}
+@{
+    int parentId = -1;
+    if (@Request != null)
+    {
+        int.TryParse(@Request.QueryString["parentId"], out parentId);
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Address</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="MemberId" value="@parentId" />
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.CareOf, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CareOf, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CareOf)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddressLine1, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AddressLine1)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddressLine2, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AddressLine2)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostalId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("PostalId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PostalId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateProvinceRegion, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StateProvinceRegion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StateProvinceRegion)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CountryId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CountryId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsPrimary, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsPrimary)
+                @Html.ValidationMessageFor(model => model.IsPrimary)
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

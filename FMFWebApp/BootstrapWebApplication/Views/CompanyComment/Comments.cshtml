@@ -1,0 +1,151 @@
+﻿@model BootstrapWebApplication.Models.Company
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipCommentViewModel>()
+    .Name("gridCompanyComment")
+    .Columns(columns =>
+    {
+        columns.AutoGenerate(false);
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Text).Title(@Resources.Comment);
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Template(p => p.ChangeEvent != null ? p.ChangeEvent.CreatedByUserIdCode  : "").Title(@Resources.ChangeEvent);
+        @*columns.Bound(p => p.ChangeEvent).Template(@<text>
+            @item.ChangeEvent.UpdatedByUserIdCode - @item.ChangeEvent.UpdatedOn.ToString("{0:d}")
+        </text>).Title(@Resources.ChangeEvent);*@
+        //columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:d}").Title(@Resources.UpdatedOn);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+        //columns.Command(command =>
+        //{
+        //    command.Edit().Text(@Resources.Edit);
+        //    command.Destroy().Text(@Resources.Delete);
+        //}).Width(200);
+    })
+    .Events(evt => {
+        evt.Save("onGridSave");
+        evt.Edit("onGridEdit");
+        evt.Remove("onGridRemove");
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='CompanyComment' data-action-name='Create?companyId=@Model.Id' data-model-name='CompanyComment'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='CompanyComment' data-action-name='' data-model-name='CompanyComment'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='CompanyComment' data-action-name='' data-model-name='CompanyComment'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    .Editable(editable => editable.Mode(GridEditMode.PopUp).Enabled(true))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Selectable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Virki viðmerkingar.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onCompanyCommentChange").DataBound("onCompanyCommentDataBound").DataBinding("onCompanyCommentDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Read", "CompanyComment", new { id = @Model.Id }))
+    )
+)
+<script>
+    function onCompanyCommentChange(e) {
+        var id = companyCommentGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&companyId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&companyId=" + @Model.Id);
+    }
+
+    function onCompanyCommentDataBound(e) {
+        companyCommentGridHandler.onDataBound(e);
+    }
+
+    function onCompanyCommentDataBinding(e) {
+        companyCommentGridHandler.onDataBinding(e);
+    }
+
+    var companyCommentGridHandler;
+    $(function () {
+
+        companyCommentGridHandler = new GridHandler("#gridCompanyComment");
+        companyCommentGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        companyCommentGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    function onGridSave(arg) {
+        //alert("on save");
+    };
+
+    function onGridEdit(arg) {
+        //alert("on edit");
+    };
+
+    function onGridRemove(arg) {
+        //alert("on remove");
+    };
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

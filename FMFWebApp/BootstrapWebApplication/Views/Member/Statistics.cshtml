@@ -1,0 +1,84 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<dl class="dl-horizontal">
+    <dt>
+        @*@Html.DisplayNameFor(model => model.BURT_DG)*@
+        @Resources.DaysThisYear
+    </dt>
+
+    <dd>
+        <span id="DaysThisYear"></span>
+    </dd>
+
+    <dt>
+        @*@Html.DisplayNameFor(model => model.TUR_IALT)*@
+        @Resources.TripsThisYear
+    </dt>
+
+    <dd>
+        <span id="TripsThisYear"></span>
+    </dd>
+
+    <dt>
+        @*@Html.DisplayNameFor(model => model.LAST_ID)*@
+        @Resources.Last
+    </dt>
+
+    <dd>
+        @*@Html.DisplayFor(model => model.LAST_DATO)*@
+        @*@Html.DisplayFor(model => model.LastSignOn.From)*@
+        <span id="LastSignOnFromDate"></span>
+        <br />
+        @*@Html.DisplayFor(model => model.LastSignOn.ShipCode)*@
+        <span class="LastSignOnShipCode"></span>
+    </dd>
+</dl>
+
+<hr />
+
+<dl class="dl-horizontal">
+    <dt>
+        @Resources.SignOn
+    </dt>
+
+    <dd style="max-width:150px;">
+        @*@Html.DisplayFor(model => model.MI_AR) @Html.DisplayFor(model => model.MI_ID) @Html.DisplayFor(model => model.MI_TOT)*@
+        <span id="lastSignOnYear"></span> <span class="LastSignOnShipCode"></span> <span class="pull-right" id="signOnsThisYear"></span>
+    </dd>
+
+    <dt>
+        @Resources.MembershipFee
+    </dt>
+
+    <dd style="max-width:150px;">
+        @*@Html.DisplayFor(model => model.LG_AR) @Html.DisplayFor(model => model.LG_KR) @Html.DisplayFor(model => model.LG_TOT)*@
+        <span class="PaymentsYear"></span> <span class="PaymentsSum"></span> <span class="pull-right" id="memberPaymentsCount"></span>
+    </dd>
+</dl>
+<script>
+    $(function () {
+        $.getDataAsJson('/api/Member/GetStatistics', {
+            'id': '@Model.Id',
+            'year': '@DateTime.Now.Year',
+            'type': 'json'
+        }, function (json) {
+            //println(json, "GetStatistics");
+            if (json.SignOn !== null) {
+                $('#LastSignOnFromDate').html(kendo.toString(new Date(json.SignOn.From), "d"));//  moment(json.SignOn.From).format('LL'));
+                $('.LastSignOnShipCode').html(json.SignOn.ShipCode);
+                $('#lastSignOnYear').html(kendo.toString(new Date(json.SignOn.From), "yy"));//moment(json.SignOn.From).format('YY'));
+            }
+            $('#TripsThisYear').html(Math.floor(json.TripsThisYear));
+            $('#DaysThisYear').html(json.DaysThisYear);
+
+            $('#signOnsThisYear').html(json.SignOnsThisYear);
+            if (json.PaymentsYear) {
+                $('.PaymentsYear').html(kendo.toString(new Date(json.PaymentsYear), "yy"));//moment(json.PaymentsYear).format('YY'));
+            }
+            $('.PaymentsSum').html(kendo.toString(json.PaymentsSum, "c2"));
+            $('#memberPaymentsCount').html(json.PaymentsTotal);
+        }, function (error) {
+            console.log(error);
+        });
+    });
+</script>

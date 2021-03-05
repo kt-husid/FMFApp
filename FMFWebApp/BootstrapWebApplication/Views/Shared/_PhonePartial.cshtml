@@ -1,0 +1,17 @@
+﻿@model BootstrapWebApplication.Models.Phone
+@{
+    if (Model != null)
+    {
+        <div>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Number)
+                </dt>
+
+                <dd>
+                    @(!String.IsNullOrEmpty(@Model.RawNumber) ? "(+" + @Model.CountryCode + ") " + Model.Number : "-")
+                </dd>
+            </dl>
+        </div>
+    }
+}

@@ -1,0 +1,375 @@
+﻿@model BootstrapWebApplication.Models.ETransViewModel
+@{
+    var lastChanged = Model.CurrentItem.ChangeEvent != null ? Model.CurrentItem.ChangeEvent.UpdatedOn.ToString("g") : DateTime.Now.ToString("g");
+}
+<div class="form-horizontal">
+    <div class="col-md-4 col-md-offset-3">
+        <h3>@Resources.Old</h3>
+    </div>
+    <div class="col-md-4">
+        <h3>@Resources.New</h3>
+    </div>
+
+    @*<input type="hidden" id="Id" name="Id" />
+    <input type="hidden" id="NewId" name="NewId" value="@Model.CurrentItem.Id" />*@
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.Choose</label>
+        </div>
+        <div class="col-md-3">
+            @*@{
+                if (@Model.Alternatives != null && @Model.Alternatives.Count() > 0)
+                {
+                    IList<BootstrapWebApplication.Models.ETrans> tempList = Model.Alternatives.ToList();
+                    var items = new List<SelectListItem>();
+                    for (int i = 0; i < tempList.Count(); i++)
+                    {
+                        var item = tempList[i];
+                        items.Add(new SelectListItem() { Value = item.Id.ToString(), Text = item.FullName + " " + string.Format("{0:d}", (item.Birthday.HasValue ? item.Birthday.Value : DateTime.Now)) + "(" + item.SSN + ")", Selected = i == 0 });
+                    }
+                    @Html.DropDownList("alternatives", new SelectList(items, "Value", "Text"), new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.Raw("Invalid request");
+                }
+            }*@
+            <input name="alternatives" id="alternatives" placeholder="Leita..." style="width: 100%;" />
+        </div>
+        <div class="col-md-1">
+            @Resources.PressEnterToSave
+        </div>
+        <div class="col-md-4">
+            <button id="resetNewInput" class="btn btn-default">@Resources.Reset</button>
+            <button id="createMember" class="btn btn-default">@Resources.Create</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.Id</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="Id" id="Id" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="NewId" id="NewId" class="form-control" disabled="disabled" value="@Model.CurrentItem.Id" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.Birthday</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="Birthday" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewBirthday" class="form-control" placeholder="@Resources.Birthday" value="@String.Format("{0:d}",@Model.CurrentItem.Birthday)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.FirstName</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="FirstName" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewFirstName" class="form-control" placeholder="@Resources.FirstName" value="@Model.CurrentItem.FirstName" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.LastName</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="LastName" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewLastName" class="form-control" placeholder="@Resources.LastName" value="@Model.CurrentItem.LastName" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.AddressLine1</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="AddressLine1" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewAddressLine1" class="form-control" placeholder="@Resources.AddressLine1" value="@Model.CurrentItem.AddressLine1" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.Postal</label>
+        </div>
+        <div class="col-md-1">
+            <input type="text" id="PostalCode" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="CityName" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-2">
+            <input id="NewPostalCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.Postal" value="@Model.CurrentItem.PostalCode" />
+        </div>
+        <div class="col-md-2">
+            @*@Html.DropDownList("NewPostalId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })*@
+            <input id="PostalInfo" name="Postalinfo" type="text" class="form-control" readonly="readonly" />
+            <input type="hidden" id="NewPostalId" name="NewPostalId" />
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.Gender</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="GenderCode" class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewGenderCode" class="form-control" placeholder="@Resources.Gender" value="@Model.CurrentItem.Gender" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label pull-right">@Resources.LastChanged</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="LastChanged" class="form-control" disabled="disabled" readonly="readonly" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="NewLastChanged" class="form-control" value="@lastChanged" readonly="readonly" />
+        </div>
+    </div>
+</div>
+<script>
+    var itemSelected = null;
+    var list = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Alternatives)))");
+    var newItem = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(@Newtonsoft.Json.JsonConvert.SerializeObject(@Model.CurrentItem)))");
+    //var postalCodes = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.PostalCodes)))");
+    //console.log(newItem);
+    //console.log("alternatives");
+    //console.log(list);
+
+    var alternativesList = [];
+    $.each(list, function (k, v) {
+        alternativesList.push({ 'text': (v.FullName + ' - ' + kendo.toString(kendo.parseDate(v.Birthday), 'd') + ' (' + v.SSN + ')'), 'value': v.Id })
+    });
+
+    $("#alternatives").kendoComboBox({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: alternativesList,
+        filter: "contains",
+        suggest: true,
+        select: onSelectAlternative,
+        index: 0
+    });
+
+    function setOldInput(item) {
+        if (item) {
+            //console.log(JSON.stringify(item));
+            $("#Id").val(item.Id);
+            $("#Birthday").val(kendo.toString(kendo.parseDate(item.Birthday), "d"));
+            $("#FirstName").val(item.FirstName);
+            $("#LastName").val(item.LastName);
+            $("#AddressLine1").val(item.AddressLine1);
+            $("#PostalCode").val(item.PostalCode);
+            $("#CityName").val(item.CityName);
+            $("#GenderCode").val(item.Gender);
+            $("#LastChanged").val(item.ChangeEvent ? kendo.toString(kendo.parseDate(item.ChangeEvent.UpdatedOn), "g") : "");
+        }
+    }
+
+    function resetNewInput() {
+        $("#NewId").val(newItem.Id);
+        $("#NewBirthday").val(kendo.toString(kendo.parseDate(newItem.Birthday), "d"));
+        $("#NewFirstName").val(newItem.FirstName);
+        $("#NewLastName").val(newItem.LastName);
+        $("#NewAddressLine1").val(newItem.AddressLine1);
+        $("#NewPostalCode").val(newItem.PostalCode).keyup();
+        $("#NewGenderCode").val(newItem.Gender);
+        $("#NewLastChanged").val(newItem.ChangeEvent ? kendo.toString(kendo.parseDate(newItem.ChangeEvent.UpdatedOn), "g") : "");
+    }
+
+    function createMember() {
+        onClose(null, true);
+    }
+
+    function SaveItem(oldItem) {
+        //var memberId = $("#Id").val();
+        //console.log("saving...");
+        //console.log(memberId);
+        //console.log(itemSelected);
+        //alert(itemSelected.id + " - " + memberId);
+
+        // update the new etrans item from input
+        newItem.Id = $("#NewId").val();
+        newItem.Birthday = kendo.parseDate($("#NewBirthday").val()).toISOString();
+        newItem.FirstName = $("#NewFirstName").val();
+        newItem.LastName = $("#NewLastName").val();
+        newItem.AddressLine1 = $("#NewAddressLine1").val();
+        newItem.PostalCode = $("#NewPostalCode").val();
+        newItem.Gender = $("#NewGenderCode").val();
+        //newItem.HolidayPayDate = new Date(parseInt(newItem.HolidayPayDate.replace(/[A-Za-z$--/]/g, '')));
+        //newItem.ETransDate = new Date(parseInt(newItem.ETransDate.replace(/[A-Za-z$--/]/g, '')));
+        //newItem.LastChanged =  $("#LastChanged").val(;
+
+        $.ajax({
+            url: "/ETrans/SaveItem",
+            type: "POST",
+            dataType: "json",
+            data: {
+                ItemFromDb: oldItem,//itemSelected,
+                ItemFromETrans: newItem
+            },
+            success: function (result) {
+                console.log("result: ");
+                console.log(result);
+            },
+            error: function (jqXHR, textStatus, ex) {
+                console.log("error: " + textStatus + "," + ex + "," + jqXHR.responseText);
+            }
+        });
+    }
+
+    function onClose(oldItem, isSaving) {
+        //alert(JSON.stringify(oldItem));
+        //alert("is saving? " + isSaving);
+        if (isSaving) {
+            SaveItem(oldItem);
+        }
+        $.event.trigger({
+            type: "modalDebugClosed",
+            message: "",
+            time: new Date()
+        }, { "eventType": (isSaving ? "save" : "cancel") });
+    }
+
+    function onSelectAlternative(e) {
+        var index = e.item.index();
+        var dataItem = this.dataItem(index);
+        console.log(dataItem);
+        itemSelected = _.where(list, { Id: dataItem.value });
+        itemSelected = itemSelected ? itemSelected[0] : null;
+        //kendoConsole.log("event :: select (" + dataItem.text + " : " + dataItem.value + ")");
+        //itemSelected = (list != null && index < list.length) ? list[index] : null;
+        console.log(JSON.stringify(itemSelected));
+        //console.log(JSON.stringify(newItem));
+        if (itemSelected) {
+            // Set MemberId
+            console.log(itemSelected);
+            //itemSelected.Id = dataItem.Id;// parseInt($(this).find(":selected").val());
+            setOldInput(itemSelected);
+        }
+    };
+
+    $(function () {
+        itemSelected = list[0];
+        setOldInput(itemSelected);
+
+        //var alternativesComboBox = $("#alternatives").data("kendoComboBox");
+
+
+        //$("#alternatives")
+        //    .off()
+        //    .on("keydown", function (e) {
+        //        if (e.keyCode === 13) {
+        //            e.preventDefault();
+        //            onClose(itemSelected, true);
+        //        }
+        //    });
+            //.change(function (e) {
+            //    var index = e.currentTarget.selectedIndex;
+            //    itemSelected = (list != null && index < list.length) ? list[index] : null;
+            //    //console.log(JSON.stringify(itemSelected));
+            //    //console.log(JSON.stringify(newItem));
+            //    if (itemSelected) {
+            //        // Set MemberId
+            //        itemSelected.Id = parseInt($(this).find(":selected").val());
+            //        setOldInput(itemSelected);
+            //    }
+            //});
+
+        $(document.body)
+            .off()
+            .on("click", ".save-modal, .close-modal", function (e) {
+                var self = $(this);
+                var isSaving = self.hasClass("save-modal");
+                onClose(itemSelected, isSaving);
+            });
+
+
+        activateDatePicker();
+
+        ParseInputDate("#NewBirthday");
+
+        $("#resetNewInput").click(function () {
+            resetNewInput();
+        });
+
+        $("#createMember").click(function () {
+            createMember();
+        });
+
+        //var postals = Rx.Observable.fromArray(postalCodes);
+        $("#NewPostalId, #NewPostalCode").prop('disabled', false);
+        //setTimeout(function () {
+        //    AddInputCodeFilter('#NewPostalCode', postals, function (x, y) { return x.Code == y; }, function (z) { $('#NewPostalId').val(z.Id); });
+        //    AddDropdownFilter('#NewPostalId', postals, function (x, y) { return x.Id == y; }, function (z) { $('#NewPostalCode').val(z.Code); });
+
+        //    setTimeout(function () { $('select#alternatives').focus(); }, 50);
+        //}, 100);
+
+        var postalDataSource = CreateDataSource(10, "/Postal/Find", "#NewPostalCode");
+
+
+        setTimeout(function () {
+            SetupAutoComplete($("#NewPostalCode"), "Code", '#: data.Code# (#: data.CityName#)', postalDataSource, function (item) {
+                $("#NewPostalId").val(item.Id);
+                $("#PostalInfo").val(item.CityName);
+            });
+
+            $('select#alternatives').focus();
+        }, 150);
+
+        @*$.ajax({
+            dataType: "json",
+            url: "/ETrans/GetAlternatives",
+            data: "@Model",
+            type: "GET",
+            success: function (alternatives) {
+                console.log("alternatives: " + alternatives);
+                $.each(alternatives, function (i, v) {
+                    $('#alternatives').append($('<option/>', {
+                        value: v,
+                        text: v
+                    }));
+                });
+
+                //$.each(data, function (k,v) {
+                //});
+                //$(el).off().on(evt, function (e) {
+                //    e.preventDefault();
+                //    //console.log($(this).html());
+                //});
+                //$.showModal("<h4>@Resources.Member</h4>", item.FirstName, null, {
+            //    keyboard: true
+            //});
+        },
+        error: function (jqXHR, textStatus, ex) {
+            console.log("error: " + textStatus + "," + ex + "," + jqXHR.responseText);
+        }
+    });*@
+    });
+</script>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="19.9999995962779cm" Culture="fo-FO" Name="MemberFinancialAidReport" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT        TOP (1) p.FirstName, p.MiddleName, p.LastName, p.Birthday, a.AddressLine1, dbo.Postal.Code, dbo.Postal.CityName, m.Id, mfa.[From], &#xD;&#xA;                         mfa.[To], ba.AccountNumber, b.RegNumber, b.Name AS BankName, mfa.SocialServicePayment, mfa.PaymentPerDay, &#xD;&#xA;                         mfa.Days, mfa.OurPayment, mfa.Id AS MemberFinancialAidId, mfa.PrintedOn, mfa.PrintedById&#xD;&#xA;FROM            dbo.Person as p INNER JOIN&#xD;&#xA;                dbo.Member as m ON p.Id = m.PersonId LEFT JOIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;dbo.Entity as entity ON entity.Id = p.EntityId LEFT JOIN&#xD;&#xA;                dbo.Address as a ON entity.Id = a.EntityId LEFT JOIN&#xD;&#xA;                dbo.Postal ON a.PostalId = dbo.Postal.Id LEFT JOIN&#xD;&#xA;                dbo.MemberFinancialAid as mfa ON m.Id = mfa.MemberId LEFT JOIN&#xD;&#xA;                dbo.BankAccount as ba ON mfa.BankAccountId = ba.Id LEFT JOIN&#xD;&#xA;                dbo.Bank as b ON ba.BankId = b.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;WHERE        (mfa.Id = @MemberFinancialAidId) AND (a.IsPrimary = 'TRUE') AND ce.DeletedOn IS NULL" Name="sqlDataSource1" ParameterValues="{&quot;@MemberFinancialAidId&quot;:&quot;1168&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@MemberFinancialAidId">
+          <Value>
+            <String>= Parameters.MemberFinancialAidId.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+      <CalculatedFields>
+        <CalculatedField Name="FullName" Expression="= Fields.FirstName + IIf(Len(MiddleName)&gt;0,&quot; &quot; + Fields.MiddleName,&quot; &quot;) + Fields.LastName">
+          <DataType>System.String</DataType>
+        </CalculatedField>
+        <CalculatedField Name="TimeSpan" Expression="=Fields.To.Date - Fields.From.Date">
+          <DataType>System.Object</DataType>
+        </CalculatedField>
+        <CalculatedField Name="DaysPlus1" Expression="=Fields.TimeSpan.Days + 1">
+          <DataType>System.Int32</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Supplement" Expression="= Fields.Days * Fields.MINLON">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="HolidayPay" Expression="= (Fields.MANN_PART_I + Fields.Supplement) * 0.12">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Total" Expression="= Fields.MANN_PART_I + Fields.Supplement + Fields.HolidayPay">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Payout" Expression="= Fields.PaymentPerDay * Fields.Days - Fields.SocialServicePayment">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+      </CalculatedFields>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="27cm" Name="detailSection1">
+      <Style>
+        <BorderStyle Top="Dashed" Bottom="Solid" Left="Solid" Right="Solid" />
+        <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+        <BorderWidth Top="0.5pt" Bottom="1pt" Left="1pt" Right="1pt" />
+        <Font Name="Courier New" Size="9pt" />
+      </Style>
+      <Items>
+        <TextBox Width="7.29999994953473cm" Height="0.400001009305291cm" Left="1.29999974767368cm" Top="5.39999969720841cm" Value="= Fields.FullName" Name="textBox1">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="7.29999971389771cm" Height="0.399799122032365cm" Left="1.29999974767368cm" Top="5.80020054896115cm" Value="= Fields.AddressLine1" Name="textBox3">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="9.99999956250191cm" Height="0.399800736920829cm" Left="1.29999974767368cm" Top="6.20019953965586cm" Value="= Fields.Code + &quot; &quot; + Fields.CityName" Name="textBox4">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="17.5cm" Height="2.59979966760235cm" Left="1.29999971389771cm" Top="9.69999974767368cm" Value="= &quot;Sambært skriv frá Almannastovuni hava tygum verið sjúkrameldaður í tíðarskeiðinum frá &quot; + Format(&quot;{0:dd'/'MM'/'yyy}&quot;, Fields.From)  + &quot; til &quot; + Format(&quot;{0:dd'/'MM'/'yyy}&quot;, Fields.To) + &quot;, og hervið eru játtaðar tygum kr.: *&quot; + Format(&quot;{0:C2}&quot;, Fields.Payout) + &quot; frá Trygdargrunninum&quot;" Culture="en" Name="textBox5">
+          <Style TextAlign="Left">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="17.5035409680017cm" Height="0.447083085775375cm" Left="1.29645824432373cm" Top="12.2999998486042cm" Value="= &quot;Upphæddin kemur soleiðis fram:&quot;" Name="textBox6">
+          <Style TextAlign="Justify">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="9.59979975383044cm" Height="0.399999798138942cm" Left="2.70020005265315cm" Top="13.4999990463257cm" Value="= &quot;minstaløn kr. &quot; +  Format(&quot;{0:C2}&quot;, Fields.PaymentPerDay) + &quot; í &quot; + Fields.DaysPlus1 + &quot; dagar&quot; " Culture="en" Name="textBox7">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="9.59980051349241cm" Height="0.399799606805663cm" Left="2.70020009477377cm" Top="13.9001992873295cm" Value="= &quot;dagpening frá Almannastovuni&quot;" Name="textBox8">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="0.399999798138942cm" Height="0.399999798138942cm" Left="2.30000005046526cm" Top="13.899998664856cm" Value="-" Name="textBox9">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.99999878883365cm" Height="0.399999798138942cm" Left="14.4999995458126cm" Top="13.499999243021cm" Value="=&quot;*&quot; +  Format(&quot;{0:C2}&quot;, Fields.PaymentPerDay * Fields.Days)" Name="textBox10">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="0.399999797344208cm" Height="0.399999797344208cm" Left="13.5999995962779cm" Top="13.499999243021cm" Value="=&quot;=&quot;" Name="textBox11">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="0.399999797344208cm" Height="0.399999797344208cm" Left="13.5999995962779cm" Top="13.9001992873295cm" Value="=&quot;=&quot;" Name="textBox12">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.99999707301466cm" Height="0.399999797344208cm" Left="14.4999995458126cm" Top="13.9001992873295cm" Value="=&quot;*&quot; +  Format(&quot;{0:C2}&quot;, Fields.SocialServicePayment)" Name="textBox13">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="15.5000014634927cm" Height="0.132291662986908cm" Left="1.99999979813895cm" Top="14.3999996185303cm" Value="" TextWrap="False" Name="textBox14">
+          <Style>
+            <BorderStyle Top="None" Bottom="Dashed" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="0.5pt" Bottom="0.5pt" Left="0.5pt" Right="0.5pt" />
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.99999707301466cm" Height="0.399999797344208cm" Left="14.4999995458126cm" Top="14.5999998990695cm" Value="=&quot;*&quot; + Format(&quot;{0:C2}&quot;, Fields.Payout)" Name="textBox15">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="9.5998000737087cm" Height="0.39979961514473cm" Left="2.70020009477377cm" Top="14.5999998990695cm" Value="veiting úr Trygdargrunninum" Name="textBox17">
+          <Style>
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="17.4999995175997cm" Height="0.447083085775375cm" Left="1.29999971389771cm" Top="16.7999992370605cm" Value="=&quot;Upphæddin er flutt á konto tygara&quot;" Name="textBox18">
+          <Style TextAlign="Left">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="14.6999993157387cm" Height="0.447083085775375cm" Left="3.80000010093053cm" Top="17.6999995458126cm" Value="=&quot;nr. &quot; + Fields.RegNumber + &quot; - &quot; + Fields.AccountNumber + &quot; í &quot; + Fields.BankName + &quot;.&quot;" Name="textBox19">
+          <Style TextAlign="Left">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="5.59999933203059cm" Height="0.447083085775375cm" Left="7.49999984860421cm" Top="21.6999991420905cm" Value="=&quot;Tórshavn, &quot; + Format(&quot;{0:dddd}&quot;, Today())" Name="textBox20">
+          <Style TextAlign="Left">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="4.39980107983506cm" Height="0.447083085775375cm" Left="13.1001996910517cm" Top="21.6999991420905cm" Value="=&quot;tann &quot; + Format(&quot;{0:dd'/'MM'/'yyy}&quot;,Today())" Name="textBox21">
+          <Style TextAlign="Right">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="10.0000009365876cm" Height="0.132291659712791cm" Left="7.49999984860421cm" Top="23.5999993944168cm" Value="" TextWrap="False" Name="textBox22">
+          <Style>
+            <BorderStyle Top="None" Bottom="Dashed" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="0.5pt" Bottom="0.5pt" Left="0.5pt" Right="0.5pt" />
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="6.80000019073486cm" Height="0.447083085775375cm" Left="9.59999919255577cm" Top="23.8324916568301cm" Value="=&quot;Føroya Fiskimannafelag&quot;" Name="textBox23">
+          <Style TextAlign="Left">
+            <Font Size="12pt" />
+          </Style>
+        </TextBox>
+        <Panel Width="8.80354118347168cm" Height="3cm" Left="10.8000002018611cm" Top="0.399999798138942cm" Name="panel1">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="0.5pt" Bottom="0.5pt" Left="0.5pt" Right="0.5pt" />
+          </Style>
+          <Items>
+            <TextBox Width="5.50344057033824cm" Height="1.10000025232632cm" Left="3.29999923706055cm" Top="0.400000005960464cm" Value="Trygdargrunnur &#xD;&#xA;Føroya Fiskimannafelags" Name="textBox24">
+              <Style TextAlign="Left">
+                <Font Name="Arial" Size="12pt" Bold="True" Italic="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.5000001402696cm" Height="0.399999801435403cm" Left="0.403541652263039cm" Top="1.80000010093053cm" Value="=&quot;Tórshavn &quot; + Format(&quot;{0:dd'/'MM'/'yyy}&quot;, Today())" Name="textBox25">
+              <Style TextAlign="Left">
+                <Font Size="10pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.5cm" Height="0.399999797344208cm" Left="0.403541652263039cm" Top="2.20020014523903cm" Value="=&quot;j.nr. &quot; + Format(&quot;{0:yy-MM-dd}&quot;,Fields.Birthday)" Name="textBox26" />
+            <TextBox Width="2.99999954581262cm" Height="0.399999797344208cm" Left="5.40354316622097cm" Top="1.82936967370674cm" Value="= Format(&quot;{0:hh:mm}&quot;,Fields.PrintedOn.Date) + &quot; &quot; + Fields.PrintedById" Name="textBox27">
+              <Style TextAlign="Right" />
+            </TextBox>
+            <PictureBox Value="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" Width="2.39990028063734cm" Height="1.10000065604844cm" Left="0.499999343951561cm" Top="0.4cm" MimeType="image/png" Name="pictureBox1" />
+          </Items>
+        </Panel>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="0.500000151395794cm" Name="pageHeaderSection1" />
+    <PageFooterSection Height="0.500002170006371cm" Name="pageFooterSection1" />
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="0.5cm" Right="0.5cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="MemberFinancialAidId" Type="Integer">
+      <Value>
+        <String>25</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

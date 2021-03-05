@@ -1,0 +1,46 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.SocialNetwork>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.SocialNetwork,
+        Titles = @Resources.SocialNetworks
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().UserName)
+                </th>
+                <th>
+                    @Html.ActionLink(HttpUtility.HtmlDecode(@Html.DisplayNameFor(model => model.FirstOrDefault().UriString).ToHtmlString()), "Index", new { sortName = ViewBag.UriSortParam, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr>
+                <td data-bind="text: UserName"></td>
+                <td>
+                    <a data-bind="text: Uri, attr: { href: Uri }"></a>
+                </td>
+                <td data-bind="text: Description"></td>
+                <td class="edit-details-delete">
+                    @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/SocialNetwork", PagedList = @Model })

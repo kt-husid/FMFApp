@@ -1,0 +1,317 @@
+﻿@model BootstrapWebApplication.Model.Bokingar
+@{
+    ViewBag.Title = "Innles Limagjøld frá Lundanum";
+}
+<div class="container-fluid">
+    <div class="row" style="padding-bottom:5px;">
+        <div class="col-md-12">
+            <button type="button" id="start" class="btn btn-primary disabled">Innles Limagjøld frá Lundanum</button>
+            <br />
+            <label>Status:</label> <span id="progress">bíða...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="tabs" class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#itemsAdded" role="tab" data-toggle="tab">Lagt inn (nýtt)</a></li>
+                <li><a href="#itemsAlreadyAdded" role="tab" data-toggle="tab">Longu lagt inn (gamalt)</a></li>
+                <li><a href="#itemsError" role="tab" data-toggle="tab">Feilir</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="itemsAdded">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.ViewModels.BokingarViewModel>()
+                    .Name("grid1")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.BokID).Title(@Resources.Id);
+                        columns.Bound(p => p.Date).Title(@Resources.Date).Format("{0:d}");
+                        columns.Bound(p => p.JournalNumber).Title(@Resources.Document);
+                        columns.Bound(p => p.Amount).Title(@Resources.Amount);
+                        columns.Bound(p => p.ShipCode).Title(@Resources.ShipCode);
+                        columns.Bound(p => p.TripNumber).Title(@Resources.TripNumber);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                    .Pageable(pageable => pageable
+                        .Messages(m =>
+                            m.ItemsPerPage(@Resources.ItemsPerPage)
+                            .First(@Resources.First)
+                            .Previous(@Resources.Previous)
+                            .Next(@Resources.Next)
+                            .Last(@Resources.Last)
+                            .Refresh(@Resources.Refresh)
+                            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+                            .Page(@Resources.Page)
+                            .Of(@Resources.Of))
+                        .Refresh(true)
+                        .PageSizes(true)
+                        .ButtonCount(10))
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Multiple)
+                        .Type(GridSelectionType.Row))
+                    .AllowCopy(true)
+        //.Sortable()
+        //.Scrollable()
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ALKA - Nýggjar bókingar.xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+        //.Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.BokID))
+                        //.Read(read => read.Action("Index", "ETrans").Data("getETransData"))
+                        .Read(read => read.Data("getItemsAdded"))
+                    ))
+                </div>
+                <div class="tab-pane" id="itemsAlreadyAdded">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.ViewModels.BokingarViewModel>()
+                    .Name("grid2")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.BokID).Title(@Resources.Id);
+                        columns.Bound(p => p.Date).Title(@Resources.Date).Format("{0:d}");
+                        columns.Bound(p => p.JournalNumber).Title(@Resources.Document);
+                        columns.Bound(p => p.Amount).Title(@Resources.Amount);
+                        columns.Bound(p => p.ShipCode).Title(@Resources.ShipCode);
+                        columns.Bound(p => p.TripNumber).Title(@Resources.TripNumber);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                    .Pageable(pageable => pageable
+                        .Messages(m =>
+                            m.ItemsPerPage(@Resources.ItemsPerPage)
+                            .First(@Resources.First)
+                            .Previous(@Resources.Previous)
+                            .Next(@Resources.Next)
+                            .Last(@Resources.Last)
+                            .Refresh(@Resources.Refresh)
+                            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+                            .Page(@Resources.Page)
+                            .Of(@Resources.Of))
+                        .Refresh(true)
+                        .PageSizes(true)
+                        .ButtonCount(10))
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Multiple)
+                        .Type(GridSelectionType.Row))
+                    .AllowCopy(true)
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ALKA - Gamlar bókingar.xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+        //.Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.BokID))
+                        .Read(read => read.Data("getItemsAlreadyAdded"))
+                    ))
+                </div>
+                <div class="tab-pane" id="itemsError">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.Controllers.LundinBokingarController.ImportError>()
+                    .Name("grid3")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.ShipCode).Title(@Resources.ShipCode);
+                        columns.Bound(p => p.TripId).Title(@Resources.TripNumber);
+                        columns.Bound(p => p.Amount).Title(@Resources.Amount);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ALKA - Feilir (error listi).xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+        //.Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.TripId))
+                        .Read(read => read.Data("getItemsError"))
+                    ))
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/js/signalr")
+    @Scripts.Render("~/signalr/hubs")
+}
+<script>
+
+    //function onChange(arg) {
+    //    gridHandler.onChange(arg);
+    //    selectedItem = gridHandler.currentItem();
+    //    var id = selectedItem.Id;
+    //    //console.log(selectedItem);
+    //}
+
+    //function onDataBound(e) {
+    //    gridHandler.onDataBound(e);
+    //    //console.log(e);
+    //    //setDataSource(false);
+    //    //gridHandler.reload();
+    //}
+
+    //function onDataBinding(e) {
+    //    gridHandler.onDataBinding(e);
+    //    //console.log(e);
+    //    //alert(JSON.stringify(e));
+    //}
+
+    function setDataSource(inputData, refresh, _gridHandler, updateList) {
+        if (inputData) {
+            var dataSource = new kendo.data.DataSource({
+                data: inputData,
+                pageSize: 1000,
+                serverFiltering: false,
+                serverPaging: false
+            });
+            if (updateList) {
+                updateList(dataSource);
+            }
+            //etransData = dataSource;
+            _gridHandler.setDataSource(dataSource);
+            if (refresh) {
+                _gridHandler.reload();
+            }
+            //alert("data source set!");
+        }
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+    var gridHandlerItemsAdded,
+        gridHandlerItemsAlreadyAdded,
+        gridHandlerItemsError;
+
+    var itemsAdded = [];
+    var itemsAlreadyAdded = [];
+    var itemsError = [];
+
+    function getItemsAdded() {
+        return itemsAdded;
+    }
+
+    function getItemsAlreadyAdded() {
+        return itemsAlreadyAdded;
+    }
+
+    function getItemsError() {
+        return itemsError;
+    }
+
+    $(function () {
+
+        gridHandlerItemsAdded = new GridHandler("#grid1");
+        gridHandlerItemsAlreadyAdded = new GridHandler("#grid2");
+        gridHandlerItemsError = new GridHandler("#grid3");
+
+        var counter = 0;
+
+        var connection = $.hubConnection();
+        var contosoChatHubProxy = connection.createHubProxy('lundinBookingsHub');
+        contosoChatHubProxy.on('updateProgress', function (progress) {
+            $('#progress').text(progress + "% liðugt");
+        });
+        contosoChatHubProxy.on('addNewItem', function (item) {
+            //console.log("new item:");
+            //console.log(item);
+            itemsAdded.push(item);
+            if (counter % 10 == 0) {
+                gridHandlerItemsAdded.grid.dataSource.add(item);
+            }
+            counter++;
+        });
+        contosoChatHubProxy.on('addOldItem', function (item) {
+            //console.log("old item:");
+            //console.log(item);
+            itemsAlreadyAdded.push(item);
+            if (counter % 10 == 0) {
+                gridHandlerItemsAlreadyAdded.grid.dataSource.add(item);
+                gridHandlerItemsAlreadyAdded.reload();
+            }
+            counter++;
+        });
+        contosoChatHubProxy.on('addErrorItem', function (item) {
+            //console.log("error item:");
+            //console.log(item);
+            itemsError.push(item);
+            if (counter % 10 == 0) {
+                gridHandlerItemsError.grid.dataSource.add(item);
+                gridHandlerItemsError.reload();
+            }
+            counter++;
+        });
+        connection.start()
+            .done(function () { $("#start").removeClass("disabled"); $("#progress").html(""); console.log('Now connected, connection ID=' + connection.id); })
+            .fail(function () { console.log('Could not connect'); });
+
+
+        $("#start").click(function () {
+            $.post("/LundinBokingar/StartImportMembershipPayment", function (d) {
+                //console.log("OK");
+            });
+        });
+    });
+</script>

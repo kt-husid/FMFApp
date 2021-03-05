@@ -1,0 +1,37 @@
+﻿@model BootstrapWebApplication.Models.Bank
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @Resources.Details;
+    <h2>@Resources.Details</h2>
+}
+
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        <h4>@Resources.Country</h4>
+        <hr />
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+</div>
+@if (!@Request.IsAjaxRequest())
+{
+    Html.Partial("_EditBackToListPartial", Model);
+}

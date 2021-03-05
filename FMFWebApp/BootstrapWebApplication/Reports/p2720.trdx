@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="70mm" Name="p2720" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT&#xD;&#xA;&#x9;ship.Code as ShipCode, &#xD;&#xA;&#x9;ship.Name as ShipName,&#xD;&#xA;&#x9;ship.ContactCompanyName,&#xD;&#xA;&#x9;sc.Name as ShippingCompanyName,&#xD;&#xA;&#x9;ship.CountryCode,&#xD;&#xA;&#x9;ship.PostalCode, &#xD;&#xA;&#x9;ship.CityName,&#xD;&#xA;&#x9;ship.AddressLine as AddressLine1&#xD;&#xA;FROM            &#xD;&#xA;&#x9;dbo.Ship as ship INNER JOIN&#xD;&#xA;&#x9;--dbo.ShipType ON dbo.ShipType.Id = ship.ShipTypeId INNER JOIN&#xD;&#xA;&#x9;dbo.ShippingCompany as sc ON sc.Id = ship.ShippingCompanyId LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON ship.ChangeEventId = ce.Id&#xD;&#xA;WHERE &#xD;&#xA;&#x9;(ship.Code &gt;= @shipFrom) AND (ship.Code &lt;= @shipTo) AND (ship.[Status] != 'in') AND (ship.[Status] != 'iv') AND ce.DeletedOn IS NULL&#xD;&#xA;ORDER BY ship.Code" Name="sqlDataSource1" ParameterValues="{&quot;@shipFrom&quot;:&quot;VA180&quot;,&quot;@shipTo&quot;:&quot;VA182&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="String" Name="@shipFrom">
+          <Value>
+            <String>= Parameters.ShipCodeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@shipTo">
+          <Value>
+            <String>= Parameters.ShipCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="36mm" Name="detailSection1">
+      <Items>
+        <TextBox Width="5.49999924302103cm" Height="0.500000151395794cm" Left="0.999999899069471cm" Top="1.6cm" Value="= Fields.ShipName" Name="textBox1">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="5.49999904632568cm" Height="0.499799698591232cm" Left="0.99999988079071cm" Top="2.60000010093053cm" Value="= Fields.AddressLine1" Name="textBox2">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="1.69979970336518cm" Height="0.499999747673677cm" Left="0.999999899069471cm" Top="3.09999984860421cm" Value="= IIf(Len(Trim(Fields.CountryCode)) &gt; 0, IIf(Fields.PostalCode &gt; 0, Fields.CountryCode + &quot;-&quot; + Fields.PostalCode, &quot;&quot;), &quot;&quot;)" Name="textBox3">
+          <Style TextAlign="Left">
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.79999969720841cm" Height="0.499999343951562cm" Left="2.69999964674315cm" Top="3.10000005046526cm" Value="= Fields.CityName" Name="textBox4">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="5.49999904632568cm" Height="0.500000178813934cm" Left="1.00000030279159cm" Top="0.799800157552556cm" Value="*** Til Manningina ***" Name="textBox5">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="5.49999904632568cm" Height="0.499799698591232cm" Left="0.999999495347355cm" Top="2.10019979198218cm" Value="= Fields.ContactCompanyName" Name="textBox6">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+      </Items>
+    </DetailSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False" ColumnCount="3">
+      <Margins>
+        <MarginsU Left="0cm" Right="0cm" Top="0cm" Bottom="0cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="ShipCodeFrom">
+      <Value>
+        <String>FD000</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="ShipCodeTo">
+      <Value>
+        <String>Z999</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

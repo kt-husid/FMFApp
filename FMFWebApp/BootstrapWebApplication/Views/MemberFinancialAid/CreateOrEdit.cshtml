@@ -1,0 +1,329 @@
+﻿@model BootstrapWebApplication.Models.MemberFinancialAidCreateViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@Resources.Create</h2>
+}
+@{
+    int id = -1;
+    int memberId = -1;
+    if (@Request != null)
+    {
+        int.TryParse(@Request.QueryString["id"], out id);
+        int.TryParse(@Request.QueryString["memberId"], out memberId);
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" id="financialAidForm">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Comment</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="Id" value="@id" />
+        <input type="hidden" name="MemberId" value="@memberId" />
+
+        <div class="form-group">
+            @Html.Label(@Resources.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <span id="status"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="display-picker">
+                    @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "datefield form-control", required = "required" } })
+                </div>
+
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "datefield form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Days, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Days, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Days, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SocialServicePayment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SocialServicePayment, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.SocialServicePayment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentPerDay, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PaymentPerDay, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.PaymentPerDay, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <span id="totalPayment"></span>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.OurPayment, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.OurPayment, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OurPayment, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("MemberBankAccountId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.BankAccountNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("BankId", null, htmlAttributes: new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.BankId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BankAccountNumber, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.BankAccountNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default save-action" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}
+
+<script>
+
+    var errors = new kendo.data.ObservableArray([]);
+    var bankAccounts = new kendo.data.ObservableArray([]);
+    var days = parseInt('@Model.Days');
+
+    $(function () {
+
+        activateDatePicker();
+
+        $("#financialAidForm #From").focus();
+        ParseInputDate("#financialAidForm #To, #financialAidForm #From");
+        ParseInputDecimal("#financialAidForm #Days, #financialAidForm #SocialServicePayment, #financialAidForm #PaymentPerDay");
+        //ParseInputPercentage("#CrewSharePercentage");
+
+
+
+        var container = $("#financialAidForm");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                greaterdate: function (input) {
+                    if (input.is("[data-greaterdate-msg]") && input.val() != "") {
+                        var date = kendo.parseDate(input.val()),
+                            otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
+                        return otherDate == null || otherDate.getTime() < date.getTime();
+                    }
+
+                    return true;
+                }
+            }
+        });
+
+
+
+        //$(document.body).off("blur", "#Days").on("blur", "#Days", function(e) {
+        //    var _days = parseInt($(this).val());
+        //    if(!isNaN(_days)) {
+        //        removeError(0);
+        //        days = _days;
+        //        $(this).val(days);
+        //    }
+        //    else {
+        //        logError(0, "Dagatal er skeivt ásett");
+        //        //$(this).focus();
+        //    }
+        //    //console.log("days: "+ days);
+        //});
+
+        function logError(id, text) {
+            if(!_.findWhere(errors, {id: id})) {
+                errors.push({id: id, info: text });
+                //console.log(errors);
+                updateErrorGUI();
+            }
+        }
+        function removeError(id){
+            if(_.findWhere(errors, {id: id})) {
+                errors = _.without(errors, _.findWhere(errors, {id: id}));
+                updateErrorGUI();
+            }
+        }
+
+        function updateErrorGUI(){
+            $("#status").html("");
+            $.each(errors, function(k,v){
+                //console.log(v);
+                $("#status").append($("<p />").addClass("bg-danger").html(v.info));
+            });
+        }
+
+        $(document.body).off("blur", "#To, #From").on("blur", "#To, #From", function(e) {
+            setTimeout(function() {
+                var to = parseDate($("#financialAidForm #To").val());
+                var from = parseDate($("#financialAidForm #From").val());
+                var diffMS = to - from;
+                var one_day = 1000 * 60 * 60 * 24;
+                days = Math.round(diffMS / one_day) + 1;
+                //console.log("to: " + to + ", from: " + from + ", days: " + days);
+                if(days > 0) {
+                    removeError(1);
+                    $("#Days").val(days);
+                }
+                else {
+                    $("#Days").val("");
+                    logError(1, "Dato 'to' skal vera hægri enn 'from'");
+                    //$("#financialAidForm #From").focus();
+                }
+            }, 100);
+        });
+
+        $("input, textarea").blur(function(e) {
+            e.preventDefault();
+
+            var socialServicePayment = parseFloat($("#SocialServicePayment").val()).toFixed(2);// kendo.parseFloat($("#SocialServicePayment").val());
+            //console.log("socialServicePayment: " + socialServicePayment);
+            var paymentPerDay = parseFloat($("#PaymentPerDay").val()).toFixed(2);// kendo.parseFloat($("#PaymentPerDay").val());
+
+            //alert(socialServicePayment);
+            if(isNaN(socialServicePayment) || socialServicePayment == null) {
+                //$("#SocialServicePayment").focus();
+                logError(3, "Alm. gjald skal vera eitt tal");
+            }
+            else {
+                removeError(3);
+            }
+            if(isNaN(paymentPerDay) || paymentPerDay == null) {
+                //$("#PaymentPerDay").focus();
+                logError(4, "Gjald pr. dag skal vera eitt tal");
+            }
+            else {
+                removeError(4);
+            }
+            console.log(paymentPerDay * days + " " + socialServicePayment);
+            var totalPayment = paymentPerDay * days;
+            $("#totalPayment").html("Samlað gjald: " + kendo.parseFloat(totalPayment));
+            if(totalPayment < socialServicePayment) {
+                //$("#SocialServicePayment").focus();
+                logError(2, "Alm. gjald má í mesta lagi vera sama sum '@Resources.Days x @Resources.PaymentPerDay'");
+            }
+            else {
+                removeError(2);
+            }
+            return false;
+        });
+
+        $("#MemberBankAccountId").prepend($('<option />').attr('value', '-1').html("@HttpUtility.HtmlDecode(@Resources.Unknown)"));
+
+
+        $.getDataAsJson('/api/Member/BankAccounts', {
+            'id': @memberId,
+            'type': 'json'
+        }, function (json) {
+            bankAccounts = new kendo.data.ObservableArray(json);
+            //console.log(bankAccounts);
+            setTimeout(function(){
+                $("#MemberBankAccountId").prop('selectedIndex', 0);
+            }, 100);
+            //bankAccounts = Rx.Observable.fromArray(json);
+        }, function (error) {
+            console.log(error);
+        });
+
+        $("#MemberBankAccountId").change(function () {
+            var id = $(this).val();
+            //console.log("Id: " + id);
+            var bankAccount = _.find(bankAccounts, function(x){ return x.Id == id; });
+            //console.log("bankAccount: " + bankAccount);
+            if(bankAccount) {
+                $('#BankId').val(bankAccount.BankId);
+                $('#BankAccountNumber').val(bankAccount.AccountNumber);
+            }
+            else {
+                $('#BankId').val("");
+                $('#BankAccountNumber').val("");
+            }
+
+            //if(bankAccounts == undefined) {
+            //    return false;
+            //}
+            //var source = bankAccounts.filter(function (x, idx, obs) {
+            //    return x.Id == id;
+            //});
+            //var subscription = source.subscribe(
+            //function (x) {
+            //    println(x);
+            //    $('#BankId').val(x.BankId);
+            //    $('#BankAccountNumber').val(x.AccountNumber);
+            //},
+            //function (err) {
+            //    console.log('Error: %s', err);
+            //},
+            //function () {
+            //    //console.log('Completed');
+            //});
+        });
+
+        $(".save-action").prop("disabled", true);
+
+        $(document.body).on("keypress, change, blur, click", "#financialAidForm input", function(e) {
+            var validator = $("#financialAidForm").data("kendoValidator");
+            var errorCount = _.size(errors);
+            if(validator.validate() && errorCount == 0) {
+                $(".save-action").prop("disabled", false);
+            }
+            else {
+                $(".save-action").prop("disabled", true);
+            }
+        });
+
+    });
+</script>

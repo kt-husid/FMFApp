@@ -1,0 +1,336 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    var culture = Kthusid.Helpers.CultureHelper.GetCurrentCulture();
+    var cultureUILowerInvariant = Kthusid.Helpers.CultureHelper.GetCurrentUICultureLowerInvariant();
+    ViewBag.Title = Core.Settings.Instance.AppName;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/css/kthusid")
+    @Styles.Render("~/css/bootstrap")
+    @Styles.Render("~/Content/kendo/2015.1.408/styles/kendocss")
+    @Scripts.Render("~/js/jquery")
+    @*@Scripts.Render("~/js/modernizr")*@
+    @*@Scripts.Render("~/css/jqueryui")*@
+    @*@Styles.Render("~/css/fuelux")*@
+    @*@Styles.Render("~/css/bootstrap-datepicker")*@
+    @*@Styles.Render("~/css/editable")*@
+    @*@Styles.Render("~/css/datatable")*@
+    @RenderSection("head", required: false)
+	<script src="@Url.Content("~/Content/kendo/2015.1.408/aspnet/js/jszip.min.js")"></script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" rel="home" href='/Member' title="@Core.Settings.Instance.AppName">
+                    <img style="max-width:275px; padding-bottom:5px; padding-top:5px; margin-top: -14px; height:inherit" src="~/Content/images/logo.png">
+                </a>
+                @*@Html.ActionLink(@Core.Settings.Instance.AppName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @*<li>@Html.ActionLink(@Resources.Members, "Index", "Member")</li>
+                        <li>@Html.ActionLink(@Resources.ShipsAndBoats, "Index", "Ship")</li>
+                        <li>@Html.ActionLink(@Resources.Companies, "Index", "Company")</li>
+                        <li>@Html.ActionLink(@Resources.ShippingCompanyAndEmployers, "Index", "ShippingCompany")</li>*@
+
+                    <li>@Html.ActionLink(@Resources.Members, "Index", "Member")</li>
+                    <li>@Html.ActionLink(@Resources.ShipsAndBoats, "Index", "Ship")</li>
+                    @*<li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.DailyAdministrations <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink(@Resources.Members, "Index", "Member")</li>
+                            <li>@Html.ActionLink(@Resources.ShipsAndBoats, "Index", "Ship")</li>
+                            <li>@Html.ActionLink(@Resources.Companies, "Index", "Company")</li>
+                            <li>@Html.ActionLink(@Resources.ShippingCompanyAndEmployers, "Index", "ShippingCompany")</li>
+                        </ul>
+                    </li>*@
+
+                    @*<li>@Html.ActionLink(@Resources.Persons, "Index", "Person")</li>*@
+
+
+                    <li id="context-dropdown-menu" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <!-- shortcuts related to the current context will be added here -->
+                        </ul>
+                    </li>
+                </ul>
+                @Html.Partial("_LoginPartialNavbar")
+
+                <ul class="nav navbar-nav navbar-right">
+                    @*<li>@Html.ActionLink("E-Trans", "Index", "ETrans")</li>*@
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bókingar <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("Innles Limagjøld", "ImportMembershipPayment", "LundinBokingar")</li>
+                            <li>@Html.ActionLink("Innles ALKA", "ImportAlka", "LundinBokingar")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">E-Trans <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("Innles dátu", "Index", "ETrans")</li>
+                            <li>@Html.ActionLink("Útskriva rapport", "PrintReport", "ETrans")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.Reports <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink(@Resources.CrewList, "PrintCrewList", "Member")</li>
+                            <li>@Html.ActionLink("Alka aldursbýti", "PrintAlkaList", "Member")</li>
+                            <li>@Html.ActionLink("Alka Áminningarlisti", "PrintAlkaReminderList", "Member")</li>
+                            <li>@Html.ActionLink("Alka Áminningarbrøv", "PrintAlkaReminder", "Member")</li>
+                            <li>@Html.ActionLink("Árskoyring: Uppgerð", "PrintIncomeStats", "Report")</li>
+                            <li>@Html.ActionLink("Árskoyring: Fiskabýti", "PrintFishStats", "Report")</li>
+                            <li>@Html.ActionLink("Árskoyring: Veiðuvirði", "PrintSaleStats", "Report")</li>
+                            <li>@Html.ActionLink("Samlagstrygging", "PrintInsuranceReport", "Report")</li>
+                            <li>@Html.ActionLink("Limalisti", "PrintMemberList", "Member")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.Labels <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink(@Resources.Members, "PrintLabel", "Member")</li>
+                            <li>@Html.ActionLink(@Resources.Ships, "PrintLabel", "Ship")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.PeriodicAdministrations <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink(@Resources.Companies, "Index", "Company")</li>
+                            <li>@Html.ActionLink(@Resources.ShippingCompanyAndEmployers, "Index", "ShippingCompany")</li>
+                            <li>@Html.ActionLink(@Resources.Banks, "Index", "Bank")</li>
+                            <li>@Html.ActionLink(@Resources.Countries, "Index", "Country")</li>
+                            <li>@Html.ActionLink(@Resources.Postals, "Index", "Postal")</li>
+                            <li>@Html.ActionLink(@Resources.JobTitle, "Index", "Job")</li>
+                            <li>@Html.ActionLink(@Resources.ShipType, "Index", "ShipType")</li>
+                            <li>@Html.ActionLink(@Resources.Genders, "Index", "PersonGender")</li>
+                            <li>@Html.ActionLink(@Resources.Titles, "Index", "PersonTitle")</li>
+                            <li>@Html.ActionLink(@Resources.MembershipTypes, "Index", "MemberType")</li>
+                            <li>@Html.ActionLink(@Resources.FishSpecies, "Index", "FishSpecies")</li>
+                            <li>@Html.ActionLink(@Resources.Status, "Index", "Status")</li>
+                            <li>@Html.ActionLink(@Resources.DeductionTypes, "Index", "DeductionType")</li>
+                            <li>@Html.ActionLink(@Resources.MinimumWage, "Index", "MinimumWage")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resources.ChooseLanguage <span class="caret"></span></a>
+                        <ul id="languageSelect" class="dropdown-menu" role="menu">
+                            @{
+                                foreach (var item in Kthusid.Helpers.CultureHelper.Instance.Cultures)
+                                {
+                                    <li>@Html.ActionLink(@item.Value.LanguageLocal.ToUpperFirst(), "SetCulture", "Home", new { culture = @item.Key }, null)</li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid body-content">
+
+        <div class="row row-offcanvas row-offcanvas-left">
+
+            <div class="col-sm-0 col-md-0 sidebar-offcanvas" id="sidebar" role="navigation">
+
+                @RenderSection("SidebarMenu", false)
+
+                @*@Html.Partial("_SidebarUserInfo")*@
+            </div><!--/span-->
+
+            <div class="col-sm-12 col-md-12 main">
+
+                <!--toggle sidebar button-->
+                <p class="visible-xs">
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                </p>
+
+                @*<h1 class="page-header">
+                        Dashboard
+                        <p class="lead">(with off-canvas sidebar)</p>
+                    </h1>*@
+                <div class="row placeholders">
+                    <div id="main">
+                        @RenderBody()
+                    </div>
+                    @*<footer>
+                            <p>@Core.Settings.Instance.AppRegInfo</p>
+                        </footer>*@
+
+                    @Html.Partial("_ModalCRUDPartial")
+
+                    @Html.Partial("_ModalDebugPartial")
+
+                    @*<form><input type="hidden" name="preventTabClose" id="preventTabClose" /></form>*@
+                </div>
+            </div><!--/row-->
+        </div>
+    </div><!--/.container-->
+    @Scripts.Render("~/js/bootstrap")
+    @*@Scripts.Render("~/js/bootstrap-datepicker")*@
+    @*@Scripts.Render("~/js/knockout")*@
+    @*@Scripts.Render("~/js/linq")*@
+    @*@Scripts.Render("~/js/maskedinput")*@
+    @Scripts.Render("~/js/jqueryval")
+    @*@Scripts.Render("~/js/signalr")*@
+    @Scripts.Render("~/js/underscore")
+    @Scripts.Render("~/js/json2")
+    @Scripts.Render("~/js/kthusid")
+    @*@Scripts.Render("~/js/kthusid-knockout-extensions")*@
+    @Scripts.Render("~/js/shortcuts")
+    @*@Scripts.Render("~/js/editable")
+    @Scripts.Render("~/js/datatable")
+    @Scripts.Render("~/js/fuelux")*@
+    @Scripts.Render("~/js/kendo")
+    @Scripts.Render("~/js/moment")
+    <script src="@Url.Content("~/Content/kendo/2015.1.408/js/cultures/kendo.culture." + culture.ToLower() + ".min.js")"></script>
+    @RenderSection("scripts", required: false)
+    @*@Scripts.Render("~/js/globalize")*@
+    <script>
+        kendo.culture("@culture.ToLower()");
+        //console.log(kendo.culture());
+        $(function () {
+            var tempForm;
+
+            //shortcut.add("Ctrl+O", function () {
+            //    alert("OK");
+            //});
+            shortcut.add("Ctrl+F", function () {
+                $("#GridSearch").focus();
+            });
+
+
+            // Update (visible) Kendo Grids after modal has been closed
+            $(document).on("modalClosed", function (e, d) {
+                UpdateVisibleGrids();
+            });
+
+            simulateTabForKeyCode(13);
+
+            //setTimeout(function () {
+            //    $("#preventTabClose").val("don't close tab");
+            //}, 500);
+
+            //http://blog.alexmaccaw.com/jswebapps-onbeforeunload
+            //(function () {
+            //    var $ = jQuery;
+
+            //    var TRANSFORM_TYPES = ['PUT', 'POST', 'DELETE'];
+
+            //    $.activeTransforms = 0;
+
+            //    $(document).ajaxSend(function (e, xhr, settings) {
+            //        if (TRANSFORM_TYPES.indexOf(settings.type) < 0) return;
+            //        return $.activeTransforms += 1;
+            //    });
+
+            //    $(document).ajaxComplete(function (e, xhr, settings) {
+            //        if (TRANSFORM_TYPES.indexOf(settings.type) < 0) return;
+            //        return $.activeTransforms -= 1;
+            //    });
+
+            //    window.onbeforeunload || (window.onbeforeunload = function () {
+            //        if ($.activeTransforms) {
+            //            return 'There are some pending network requests which\n' +
+            //                       'means closing the page may lose unsaved data.';
+            //        }
+            //    });
+            //}).call(this);
+
+            //$(document).bind('keydown.esc', function (e) {
+            //    e.preventDefault();
+            //    //Always hide modal debug on escape key
+            //    $('#modalDebug').modal('hide');
+            //    if (tempForm && jQuery.isFunction(tempForm)) {
+            //        //validate the form inside the modalCRUD if it's not undefined and tempForm is a function
+            //        tempForm.validate();
+            //        console.log(tempForm.valid());
+
+            //        if (!tempForm.valid()) {
+            //            //$('#modalDebug').modal('hide');
+            //            $('#modalCRUD').modal('hide');
+            //        }
+            //    }
+            //    else {
+            //        $('#modalCRUD').modal('hide');
+            //        console.log("tempForm is NULL!");
+            //    }
+            //});
+
+
+            $('#modalCRUD,#modalDebug').on('show.bs.modal', function () {
+                setModalHeight(0.98);
+            });
+            $(window).resize(function () {
+                setModalHeight(0.98);
+            });
+            $('#modalCRUD,#modalDebug').on('shown.bs.modal', function (e) {
+                tempForm = $("#modalCRUD").find("form");
+                //console.log(tempForm);
+            });
+
+            //$(document).bind('keydown.ctrl_c', function (e) {
+            //    alert("");
+            //});
+            // CTRL + H for help
+            @*$(document).bind('keydown.ctrl_h', function (e) {
+                e.preventDefault();
+                var modal = $.showModal("<h4>@Resources.Help</h4>", null, "", {
+                    keyboard: true
+                });
+                $.get("/Home/KeyboardShortcut", null, function (data) {
+                    modal.setContent(data);
+                });
+            });*@
+
+            // Hide menu bar when scrolling
+            //$(window).scroll(function () {
+            //    if ($(this).scrollTop() > 50) {
+            //        $('.navbar').fadeOut();
+            //    } else {
+            //        $('.navbar').fadeIn();
+            //    }
+            //});
+
+            //$.fn.editable.defaults.mode = 'inline';
+            @*if (Modernizr.inputtypes.date) {
+        $(".datefield").datepicker({
+            autoClose: true,
+            format: 'dd-mm-yyyy'
+            //language: "@culture.ToUpper()"
+        });
+    }*@
+            //$('.datefield').datepicker({
+            //})
+            //.on('changeDate', function (e) {
+            //    console.log(e);
+            //});
+
+            //console.log(moment);
+            moment.locale("@culture.ToUpper()");
+            //console.log(moment.locale);
+            @*Globalize.locale("@culture.ToUpper()");*@
+            //$("#languageSelect li").on("click", function () {
+            //    $(this).parents("form").submit(); // post form
+            //});
+            //alert($.fn.jquery);
+        });
+    </script>
+</body>
+</html>

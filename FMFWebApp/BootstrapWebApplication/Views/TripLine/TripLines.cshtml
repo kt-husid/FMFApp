@@ -1,0 +1,497 @@
+﻿@model BootstrapWebApplication.Models.Trip
+
+@*<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>*@
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.TripTripLineViewModel>()
+    .Name("gridTripLines")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.TripId).Hidden();
+        columns.Bound(p => p.FishSpeciesCode).Title(@Resources.Code);
+        columns.Bound(p => p.FishSpeciesName).Title(@Resources.FishSpecies);
+        columns.Bound(p => p.Amount).Title(@Resources.Amount2);
+        columns.Bound(p => p.Price).Title(@Resources.Price);
+        columns.Bound(p => p.KR);
+        columns.Bound(p => p.UpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.UpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Bound(p => p.CompanyName).Title(@Resources.Company);
+        //columns.Bound(p => p.PortOfLanding).Title(@Resources.PortOfLanding);
+        //columns.Bound(p => p.DateOfLanding).Format("{0:d}").Title(@Resources.DateOfLanding);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="width:100%;">
+                @*<button class="k-button k-button-icontext k-grid-excel"><span class="k-icon k-i-excel"></span>Export to Excel</button>*@
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+
+                <form class="form-inline form-group" id="tripLineCreateForm">
+                    @Html.ExportToExcelButton("Excel")
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(false)*@
+                    <input name="Id" id="Id" type="hidden" />
+                    <input name="TripId" id="TripId" type="hidden" value="@Model.Id" />
+                    <input name="FishSpeciesCode" id="FishSpeciesCode" type="text" class="k-textbox" placeholder="@Resources.FishSpecies" />
+                    <input name="FishSpeciesId" id="FishSpeciesId" type="hidden" />
+                    @*<select name="FishSpeciesId" id="FishSpeciesId" data-bind="options: FishSpecies, optionsText: function(item) { return item.Code() + ' ' + item.Name() }, value: SelectedFishSpecies, optionsCaption: '@Resources.Choose...'" class=" k-textbox" tabindex="-1" disabled="disabled"></select>*@
+                    <input name="Amount" id="Amount" class="k-textbox" placeholder="@Resources.Amount2" />
+                    <input name="UnitPrice" id="UnitPrice" class="k-textbox" placeholder="@Resources.UnitPrice" disabled="disabled" />
+                    <input name="TotalPrice" id="TotalPrice" class="k-textbox" placeholder="@Resources.TotalPrice" />
+                    @*<input name="Amount" id="Amount" data-bind="value: Amount" class="k-textbox" placeholder="@Resources.Amount2" />
+                    <input name="UnitPrice" id="UnitPrice" data-bind="value: UnitPrice" class="k-textbox" placeholder="@Resources.UnitPrice" disabled="disabled" />
+                    <input name="TotalPrice" id="TotalPrice" data-bind="value: TotalPrice" class="k-textbox" placeholder="@Resources.TotalPrice" />*@
+                    <span class="text-danger" id="tripLineErrorMsg"></span>
+                    <button class="k-button clear-form">@Resources.Clear</button>
+                    <button class="delete-action k-button" data-toggle='modal' data-controller-name='TripLine' data-action-name='' data-model-name='TripLine'>@Resources.Delete</button>
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    .Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Avreiðingar.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onTripLineChange").DataBound("onTripLineDataBound").DataBinding("onTripLineDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("TripCreate", "Trip"))
+        .Read(read => read.Action("Read", "TripLine", new { id = @Model.Id }))
+        //.Update(update => update.Action("TripUpdate", "Trip"))
+        //.Destroy(update => update.Action("TripDestroy", "Trip"))
+    )
+)
+<script>
+    var tripLineGridHandler;
+    var fishSpecies;
+    var viewModel;
+
+    var isTripLineEditMode = false;
+
+    $(function () {
+        tripLineGridHandler = new GridHandler("#gridTripLines");
+        tripLineGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        tripLineGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+            clearTripLineForm();
+        };
+
+        //$(".clear-form").filter(":visible").click(function(e) {
+        $("#tripLineCreateForm").find(".clear-form").click(function(e) {
+            e.preventDefault();
+            clearTripLineForm();
+            return false;
+        });
+    });
+
+
+    function onTripLineChange(arg) {
+        tripLineGridHandler.onChange(arg);
+        var item = tripLineGridHandler.currentItem();
+        println(item);
+        var id = item.Id;
+
+        isTripLineEditMode = true;
+
+        $("#FishSpeciesCode").val(item.FishSpeciesCode);
+        $("#tripLineCreateForm > #Id").val(item.Id);
+        $("#tripLineCreateForm > #TripId").val(item.TripId);
+        $("#tripLineCreateForm > #FishSpeciesId").val(item.FishSpeciesId);
+        $("#tripLineCreateForm > #Amount").val(item.Amount).prop('disabled', false);
+        $("#tripLineCreateForm > #UnitPrice").val(item.Price).prop('disabled', false);
+        $("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&tripId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&tripId=" + @Model.Id);
+    }
+
+    function onTripLineDataBound(arg) {
+        tripLineGridHandler.onDataBound(arg);
+        LoadTripInfo();
+    }
+
+    function onTripLineDataBinding(arg) {
+        tripLineGridHandler.onDataBinding(arg);
+    }
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+
+    //function TripLineVM() {
+    //    var self = this;
+    //    self.Amount = ko.observable("");
+    //    self.UnitPrice = ko.observable("");
+    //    self.TotalPrice = ko.pureComputed(function () {
+    //        return self.Amount() * self.UnitPrice();
+    //    }, self);
+    //    //self.FishSpecies = ko.observableArray([]);
+    //    //self.SelectedFishSpecies = ko.observable();
+    //    return self;
+    //};
+
+    function clearTripLineForm() {
+        println($("#tripLineCreateForm")[0]);
+        $("#tripLineCreateForm")[0].reset();
+        $("#FishSpeciesCode").focus();
+        isTripLineEditMode = false;
+        pageNeedsReload = true;
+    }
+
+    $(function () {
+
+        //var node = $('#tripLineCreateForm')[0];
+        //// Remove the bindings before using 'applyBindings' again !
+        //// Catuion: It will also remove other bindings such as those made by jQuery (e.g. click events)
+        //ko.cleanNode(node);
+        //viewModel = new TripLineVM();
+        //ko.applyBindings(viewModel, node);
+
+        // fix: ParseInputDecimal doesn't work. Solve this asap!
+        
+        ParseInputDecimal("#tripLineCreateForm > #Amount, #tripLineCreateForm > #UnitPrice, #tripLineCreateForm > #TotalPrice");
+
+        $("#tripLineCreateForm > #Amount, #tripLineCreateForm > #UnitPrice")
+            .filter(":visible")
+            .keyup(function() {
+                $("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+            }).focus(function() {
+                $(this).select();
+            });
+        //$('#tripLineCreateForm input]').keyup(function () {
+        //    $("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+        //});
+
+        //$.getDataAsJson('/api/TripLine/GetTripLineCreateRelatedDataListViewModel', {
+        //    'type': 'json'
+        //}, function (json) {
+        //    ko.mapping.fromJS(json.FishSpecies, {}, viewModel.FishSpecies);
+        //    fishSpecies = Rx.Observable.fromArray(json.FishSpecies);
+        //    $("#FishSpeciesId, #FishSpeciesCode").prop('disabled', false);
+        //    setTimeout(function () {
+        //        AddInputCodeFilter('#FishSpeciesCode', fishSpecies, function (x, y) { return x.Code == y; }, function (z) { viewModel.SelectedFishSpecies(z); /*('#FishSpeciesId').val(z.Id);*/ });
+        //        AddDropdownFilter('#FishSpeciesId', fishSpecies, function (x, y) { return x.Id == y; }, function (z) { println(z); $('#FishSpeciesCode').val(z.Code); });
+
+        //        $("#FishSpeciesCode").prop('disabled', false).val('').keyup();
+        //    }, 100);
+        //}, function (error) {
+        //    console.log(error);
+        //});
+
+        //$("#FishSpeciesCode").prop('disabled', false);
+
+        @*$.getDataAsJson('/TripLine/GetCreateData', {
+            'tripId' : '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            println(json.CompanyId);
+            println(json.DateOfLanding);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+
+        var fishSpeciesDataSource = null;
+
+        CreateLocalDataSource("/FishSpecies/GetAll", "#FishSpeciesCode", "FishSpecies", fishSpeciesDataSource, function (dataSource) {
+            fishSpeciesDataSource = dataSource;
+            SetupAutoComplete($("#FishSpeciesCode"), "Code", '#: data.Code# (#: data.Name#)', fishSpeciesDataSource, function (item) {
+                fishSpeciesSelected = item;
+                $("#tripLineCreateForm > #Amount").filter(":visible").val("").prop('disabled', false);
+                //console.log(fishSpeciesSelected);
+                $("#tripLineCreateForm > #FishSpeciesId").val(item.FishSpeciesId);
+                //$("#UnitPrice").val(dataItem.Price);
+                //console.log(dataItem.Id);
+                setTimeout(function() {
+                    $("#tripLineCreateForm > #Amount").focus();
+                },10);
+            });
+        });
+
+        
+        $("#FishSpeciesCode").keyup(function(e) {
+            var self = $(this);
+            var keyCode = e.keyCode || e.which;
+            var value = self.val().trim();
+            if(value.length > 0) {
+                if(keyCode == 13) {
+                    $("#tripLineCreateForm > #Amount").focus();
+                }
+                else if(keyCode == 46)
+                {
+                    clearTripLineForm();
+                }
+            }
+        });
+
+        //var dataSource = new kendo.data.DataSource({
+        //    type: "json",
+        //    serverFiltering: true,
+        //    serverPaging: true,
+        //    pageSize: 10,
+        //    //filter: { field: "filter", operator: "eq", value: $("#MemberId").val() },
+        //    //filtering: function(e) {
+        //    //    //get filter descriptor
+        //    //    var filter = e.filter;
+        //    //    console.log(filter);
+        //    //},
+        //    transport: {
+        //        //data : {
+        //        read: {
+        //            url: "/FishSpecies/Find",//url: "/FishPrice/Find",
+        //            data: {
+        //                filter: function () { return $("#FishSpeciesCode").data("kendoAutoComplete").value(); }
+        //            },
+        //            dataType: "json",
+        //            type: "GET"
+        //            //data: {
+        //            //    //filter: { operator: "eq", value: $("#MemberId").val() },
+        //            //    filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+        //            //}
+        //            //maxRows: 10
+        //        }
+        //    }
+        //});
+
+        @*$("#FishSpeciesCode").kendoAutoComplete({
+            minLength: 1,
+            delay: 150,
+            dataTextField: "Code",//dataTextField: "FishSpeciesCode",
+            template: '#: data.Code# (#: data.Name#)',//template: '#: data.FishSpeciesCode# (#: data.Name#)',
+            highlightFirst: true,
+            ignoreCase: true,
+            //suggest: true,
+            dataSource: dataSource,
+            //placeholder: "@Resources.Search",
+            select: function(e) {
+                //var item = e.item;
+                //var text = item.text();
+                //console.log(item.text());
+                fishSpeciesSelected = this.dataItem(e.item.index());
+                $("#tripLineCreateForm > #Amount").filter(":visible").val("").prop('disabled', false);
+                //console.log(fishSpeciesSelected);
+
+                $("#tripLineCreateForm > #FishSpeciesId").val(fishSpeciesSelected.FishSpeciesId);
+                //$("#UnitPrice").val(dataItem.Price);
+                //console.log(dataItem.Id);
+
+                setTimeout(function() {
+                    $("#tripLineCreateForm > #Amount").focus();
+                },10);
+            }
+        })
+        .keyup(function(e) {
+            var self = $(this);
+            var keyCode = e.keyCode || e.which;
+            var value = self.val().trim();
+            if(value.length > 0) {
+                if(keyCode == 13) {
+                    $("#tripLineCreateForm > #Amount").focus();
+                }
+                else if(keyCode == 46)
+                {
+                    clearTripLineForm();
+                }
+            }
+        });*@
+
+        var fishSpeciesSelected = null;
+
+        $("#tripLineCreateForm > #Amount").focus(function() {
+            var self = $(this);
+            //var fishSpeciesCode = $("#FishSpeciesCode").val();
+            //console.log(fishSpeciesSelected)
+
+            if(isTripLineEditMode) {
+                self.prop("disabled", false);
+            }
+            else {
+                if(!fishSpeciesSelected || fishSpeciesSelected == null) {
+                    self.val("");
+                    $("#FishSpeciesCode").focus();
+                    fishSpeciesSelected = null;
+                }
+                else {
+                    $.getDataAsJson('/api/FishPrice/GetFishPrice', {
+                        'fishSpeciesCode': fishSpeciesSelected.Code,
+                        'fishSpeciesOldCode': fishSpeciesSelected.OldCode,
+                        'type': 'json'
+                    }, function (json) {
+                        if($("#tripLineCreateForm > #UnitPrice").val().trim().length == 0) {
+                            $("#tripLineCreateForm > #UnitPrice").val(json.Price).prop('disabled', false);
+                            $("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+                        }
+                    }, function (error) {
+                        //$("#tripLineCreateForm > #UnitPrice").val("").prop('disabled', false);
+                        //$("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+                        $("#tripLineCreateForm > #UnitPrice").prop('disabled', false);
+                        console.log(error);
+                    });
+                }
+            }
+        });
+
+        $("#tripLineCreateForm > #UnitPrice").focus(function() {
+            $("#tripLineCreateForm > #TotalPrice").val(CalcTotal());
+        });
+
+        var isUnitPriceFirstKeyDown = false;
+
+        $("#tripLineCreateForm > #UnitPrice").keydown(function(e) {
+            var self = $(this);
+            var val = self.val();
+            if(val.length > 0 && isUnitPriceFirstKeyDown == false) {
+                if(e.keyCode != 9){
+                    isUnitPriceFirstKeyDown = true;
+                    self.val("");
+                }
+            }
+        });
+
+        $("#tripLineCreateForm > #TotalPrice")
+            .filter(":visible")
+            .keydown(function (e) {
+                var id = $(this).attr("id");
+                var keyCode = e.keyCode || e.which;
+                if ((keyCode == 9 || keyCode == 13) && id == "TotalPrice") {
+                    if(!e.shiftKey) {
+                        e.preventDefault();
+                        pageNeedsReload = true;
+                        $("#tripLineCreateForm > #TotalPrice").filter(":visible").val("").prop('disabled', true);
+                        var data = "";
+                        //alert(JSON.stringify(data));
+                        var url = "/TripLine";
+                        if(isTripLineEditMode) {
+                            data = $("#tripLineCreateForm").serialize();
+                            url += "/Edit";
+                        }
+                        else {
+                            data = $("#tripLineCreateForm").find('input[name!=Id]').serialize();
+                            url += "/Create";
+                        }
+                        $.post(url, data, function (d, s, xhr) {
+                            //console.log(d);
+                            //console.log(s);
+                            //console.log(xhr);
+                            //console.log(xhr.responseJSON);
+                            var json = xhr.responseJSON;
+                            if (json) { // has json object data
+                                //println(json);
+                                //console.log(json);
+                                if(fishSpeciesSelected) {
+                                    var newPrice = $("#tripLineCreateForm > #UnitPrice").val();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/api/FishPrice/UpdateFishPrice',
+                                        data: { 'FishSpeciesCode' : fishSpeciesSelected.Code, 'FishSpeciesOldCode' : fishSpeciesSelected.OldCode, 'NewPrice' : newPrice },
+                                        success: function(fishPriceJson) {
+                                            console.log('fishPriceJson:');
+                                            console.log(fishPriceJson);
+                                        },
+                                        dataType: 'json'
+                                    });
+                                    //console.log('newPrice:');
+                                    //console.log(newPrice);
+                                    //console.log('fishSpeciesSelected:');
+                                    //console.log(fishSpeciesSelected);
+                                }
+
+                                $("#tripLineErrorMsg").html("");
+                                $("#tripLineCreateForm > #Amount").filter(":visible").val("").prop('disabled', true);
+                                $("#tripLineCreateForm > #UnitPrice").filter(":visible").val("").prop('disabled', true);
+                                $("#tripLineCreateForm > #TotalPrice").filter(":visible").val("").prop('disabled', false);
+                                $("#FishSpeciesCode").filter(":visible").val("").focus();
+                                tripLineGridHandler.reload();
+                                LoadTripInfo();
+                            }
+                            else {
+                                $("#tripLineErrorMsg").html("@Resources.Error");
+                            }
+                        })
+                        .fail(function (error) {
+                            $("#tripLineErrorMsg").html("@Resources.Error");
+                            console.log(error);
+                        });
+                    }
+                }
+            })
+            .keyup(function (e) {
+                $("#tripLineCreateForm > #UnitPrice").filter(":visible").val(CalcUnitPrice());
+            });
+
+    });
+
+    function CalcTotal() {
+        var amount = ParseDecimal($("#tripLineCreateForm > #Amount").val());
+        var unitPrice = ParseDecimal($("#tripLineCreateForm > #UnitPrice").val());
+        var total = amount * unitPrice;
+        console.log("total: " + total);
+        return MathRound(total, 8);
+    }
+    function CalcUnitPrice() {
+        var total = ParseDecimal($("#tripLineCreateForm > #TotalPrice").val());
+        var amount = ParseDecimal($("#tripLineCreateForm > #Amount").val());
+        var unitPrice = total / amount;
+        console.log("unitPrice: " + unitPrice);
+        return MathRound(unitPrice, 8);
+    }
+</script>

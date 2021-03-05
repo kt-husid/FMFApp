@@ -1,0 +1,238 @@
+﻿@model BootstrapWebApplication.Models.ShippingCompany
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+        <li class="active"><a href="#"></a></li>
+
+        <li><a href="#"></a></li>
+    </ul>
+    }*@
+@{
+    var controllerName = ViewContext.GetControllerName();
+}
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.ShippingCompany + " " + @Model.Name;
+}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>@ViewBag.Title</strong>
+                        @if (!@Request.IsAjaxRequest())
+                        {
+                            <span class="pull-right">
+                                @Html.Partial("_BackToListPartial", Model)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Code)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Code)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactPersonName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactPersonName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactCompanyName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactCompanyName)
+                        </dd>
+
+                        @*<dt>
+                            @Html.DisplayNameFor(model => model.PrimaryPhone.Number)
+                        </dt>
+
+                        <dd>
+                            @{
+                                if (Model.PrimaryPhone == null || string.IsNullOrEmpty(Model.PrimaryPhone.RawNumber))
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>(+@Model.PrimaryPhone.CountryCode) @Model.PrimaryPhone.Number</label>
+                                }
+                            }
+                        </dd>*@
+
+                        @*<dt>
+                                @Html.DisplayNameFor(model => model.FaxNumber)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.FaxNumber)
+                            </dd>*@
+
+                        @*<dt>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Status) @ViewBag.StatusText
+                            </dd>*@
+                    </dl>
+                    @if (@Model.PrimaryPhone != null)
+                    {
+                         @Html.Partial("_PhonePartial", Model.PrimaryPhone);
+                    }
+                    @if (@Model.PrimaryAddress != null)
+                    {
+                        @Html.Partial("_AddressPartial", Model.PrimaryAddress);
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@Resources.Information</strong></h3>
+                </div>
+                <div class="panel-body">
+                    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+
+                    <hr />
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.A_REG)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.A_REG)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.A_KTO)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.A_KTO)
+                        </dd>
+                    </dl>
+
+                    <hr />
+
+                    <div id="tripInfoForYear">
+                        <dl class="dl-horizontal">
+                            <dt>@Resources.DaysThisYear</dt>
+                            <dd>
+                                <span id="DayCount"></span>
+                            </dd>
+                            <dt>@Resources.TripsThisYear</dt>
+                            <dd>
+                                <span id="TripCount"></span>
+                            </dd>
+                            <dt>@Resources.Last</dt>
+                            <dd>
+                                <span id="LastDate"></span>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <hr />
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Resources.HolidayPay @Resources.Total.ToLower()
+                        </dt>
+
+                        <dd>
+                            @string.Format("{0:C}", @ViewBag.HolidayPayTotal)
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <ul id="tabs" class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#ships" role="tab" data-toggle="tab">@Resources.Ships</a></li>
+        <li><a href="#holidayPayForMembers" role="tab" data-toggle="tab">@Resources.HolidayPays</a></li>
+        <li><a href="#comments" role="tab" data-toggle="tab">@Resources.Comments</a></li>
+        <li><a href="#addresses" role="tab" data-toggle="tab">@Resources.Addresses</a></li>
+        <li><a href="#phoneNumbers" role="tab" data-toggle="tab">@Resources.Phones</a></li>
+        <li><a href="#log" role="tab" data-toggle="tab">@Resources.Log</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="ships">@Html.Action("Ships", @controllerName, @Model)</div>
+        <div class="tab-pane" id="holidayPayForMembers">@Html.Action("HolidayPayForMembers", @controllerName, @Model)</div>
+        <div class="tab-pane" id="comments">@Html.Action("Comments", "ShippingCompanyComment", @Model)</div>
+        <div class="tab-pane" id="addresses">@Html.Action("Addresses", "ShippingCompanyAddress", @Model)</div>
+        <div class="tab-pane" id="phoneNumbers">@Html.Action("Phones", "ShippingCompanyPhone", @Model)</div>
+        <div class="tab-pane" id="log">@Html.Action("Logs", "Log", @Model.Entity)</div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+                    "<a href='#' class='edit-action' data-toggle='modal' data-controller-name='ShippingCompany' data-action-name='Edit?id=@Model.Id' data-model-name='ShippingCompany'>@Resources.Edit</a>"
+        ]);
+
+        $(document).on("modalClosed", function (e, d) {
+
+        });
+
+        $('#tabs a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+
+        $.getDataAsJson('/api/ShippingCompany/GetTripInfoForYear', {
+            'id': '@Model.Id',
+            //todo: make year dynamic (input)
+            'year': '@DateTime.Now.Year',
+            'type': 'json'
+        }, function (json) {
+            //console.log(json);
+            //var mapping = ko.mapping.fromJS([]);
+            //ko.mapping.fromJS(json, mapping);
+            //$('#LastSignOnFromDate').html(moment(json.SignOn.From).format('LL'));
+            $('#DayCount').html(json.DayCount);
+            $('#TripCount').html(json.TripCount);
+            if (json.LastTripDate) {
+                $('#LastDate').html(kendo.toString(new Date(json.LastTripDate), "d"));//moment(json.LastTripDate).format('LL'));
+            }
+            else {
+                $('#LastDate').html("-");
+            }
+        }, function (error) {
+            console.log(error);
+        });
+
+
+    });
+</script>
+
+@if (!@Request.IsAjaxRequest())
+{
+}

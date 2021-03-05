@@ -1,0 +1,104 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Member>
+@using PagedList.Mvc;
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ChangeEvent.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Person.PrimaryAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Person.PrimaryPhone.Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Job.TEKSTUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().LastSignOn.SKIB_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().MemberType.TEKSTUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Person.SSN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().PostNr.POSTNR1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Stat.TEKSTUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().JobTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().PRI_OWN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().BETALER)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().M_STATUS)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeEvent.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person.PrimaryAddress.AddressLine1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person.PrimaryPhone.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Job.TEKSTUR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastSignOn.SKIB_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberType.TEKSTUR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person.SSN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostNr.POSTNR1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stat.TEKSTUR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PRI_OWN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BETALER)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.M_STATUS)
+            </td>
+            <td>
+                @Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "Member", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+@Html.Partial("_PagedListFooterPartial")

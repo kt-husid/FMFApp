@@ -1,0 +1,55 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Person>
+@using PagedList.Mvc;
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().SSN)
+        </th>
+        <th>
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.FirstOrDefault().FirstName).ToHtmlString(), "Index", new { sortName = ViewBag.NameSortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().MiddleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Title)
+        </th>
+        <th>
+            @Html.ActionLink(HttpUtility.HtmlDecode(@Html.DisplayNameFor(model => model.FirstOrDefault().Birthday).ToHtmlString()), "Index", new { sortName = ViewBag.DateSortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SSN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthday)
+            </td>
+            <td>
+                @Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "Person", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+@Html.Partial("_PagedListFooterPartial")

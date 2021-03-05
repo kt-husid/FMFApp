@@ -1,0 +1,34 @@
+﻿@model BootstrapWebApplication.Models.MemberSignOnReportParameters
+@{
+    //ViewBag.Title = @Resources.ReportFor + " " + @Resources.Member + " " + @Resources.SignOns;
+    Layout = "~/Views/Shared/_LayoutReporting.cshtml";
+}
+@Html.Partial("_ReportHeaderPartial")
+@{
+    var PostalCodeFrom = 100;
+    var PostalCodeTo = 100;
+    var SignOnFrom = 1900;
+    var SignOnTo = 1900;
+    int.TryParse(@Request.QueryString["PostalCodeFrom"], out PostalCodeFrom);
+    int.TryParse(@Request.QueryString["PostalCodeTo"], out PostalCodeTo);
+    int.TryParse(@Request.QueryString["SignOnFrom"], out SignOnFrom);
+    int.TryParse(@Request.QueryString["SignOnTo"], out SignOnTo);
+    //    var SignOnFrom = DateTimeHelper.ParseForReport(@Request.QueryString["SignOnFrom"]);
+//    var SignOnTo = DateTimeHelper.ParseForReport(@Request.QueryString["SignOnTo"]);
+    var reportSource = new UriReportSource() { Uri = "p1700_2.trdx" };
+    reportSource.Parameters.Add("PostalCodeFrom", @PostalCodeFrom);
+    reportSource.Parameters.Add("PostalCodeTo", @PostalCodeTo);
+    reportSource.Parameters.Add("MemberTypeCode", @Request.QueryString["MemberTypeCode"]);
+    reportSource.Parameters.Add("MemberJobCodeFrom", @Request.QueryString["MemberJobCodeFrom"]);
+    reportSource.Parameters.Add("MemberJobCodeTo", @Request.QueryString["MemberJobCodeTo"]);
+    reportSource.Parameters.Add("SignOnFrom", @SignOnFrom);
+    reportSource.Parameters.Add("SignOnTo", @SignOnTo);
+}
+@Html.Partial("_ReportFooterPartial", reportSource)
+
+
+<script>
+    function onPrint() {
+        // Optionally implement code to be executed after the print button on the Telerik Report Viewer has been clicked
+    }
+</script>

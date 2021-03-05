@@ -1,0 +1,100 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3   width:1280">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Útskriva ALKA áminningarbrøv</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="PrintCrewList" class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.From.ToLower(), new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="100" name="PostalCodeFrom" id="PostalCodeFrom" type="text" class="form-control1" placeholder="@Resources.From" size="4"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.To.ToLower(), new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="999" name="PostalCodeTo" id="PostalCodeTo" type="text" class="form-control1" placeholder="@Resources.To" size="4" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Days, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="180" name="DaysUntilInsuranceExpires" id="DaysUntilInsuranceExpires" type="text" size="4" /> @*Hans broytt til 180*@
+                                    Rapportin tekur avmynstringar við frá "Dato" minus talið í "Dagar" og 40 dagar fram
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label(@Resources.Date, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input  name="SignOnTo" id="SignOnTo" type="text" class="form-control datefield" placeholder="@Resources.Date" /> @*Hans value="01-01-2016" tikið vekk*@
+                                    "Dato" skal vanliga vera dags dato, tær sum ganga út frá DD og 40 dagar fram eru við
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">
+                                        Minni enn 30 dagar við?
+                                    </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="checkbox" id="IncludeLessThanThirtyDays" name="IncludeLessThanThirtyDays"  />
+                                    Tak teir við sum hava verið mynstraðir < 30 dagar í árinum og seinasta avmynstring færri enn 30 dagar síðani
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button id="PrintAlkaReminderReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('SignOnTo').valueAsDate = new Date();
+</script>
+<script>
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#SignOnTo");
+
+        $("#PrintAlkaReminderReport").click(function (e) {
+            e.preventDefault();
+            var PostalCodeFrom = $("#PostalCodeFrom").val();
+            var PostalCodeTo = $("#PostalCodeTo").val();
+            var IncludeLessThanThirtyDays = $("#IncludeLessThanThirtyDays").is(":checked");
+            //var SignOnFrom = $("#SignOnFrom").val();
+            var DaysUntilInsuranceExpires = $("#DaysUntilInsuranceExpires").val();
+            var SignOnTo = $("#SignOnTo").val();
+
+            
+            window.open('/Member/AlkaReminderReport?PostalCodeFrom=' + PostalCodeFrom + '&PostalCodeTo=' + PostalCodeTo + '&IncludeLessThan30Days=' + IncludeLessThanThirtyDays + '&DaysUntilInsuranceExpires=' + DaysUntilInsuranceExpires + '&SignOnTo=' + SignOnTo);
+            //window.open('/Member/AlkaReminderReport?PostalCodeFrom=' + PostalCodeFrom + '&PostalCodeTo=' + PostalCodeTo + '&IncludeLessThanThirtyDays=' + IncludeLessThanThirtyDays + '&SignOnFrom=' + SignOnFrom + '&SignOnTo=' + SignOnTo);
+            return false;
+        });
+
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+    });
+</script>

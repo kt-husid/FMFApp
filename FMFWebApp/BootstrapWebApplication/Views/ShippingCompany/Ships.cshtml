@@ -1,0 +1,120 @@
+﻿@model BootstrapWebApplication.Models.ShippingCompany
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipViewModel>()
+    .Name("gridShippingCompanyShips")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Code).ClientTemplate("<text><a href='/Ship/Details/#= Id #'>#= Code # </a></text>").Title(@Resources.Code);
+        columns.Bound(p => p.Name).ClientTemplate("<text><a href='/Ship/Details/#= Id #'>#= Name #</a></text>").Title(@Resources.Name);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='Ship' data-action-name='Create?shippingCompanyId=@Model.Id' data-model-name='Ship'>@Resources.Create @Resources.Ship.ToLower()</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .FileName("Reiðarí " + @Model.Name + " - Skip.xlsx")
+        .AllPages(true)
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onShipChange").DataBound("onShipDataBound").DataBinding("onShipDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("ShippingCompanyShips_Read", "ShippingCompany", new { id = @Model.Id }))
+    )
+)
+<script>
+
+    function onShipChange(arg) {
+        shippingCompanyShipGridHandler.onChange(arg);
+        @*var id = memberSignOnGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);*@
+    }
+
+    function onShipDataBound(e) {
+        shippingCompanyShipGridHandler.onDataBound(e);
+    }
+
+    function onShipDataBinding(e) {
+        shippingCompanyShipGridHandler.onDataBinding(e);
+    }
+
+    var shippingCompanyShipGridHandler;
+    $(function () {
+
+        shippingCompanyShipGridHandler = new GridHandler("#gridShippingCompanyShips");
+        shippingCompanyShipGridHandler.onDoubleClick = function (item) {
+            navigate('/Ship/Details/' + item.Id);
+        };
+        shippingCompanyShipGridHandler.onItemOpen = function (item) {
+            navigate('/Ship/Details/' + item.Id);
+        };
+        //shippingCompanyShipGridHandler.onItemDelete = function (item) {
+        //    //console.log(item);
+        //    $(".delete-action").filter(":visible").click();
+        //};
+    });
+
+    $(function () {
+      
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

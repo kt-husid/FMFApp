@@ -1,0 +1,123 @@
+﻿@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var title = @Resources.Status;
+    var controllerName = ViewContext.GetControllerName();
+    ViewBag.Title = title;
+}
+@*<h2>@title</h2>*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.StatusViewModel>()
+    .Name("gridStatus")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Code).Title(@Resources.Code);
+        columns.Bound(p => p.Description).Title(@Resources.Description);
+        columns.Bound(p => p.YearList);
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                <input type="text" id="GridSearch" class="k-textbox" />
+                <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='Status' data-action-name='Create' data-model-name='Status'>@Resources.Create</button>
+                <button tabindex="-1" class="edit-action k-button" data-toggle='modal' data-controller-name='Status' data-action-name='' data-model-name='Status'>@Resources.Edit</button>
+                <button tabindex="-1" class="delete-action k-button" data-toggle='modal' data-controller-name='Status' data-action-name='' data-model-name='Status'>@Resources.Delete</button>
+
+            </div>
+        </text>);
+    })
+    .Reorderable(reorderable=>reorderable.Columns(false))
+    //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+    .Filterable(ftb => ftb.Mode(GridFilterMode.Menu))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Selectable()
+    .Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+    //.HtmlAttributes(new { style = "min-height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Read", "Status"))
+    )
+)
+<script>
+    var gridHandler;
+    $(function () {
+
+        gridHandler = new GridHandler("#gridStatus", "#GridSearch");
+        gridHandler.focusSearch();
+        gridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        gridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+    });
+
+
+    function onChange(arg) {
+        gridHandler.onChange(arg);
+        var id = gridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id);
+        $(".delete-action").data("action-name", "Delete?id=" + id);
+    }
+
+    function onDataBound(arg) {
+        gridHandler.onDataBound(arg);
+    }
+
+    function onDataBinding(arg) {
+        gridHandler.onDataBinding(arg);
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

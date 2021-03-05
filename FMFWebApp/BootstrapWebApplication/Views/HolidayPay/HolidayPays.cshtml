@@ -1,0 +1,189 @@
+﻿<script>
+    function onHolidayPayChange(arg) {
+        holidayPayGridHandler.onChange(arg);
+        @*var id = holidayPayGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);*@
+        }
+
+    function onHolidayPayDataBound(e) {
+        holidayPayGridHandler.onDataBound(e);
+    }
+
+    function onHolidayPayDataBinding(e) {
+        holidayPayGridHandler.onDataBinding(e);
+    }
+
+    var holidayPayGridHandler;
+</script>
+
+@model BootstrapWebApplication.Models.Member
+@{
+    var from = @DateTime.Now.AddYears(-15);
+    var to = @DateTime.Now;
+}
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberHolidayPay_HOVD_ViewModel>()
+    .Name("gridHolidayPay")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.TransferDate).Format("{0:d}").Title(@Resources.TransactionDate);
+        columns.Bound(p => p.Amount).Title(@Resources.Amount).Format("{0:C2}").ClientFooterTemplate("<text>#if(data.Amount){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber);
+        columns.Bound(p => p.REG_NR_FF).ClientTemplate("<text>#= REG_NR_FF # - #= KONTO_FF #</text>").Title(@Resources.BankAccount);
+        //columns.Bound(p => p.REG_NR).Title(@Resources.RegNumber);
+        //columns.Bound(p => p.KONTO).Title(@Resources.BankAccount);
+        columns.Bound(p => p.ART);
+        columns.Bound(p => p.KOYR_DATO).Format("{0:d}").Title("KOYR_DATO");
+        columns.Bound(p => p.TR_NR).Title(@Resources.Trip);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @*<button class="create-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='CreateBankAccount' data-model-name='BankAccount'>@Resources.Create</button>*@
+                <form class="form-inline">
+                    @Html.ExportToExcelButton("Excel")
+                    <input id="id" type="hidden" value="@Model.Id" />
+                    @Resources.From <input id="HolidayPay_From" type="text" class="k-textbox" value='@string.Format("{0:" + Core.Settings.Instance.DateTimeFormatReporting + "}", @from)' />
+                    @Resources.To <input id="HolidayPay_To" type="text" class="k-textbox" value='@string.Format("{0:" + Core.Settings.Instance.DateTimeFormatReporting + "}", @to)' />
+                    <a id="printHolidayReport" href="#" class="k-button">@Resources.Print</a>
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima frítíðarlønir.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onHolidayPayChange").DataBound("onHolidayPayDataBound").DataBinding("onHolidayPayDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberHolidayPay_HOVD_Create", "Member", new { id = @Model.Id }))
+        .Read(read => read.Action("Read", "HolidayPay", new { id = @Model.Id, from = string.Format("{0:ddMMyyyy}", @from), to = string.Format("{0:ddMMyyyy}", @to) }))
+        .Aggregates(aggregates =>
+        {
+            aggregates.Add(p => p.Amount).Sum();
+        })
+        //.Update(update => update.Action("MemberFinancialAid_Update", "Member"))
+        //.Destroy(update => update.Action("MemberFinancialAid_Destroy", "Member"))
+    )
+)
+<script>
+    $(function () {
+
+        holidayPayGridHandler = new GridHandler("#gridHolidayPay");
+        holidayPayGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        holidayPayGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+        //$("#From,#To").kendoMaskedTextBox({
+        //    mask: "00" + dateSeparator + "00" + dateSeparator + "0000",
+        //});
+
+        $("#printHolidayReport").click(function (e) {
+            var from = $("#HolidayPay_From").val();
+            var to = $("#HolidayPay_To").val();
+            window.open('/HolidayPay/MemberHolidayPayReport?MemberId=' + '@Model.Id' + '&From=' + from + '&to=' + to + '&isPartialView=false');
+            @*var modal = $.showModal("<h4>@Resources.ReportFor @Resources.HolidayPays</h4>", null, "", {
+                keyboard: true
+            });*@
+
+            //from = replaceAll(dateSeparator, "", from);
+            //to = replaceAll(dateSeparator, "", to);
+
+            @*$.get("/Member/MemberHolidayPayReport", {
+                "MemberId": "@Model.Id",
+                "From": from,
+                "To": to
+            }, function (data) {
+                setTimeout(function () {
+                    modal.setContent(data);
+                }, 500);
+            });*@
+        });
+
+        $("#HolidayPay_From, #HolidayPay_To").change(function (e) {
+            var from = $("#HolidayPay_From").val();
+            var to = $("#HolidayPay_To").val();
+
+            if ($(this).attr('id') == "HolidayPay_From") {
+                var toYear = parseInt(from.substring(4, 8)) + 1;
+                to = from.substring(0, 4) + toYear;
+                $("#HolidayPay_To").val(to);
+            }
+
+            var grid = $("#gridHolidayPay").data("kendoGrid");
+            if (from && to) {
+                grid.dataSource.filter([{ field: "from", operator: "eq", value: from }, { field: "to", operator: "eq", value: to }]);
+            } else {
+                grid.dataSource.filter({});
+            }
+        });
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

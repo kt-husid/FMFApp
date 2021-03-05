@@ -1,0 +1,143 @@
+﻿@model BootstrapWebApplication.Models.Ship
+@{
+    var from = new DateTime(DateTime.Now.Year-1, 1, 1);
+    var to = DateTime.Now;
+}
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipSignOnViewModel>()
+    .Name("gridShipSignOns")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.ShipCode).Title(@Resources.ShipCode);
+        columns.Bound(p => p.JobCode).Title(@Resources.JobCode);
+        columns.Bound(p => p.DG_IALT).Title(@Resources.Days);
+        columns.Bound(p => p.Birthday).Format("{0:d}").Title(@Resources.Birthday);
+        columns.Bound(p => p.FullName).Title(@Resources.FullName);
+        //columns.Bound(p => p.Person.FullName).Title(@Resources.FullName);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                <form class="form-inline">
+                    @Resources.SignOns @Resources.From.ToLower()
+                    <input id="SignOn_From" type="text" value='@String.Format("{0:ddMMyyyy}", from)' class="datefield k-textbox" />
+                    @Resources.To.ToLower()
+                    <input id="SignOn_To" type="text" value='@String.Format("{0:ddMMyyyy}", to)' class="datefield k-textbox" />
+                    @*<a id="getHolidayPaysForPeriod" href="#" class="k-button">@Resources.Load</a>*@
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+        //.Groupable()
+    .Selectable()
+    .Events(events => events.Change("onShipSignOnChange").DataBound("onShipSignOnDataBound").DataBinding("onShipSignOnDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(false)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("ShipTrip_Create", "Ship"))
+        .Read(read => read.Action("ReadShipSignOns", "SignOn", new { id = @Model.Id, from = @from, to = @to }))
+        //.Update(update => update.Action("MemberSignOn_Update", "Member"))
+        //.Destroy(update => update.Action("MemberSignOn_Destroy", "Member"))
+    )
+)
+<script>
+    function onShipSignOnChange(arg) {
+        shipSignOnGridHandler.onChange(arg);
+        var id = shipSignOnGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&shipId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&shipId=" + @Model.Id);
+    }
+
+    function onShipSignOnDataBound(e) {
+        shipSignOnGridHandler.onDataBound(e);
+    }
+
+    function onShipSignOnDataBinding(e) {
+        shipSignOnGridHandler.onDataBinding(e);
+    }
+
+    var shipSignOnGridHandler;
+    $(function () {
+
+        shipSignOnGridHandler = new GridHandler("#gridShipSignOns");
+        shipSignOnGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        shipSignOnGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+        //$("#SignOn_From, #SignOn_To").kendoNumericTextBox({
+        //    format: "0",
+        //    min: 1970,
+        //    max: 2070,
+        //    step: 1
+        //});
+
+        $("#SignOn_From, #SignOn_To").change(function (e) {
+            var from = $("#SignOn_From").val();
+            var to = $("#SignOn_To").val();
+
+            var grid = $("#gridShipSignOns").data("kendoGrid");
+            if (from && to) {
+                grid.dataSource.filter([{ field: "from", operator: "eq", value: from }, { field: "to", operator: "eq", value: to }]);
+            } else {
+                grid.dataSource.filter({});
+            }
+        });
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

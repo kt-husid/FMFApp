@@ -1,0 +1,154 @@
+﻿<script>
+    function onMemberFinancialChange(arg) {
+        financialAidGridHandler.onChange(arg);
+        var id = financialAidGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);
+    }
+
+    function onMemberFinancialDataBound(e) {
+        financialAidGridHandler.onDataBound(e);
+    }
+
+    function onMemberFinancialDataBinding(e) {
+        financialAidGridHandler.onDataBinding(e);
+    }
+
+    var financialAidGridHandler;
+</script>
+@model BootstrapWebApplication.Models.Member
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberFinancialAidViewModel>()
+    .Name("gridFinancialAid")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.Days).Title(@Resources.Days);
+        columns.Bound(p => p.SocialServicePayment).Title(@Resources.SocialServicePayment).Format("{0:C}");
+        columns.Bound(p => p.PaymentPerDay).Title(@Resources.PaymentPerDay).Format("{0:C2}");
+        columns.Bound(p => p.OurPayment).Title(@Resources.OurPayment).Format("{0:C2}");
+        columns.Bound(p => p.BankAccountId).Hidden();
+        columns.Bound(p => p.BankAccountRegNumber).ClientTemplate("<text>#= BankAccountRegNumber # - #= BankAccountAccountNumber #</text>").Title(@Resources.BankAccount);
+        columns.Bound(p => p.PrintedOn).Format("{0:g}").Title(@Resources.PrintedOn);
+        columns.Bound(p => p.PrintedBy).Title(@Resources.PrintedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //    //.HtmlAttributes(new { @class = "btn-xs" });
+        //    //command
+        //    //    .Destroy().Text(@Resources.Delete);
+        //    //.HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                        .HtmlAttributes(new { @class = "create-action" })
+                        .Content(@Resources.Create)
+                        .Name("grid-create-button")
+                        .
+                        .Events(e => e.Click("createComment"))
+                )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='MemberFinancialAid' data-action-name='Create?memberId=@Model.Id' data-model-name='MemberFinancialAid'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='MemberFinancialAid' data-action-name='' data-model-name='MemberFinancialAid'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='MemberFinancialAid' data-action-name='' data-model-name='MemberFinancialAid'>@Resources.Delete</button>
+
+                <a id="printFinancialAidReport" href="#" class="k-button">@Resources.Print</a>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima studningur.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onMemberFinancialChange").DataBound("onMemberFinancialDataBound").DataBinding("onMemberFinancialDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberFinancialAid_Create", "Member", new { id = @Model.Id }))
+        .Read(read => read.Action("Read", "MemberFinancialAid", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberFinancialAid_Update", "Member"))
+        //.Destroy(update => update.Action("MemberFinancialAid_Destroy", "Member"))
+    )
+)
+<script>
+    $(function () {
+
+        financialAidGridHandler = new GridHandler("#gridFinancialAid");
+        financialAidGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        financialAidGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+        $("#printFinancialAidReport").click(function (e) {
+            var currentItem = financialAidGridHandler.currentItem();
+            if(currentItem) {
+                window.open('/MemberFinancialAid/MemberFinancialAidReport?MemberFinancialAidId=' + currentItem.Id + '&isPartialView=false');
+                @*var modal = $.showModal("<h4>@Resources.ReportFor @Resources.FinancialAid</h4>", null, "", {
+                    keyboard: true
+                });
+
+                $.get("/Member/MemberFinancialAidReport", {
+                    "MemberFinancialAidId": financialAidId
+                }, function (data) {
+                    setTimeout(function () {
+                        modal.setContent(data);
+                    }, 500);
+                });*@
+            }
+        });
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

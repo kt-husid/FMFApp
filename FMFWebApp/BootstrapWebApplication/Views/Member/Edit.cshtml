@@ -1,0 +1,183 @@
+﻿@model BootstrapWebApplication.Models.MemberEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Edit;
+    <h2>@Resources.Edit</h2>
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditMember" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Member</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label(@Resources.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.FirstName } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.MiddleName } })
+                        @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.LastName } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Birthday, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "datefield form-control", @placeholder = @Resources.Birthday } })
+                        @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.SSN, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.SSN } })
+                        @Html.ValidationMessageFor(model => model.SSN, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GenderId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("GenderId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GenderId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="JobCode" name="JobCode" type="text" class="form-control" placeholder="@Resources.Job" value="@Model.JobCode" />
+                @*<input id="JobCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.Job" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="JobCodeDescription">@(Model.Job != null ? Model.Job.Description : "")</span>
+                <input type="hidden" id="JobId" name="JobId" value="@Model.JobId" />
+                @*@Html.DropDownList("JobId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MemberTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="MemberTypeCode" name="MemberTypeCode" type="text" class="form-control" placeholder="@Resources.MembershipType" value="@Model.MemberTypeCode" />
+                @*<input id="MemberTypeCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.MembershipType" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="MemberTypeDescription">@(Model.MemberType != null ? Model.MemberType.Description : "")</span>
+                <input type="hidden" id="MemberTypeId" name="MemberTypeId" value="@Model.MemberTypeId" />
+                @*@Html.DropDownList("MemberTypeId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.MemberTypeId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsAlive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsAlive, new { htmlAttributes = new { @class = "", @placeholder = @Resources.IsAlive } })
+                @Html.ValidationMessageFor(model => model.IsAlive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.PRI_OWN, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PRI_OWN, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PRI_OWN, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BETALER, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BETALER, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BETALER, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}
+
+<script>
+    //var jobs,
+    //    memberTypes;
+
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#Birthday");
+
+        @*$.getDataAsJson('/api/Member/GetMemberEditRelatedDataListViewModel', {
+            'type': 'json'
+        }, function (json) {
+            //console.log(json);
+            jobs = Rx.Observable.fromArray(json.Jobs);
+            memberTypes = Rx.Observable.fromArray(json.MemberTypes);
+            $("#JobId, #JobCode, #MemberTypeId, #MemberTypeCode").prop('disabled', false);
+            setTimeout(function () {
+
+                AddInputCodeFilter('#JobCode', jobs, function (x, y) { return x.Code == y; }, function (z) { $('#JobId').val(z.Id); });
+                AddDropdownFilter('#JobId', jobs, function (x, y) { return x.Id == y; }, function (z) { $('#JobCode').val(z.Code); });
+
+                AddInputCodeFilter('#MemberTypeCode', memberTypes, function (x, y) { return x.Code == y; }, function (z) { $('#MemberTypeId').val(z.Id); });
+                AddDropdownFilter('#MemberTypeId', memberTypes, function (x, y) { return x.Id == y; }, function (z) { $('#MemberTypeCode').val(z.Code); });
+
+
+                $("#JobCode").prop('disabled', false).val('@Model.JobCode').keyup();
+                $("#MemberTypeCode").prop('disabled', false).val('@Model.MemberTypeCode').keyup();
+            }, 100);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+        var jobDataSource = CreateDataSource(10, "/Job/Find", "#JobCode");
+        var memberTypeDataSource = CreateDataSource(10, "/MemberType/Find", "#MemberTypeCode");
+
+        SetupAutoComplete($("#EditMember").find("#JobCode"), "Code", '#: data.Code# (#: data.Description#)', jobDataSource, function (item) {
+            $("#JobId").val(item.Id);
+            $("#JobCodeDescription").html(item.Description);
+        });
+
+        SetupAutoComplete($("#EditMember").find("#MemberTypeCode"), "Code", '#: data.Code# (#: data.Description#)', memberTypeDataSource, function (item) {
+            $("#MemberTypeId").val(item.Id);
+            $("#MemberTypeDescription").html(item.Description);
+        });
+       
+    });
+</script>

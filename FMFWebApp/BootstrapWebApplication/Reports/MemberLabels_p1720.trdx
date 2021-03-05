@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report Width="7.59999899069471cm" Name="MemberLabels_p1720_2" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT&#xD;&#xA;&#x9;(row_number() OVER (ORDER BY (select NULL))-0) MyDataIndex,&#xD;&#xA;&#x9;p.FirstName, p.MiddleName, p.LastName, p.FullName, m.AddressLine, m.CountryCode, m.CountryName, m.PostalCode, m.CityName, so.[From]&#xD;&#xA;FROM&#xD;&#xA;&#x9;dbo.Member as m INNER JOIN&#xD;&#xA;&#x9;dbo.ChangeEvent as ce ON m.ChangeEventId = ce.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;dbo.MemberType ON dbo.MemberType.Id = m.MemberTypeId LEFT OUTER JOIN&#xD;&#xA;&#x9;dbo.Job ON dbo.Job.Id = m.JobId LEFT OUTER JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON m.LastSignOnId = so.Id &#xD;&#xA;WHERE &#xD;&#xA;&#x9;(m.PostalCode &gt;= @postalFrom) AND &#xD;&#xA;&#x9;(m.PostalCode &lt;= @postalTo) AND &#xD;&#xA;&#x9;(dbo.MemberType.Code = @memberTypeCode) AND &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND&#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;((@memberTypeCode &lt;&gt; 'al') AND so.[From] &gt;= @SignOnFrom AND so.[To] &lt;= @SignOnTo)&#xD;&#xA;&#x9;&#x9;OR&#xD;&#xA;&#x9;&#x9;((@memberTypeCode = 'al') AND (ISNULL(so.[From], 1) = 1 OR so.[From] &gt;= '19000101'))&#xD;&#xA;&#x9;)&#xD;&#xA;&#x9;AND m.JobCode &gt;= @MemberJobCodeFrom AND m.JobCode &lt;= @MemberJobCodeTo&#xD;&#xA;&#x9;AND m.JobCode not like 'ski%'&#xD;&#xA;&#x9;and p.IsAlive = 1&#xD;&#xA;ORDER BY m.PostalCode" Name="sqlDataSource1" ParameterValues="{&quot;@postalFrom&quot;:&quot;100&quot;,&quot;@postalTo&quot;:&quot;999&quot;,&quot;@memberTypeCode&quot;:&quot;ff&quot;,&quot;@SignOnFrom&quot;:&quot;2014-01-01&quot;,&quot;@SignOnTo&quot;:&quot;2015-09-11&quot;,&quot;@MemberJobCodeFrom&quot;:&quot;d&quot;,&quot;@MemberJobCodeTo&quot;:&quot;e&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@postalFrom">
+          <Value>
+            <String>= Parameters.postalFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@postalTo">
+          <Value>
+            <String>= Parameters.postalTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@memberTypeCode">
+          <Value>
+            <String>= Parameters.memberTypeCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnFrom">
+          <Value>
+            <String>= Parameters.SignOnFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeFrom">
+          <Value>
+            <String>= Parameters.MemberJobCodeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeTo">
+          <Value>
+            <String>= Parameters.MemberJobCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="3.80000019073486cm" Name="detailSection1">
+      <Items>
+        <List DataSourceName="sqlDataSource1" Width="6.80000019073486cm" Height="3.5cm" Left="0.500000151395794cm" Top="0.199999899069471cm" Name="list1">
+          <Body>
+            <Cells>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <Panel Width="68mm" Height="35mm" Left="0cm" Top="0cm" Name="panel1">
+                    <Items>
+                      <TextBox Width="5.90000057220459cm" Height="0.5cm" Left="0.599999904632568cm" Top="0.499800205230713cm" Value="= Fields.FullName" Name="textBox1" />
+                      <TextBox Width="5.89999961853027cm" Height="0.49980029463768cm" Left="0.599999904632568cm" Top="1.00000023841858cm" Value="= Fields.AddressLine" Name="textBox2" />
+                      <TextBox Width="1.4997995885269cm" Height="0.500000168079527cm" Left="0.599999904632568cm" Top="1.50000023841858cm" Value="= Fields.CountryCode + &quot;-&quot; + Fields.PostalCode" Name="textBox3" />
+                      <TextBox Width="4.40000057220459cm" Height="0.5cm" Left="2.09999990463257cm" Top="1.50000023841858cm" Value="= Fields.CityName" Name="textBox4" />
+                    </Items>
+                  </Panel>
+                </ReportItem>
+              </TableCell>
+            </Cells>
+            <Columns>
+              <Column Width="68mm" />
+            </Columns>
+            <Rows>
+              <Row Height="35mm" />
+            </Rows>
+          </Body>
+          <Corner />
+          <RowGroups>
+            <TableGroup Name="DetailGroup">
+              <Groupings>
+                <Grouping Expression="=Fields.MyDataIndex/3" />
+              </Groupings>
+            </TableGroup>
+          </RowGroups>
+          <ColumnGroups>
+            <TableGroup Name="ColumnGroup">
+              <Groupings>
+                <Grouping Expression="=Fields.MyDataIndex%3" />
+              </Groupings>
+            </TableGroup>
+          </ColumnGroups>
+        </List>
+      </Items>
+    </DetailSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False" ColumnCount="1" ColumnSpacing="0cm">
+      <Margins>
+        <MarginsU Left="0cm" Right="0cm" Top="1cm" Bottom="0cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="postalFrom" Text="postalFrom">
+      <Value>
+        <String>100</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="postalTo" Type="Integer" Text="postalTo">
+      <Value>
+        <String>999</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="memberTypeCode" Text="memberTypeCode">
+      <Value>
+        <String>ff</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnFrom" Type="DateTime" Text="SignOnFrom">
+      <Value>
+        <String>2014-01-01</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnTo" Type="DateTime" Text="SignOnTo">
+      <Value>
+        <String>2015-09-14</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="MemberJobCodeFrom" Text="MemberJobCodeFrom">
+      <Value>
+        <String>a</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="MemberJobCodeTo" Text="MemberJobCodeTo">
+      <Value>
+        <String>x</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

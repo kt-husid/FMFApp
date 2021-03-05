@@ -1,0 +1,190 @@
+﻿@model BootstrapWebApplication.Models.Ship
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>@Resources.PrintShipLabels</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="PrintShipLabels" class="form-horizontal">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <span class="text-danger" id="errorMsg"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <span id="statusMsg"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Ship + " " + @Resources.From.ToLower() + " " + @Resources.Code.ToLower(), new { @class = "control-label col-md-3" })
+                                @*<div class="col-md-2">*@
+                                <input value="" name="ShipIdFrom" id="ShipIdFrom" type="hidden" />
+                                @*</div>*@
+                                <div class="col-md-9">
+                                    <input value="FD000" name="ShipCodeFrom" id="ShipCodeFrom" type="text" class="form-control" placeholder="@Resources.From @Resources.Code.ToLower()" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Ship + " " + @Resources.To.ToLower() + " " + @Resources.Code.ToLower(), new { @class = "control-label col-md-3" })
+                                @*<div class="col-md-2">*@
+                                <input value="" name="ShipIdTo" id="ShipIdTo" type="hidden" />
+                                @*</div>*@
+                                <div class="col-md-9">
+                                    <input value="ZZ999" name="ShipCodeTo" id="ShipCodeTo" type="text" class="form-control" placeholder="@Resources.To @Resources.Code.ToLower()" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="printLabelReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var progressCheck = null;
+
+    function GetShipLabelReportParameters() {
+        $.ajax({
+            type: "GET",
+            url: "/Ship/GetShipLabelReportParameters",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //console.log(result);
+                $("#ShipIdFrom").val(result.FirstShipId);
+                $("#ShipCodeFrom").val(result.FirstShipCode);
+                $("#ShipIdTo").val(result.LastShipId);
+                $("#ShipCodeTo").val(result.LastShipCode);
+            },
+            error: function (error) {
+                console.clear();
+                console.log("error");
+                console.log(error);
+            }
+        });
+    }
+
+    $(function () {
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+        //$("#From,#To").kendoMaskedTextBox({
+        //    mask: "00" + dateSeparator + "00" + dateSeparator + "0000",
+        //});
+
+        //GetShipLabelReportParameters();
+      
+        var shipDataSource1 = CreateDataSource(10, "/Ship/LabelFind", "#ShipCodeFrom");
+        SetupAutoComplete($("#ShipCodeFrom"), "Code", '#: data.Code# (#: data.Name#)', shipDataSource1, function (item) {
+            $("#ShipIdFrom").val(item.Id);
+            $("#ShipCodeFrom").val(item.ShipCode);
+        });
+
+        var shipDataSource2 = CreateDataSource(10, "/Ship/LabelFind", "#ShipCodeTo");
+        SetupAutoComplete($("#ShipCodeTo"), "Code", '#: data.Code# (#: data.Name#)', shipDataSource2, function (item) {
+            $("#ShipIdTo").val(item.Id);
+            $("#ShipCodeTo").val(item.ShipCode);
+        });
+
+        $("#printLabelReport").click(function (e) {
+            e.preventDefault();
+
+            var ShipCodeFrom = $("#ShipCodeFrom").val();
+            var ShipCodeTo = $("#ShipCodeTo").val();
+
+            setInputActive(false);
+
+            var url = "/Ship/PrintLabelReport";
+            var data = JSON.stringify({
+                "obj": {
+                    "ShipCodeFrom": ShipCodeFrom,
+                    "ShipCodeTo": ShipCodeTo
+                },
+                "isPartialView": false,
+                "type": "json"
+            });
+            console.log(data);
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: data,
+                success: function (result) {
+                    //console.clear();
+                    console.log("done");
+                    onFinished(result);
+                },
+                error: function (error) {
+                    console.clear();
+                    console.log("error");
+                    onFinished(error);
+                }
+            });
+            progressCheck = setInterval(function () {
+                getStatus(function (json) {
+                    console.log(json);
+                    if (json && json != null && json.ItemsDone > 0) {
+                        setStatusUI(json.ItemsDone + " / " + json.ItemsTotal + ". Time spent: " + json.TimeSpent);
+                    }
+                }, function (error) {
+
+                });
+            }, 1000);
+            window.open('/Ship/LabelReport?ShipCodeFrom=' + ShipCodeFrom + '&ShipCodeTo=' + ShipCodeTo);
+            return false;
+        });
+    });
+
+    function onFinished(result) {
+        console.log(result);
+        clearInterval(progressCheck);
+        setStatusUI(result.Message.length > 0 ? result.Message : "");
+        setInputActive(true);
+    }
+    function setInputActive(value) {
+        $("#PrintShipLabels input, textarea, button").prop('disabled', !value);
+    }
+
+    function setStatusUI(text) {
+        $("#statusMsg").html(text);
+    }
+
+    function getStatus(callbackSuccess, callbackError) {
+        $.ajax({
+            type: "GET",
+            url: "/Ship/GetTimeElapsedForLabelReportPrintJob",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                callbackSuccess(result);
+            },
+            error: function (error) {
+                callbackError(error);
+            }
+        });
+    }
+</script>

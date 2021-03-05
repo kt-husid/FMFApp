@@ -1,0 +1,125 @@
+﻿@model BootstrapWebApplication.Models.AppSettingsViewModel
+@{
+    ViewBag.Title = @Resources.EditApplicationSettings;
+}
+@*@{
+    var userId = User.Identity.GetUserId();
+    var manager = new UserManager<BootstrapWebApplication.Models.ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<BootstrapWebApplication.Models.ApplicationUser>(new BootstrapWebApplication.Models.ApplicationDbContext()));
+    var currentUser = manager.FindById(userId);
+}*@
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>@ViewBag.Title</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <h4>@Resources.ApplicationSettings</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PrintServerUrl, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.PrintServerUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PrintServerUrl, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HolidayPayPercentage, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.HolidayPayPercentage, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.HolidayPayPercentage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MaternityPaymentPercentage, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.MaternityPaymentPercentage, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.MaternityPaymentPercentage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.LaborInsurancePercentage, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.LaborInsurancePercentage, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.LaborInsurancePercentage, "", new { @class = "text-danger" })
+                                        <p>
+                                            <br />
+                                            Til at tess at fíggja útgjald av inntøkutrygd, er ásett við lóg, at grunnurin fær eitt gjald av hvørjari avreiðing hjá føroyskum fiskiførum.
+                                            <br />
+                                            @Html.ActionLinkExternal("http://www.trygdargrunnurin.fo/Default.aspx?pageid=19768", "trygdargrunnurin.fo - TRYGDARGJALD")
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MemberFinancialAidPaymentPerDay, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.MemberFinancialAidPaymentPerDay, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.MemberFinancialAidPaymentPerDay, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.LaborInsuranceAmountPerDay, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.LaborInsuranceAmountPerDay, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.LaborInsuranceAmountPerDay, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-md-8">
+                                        <input type="submit" value="@Resources.Save" class="btn btn-primary" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var culture = Kthusid.Helpers.CultureHelper.GetCurrentCulture();
+    var cultureUILowerInvariant = Kthusid.Helpers.CultureHelper.GetCurrentUICultureLowerInvariant();
+    ViewBag.Title = Core.Settings.Instance.AppName;
+}
+<script>
+    $(function () {
+        ParseInputDecimal("#HolidayPayPercentage, #MaternityPaymentPercentage, #LaborInsurancePercentage, #MemberFinancialAidPaymentPerDay, #LaborInsuranceAmountPerDay");
+
+        $("#HolidayPayPercentage, #MaternityPaymentPercentage, #LaborInsurancePercentage").kendoNumericTextBox({
+            //format: "p2",
+            min: 0.00,
+            max: 100.00,
+            step: 0.1,
+            culture: "@culture"
+        });
+
+        $("#MemberFinancialAidPaymentPerDay, #LaborInsuranceAmountPerDay").kendoNumericTextBox({
+            format: "c2",
+            culture: "@culture"
+        });
+    });
+</script>
+
+
+@Html.Partial("_AccountFooter")
+@Html.Partial("_DatePickerPartial")

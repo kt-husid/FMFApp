@@ -1,0 +1,68 @@
+﻿<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>E-Trans rapport</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="ETransForm" class="form-horizontal">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.From, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="" name="WeekFrom" id="WeekFrom" type="text" class="form-control datefield" placeholder="@Resources.From" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.To, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="" name="WeekTo" id="WeekTo" type="text" class="form-control datefield" placeholder="@Resources.To" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="PrintETransReport" class="btn btn-primary">@Resources.Print</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        activateDatePicker();
+        ParseInputDate("#WeekFrom, #WeekTo");
+
+        $("#WeekFrom").change(function () {
+            var format = "DD-MM-YYYY";
+            var to = moment($(this).val(), format).add(7, 'days');
+            $("#WeekTo").val(to.format(format));
+        });
+
+        $("#PrintETransReport").click(function (e) {
+            e.preventDefault();
+            var WeekFrom = $("#WeekFrom").val();
+            var WeekTo = $("#WeekTo").val();
+            window.open('/ETrans/Report?WeekFrom=' + WeekFrom + '&WeekTo=' + WeekTo);
+            return false;
+        });
+
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+    });
+</script>

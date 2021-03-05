@@ -1,0 +1,317 @@
+﻿@model BootstrapWebApplication.Models.Ship
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+        <li class="active"><a href="#"></a></li>
+
+        <li><a href="#"></a></li>
+    </ul>
+    }*@
+@{
+    var controllerName = ViewContext.GetControllerName();
+    var holidayPayFromYear = @DateTime.Now.Year - 6;
+    var holidayPayToYear = @DateTime.Now.Year - 1;
+}
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Ship + " " + @Model.Code + " - " + @Model.Name;
+
+}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>@ViewBag.Title</strong>
+                        @if (!@Request.IsAjaxRequest())
+                        {
+                            <span class="pull-right">
+                                @Html.Partial("_BackToListPartial", Model)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Code)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Code)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ShippingCompany)
+                        </dt>
+
+                        <dd>
+                            @{
+                                var scName = @Html.DisplayForHtmlDecoded(model => model.ShippingCompany.EmployerNumber).ToString();
+                                scName += " " + @Html.DisplayForHtmlDecoded(model => model.ShippingCompany.Name).ToString();
+                            }
+                            @Html.ActionLink(scName, "Details", "ShippingCompany", new { @id = Model.ShippingCompanyId }, new { })
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactCompanyName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactCompanyName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ShipType)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ShipType.Code) @Html.DisplayFor(model => model.ShipType.Description)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Status) @ViewBag.StatusText
+                        </dd>
+
+                        @*<dt>
+                                @Html.DisplayNameFor(model => model.IND_REG)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.IND_REG)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.UD_REG)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.UD_REG)
+                            </dd>*@
+
+                    </dl>
+                    @if (@Model.PrimaryPhone != null)
+                    {
+                         @Html.Partial("_PhonePartial", Model.PrimaryPhone);
+                    }
+                    @if (@Model.PrimaryAddress != null)
+                    {
+                        @Html.Partial("_AddressPartial", Model.PrimaryAddress);
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@Resources.Information</strong></h3>
+                </div>
+                <div class="panel-body">
+
+                    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+
+                    <hr />
+
+                    <div id="tripInfoForYear">
+                        <dl class="dl-horizontal">
+                            <dt>@Resources.DaysThisYear</dt>
+                            <dd>
+                                <span id="DayCount"></span>
+                                @*<span data-bind="text: DayCount"></span>*@
+                            </dd>
+                            <dt>@Resources.TripsThisYear</dt>
+                            <dd>
+                                <span id="TripCount"></span>
+                                @*<span data-bind="text: TripCount"></span>*@
+                            </dd>
+                            <dt>@Resources.Last</dt>
+                            <dd>
+                                <span id="LastDate"></span>
+                                <!-- todo: fix date formatting (moment.js says invalid date!!)-->
+                                @*<span data-bind="text: LastDate() ? moment(LastDate()).format('LL') : '@Resources.Empty'"></span>*@
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <hr />
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Tonnage)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Tonnage)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.HK)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.HK)
+                        </dd>
+                    </dl>
+
+                    <hr />
+
+                    @*<dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ShippingCompany.EmployerNumber)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ShippingCompany.EmployerNumber)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ALT_ID)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.ALT_ID)
+                            </dd>
+                        </dl>
+
+                        <hr />*@
+
+                    @Html.Action("LabelInfo", @Model)
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (!@Request.IsAjaxRequest())
+    {
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+            @*<li><a href="#signons" role="tab" data-toggle="tab">@Resources.SignOns</a></li>*@
+            <li class="active"><a href="#ship-trips" role="tab" data-toggle="tab">@Resources.Trips</a></li>
+            <li><a href="#comments" role="tab" data-toggle="tab">@Resources.Comments</a></li>
+            <li><a href="#addresses" role="tab" data-toggle="tab">@Resources.Addresses</a></li>
+            <li><a href="#phoneNumbers" role="tab" data-toggle="tab">@Resources.Phones</a></li>
+            <li><a href="#log" role="tab" data-toggle="tab">@Resources.Log</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="ship-trips">@Html.Action("Trips", "Trip", @Model)</div>
+            <div class="tab-pane" id="comments">@Html.Action("Comments", "ShipComment", @Model)</div>
+            @*<div class="tab-pane " id="signons">@Html.Action("ShipSignOns", "SignOn", @Model)</div>*@
+            <div class="tab-pane" id="addresses">@Html.Action("Addresses", "ShipAddress", @Model)</div>
+            <div class="tab-pane" id="phoneNumbers">@Html.Action("Phones", "ShipPhone", @Model)</div>
+            <div class="tab-pane" id="log">@Html.Action("Logs", "Log", @Model.Entity)</div>
+        </div>
+
+        <script>
+            $(function () {
+
+                $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+                    "<a href='#' class='edit-action' data-toggle='modal' data-controller-name='Ship' data-action-name='Edit?id=@Model.Id' data-model-name='Ship'>@Resources.Edit</a>"
+                ]);
+
+                $(document).on("modalClosed", function (e, d) {
+                    setTimeout(function () {
+                        //console.log(e); console.log(d);
+                        console.log(d.modelName);
+                        console.log(d.data);
+                        if (d.data != null || d.data != undefined) {
+                            if (d.modelName == 'trip') {
+                                navigate("/Trip/Details/" + d.data.Id);
+                            }
+                        }
+                        //pvm.load(d.modelName, d.data);
+                        @*console.log(@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.BankAccounts)));*@
+                    }, 1000);
+
+                });
+
+                $('#tabs a').click(function (e) {
+                    e.preventDefault();
+                    var self = $(this);
+                    var id = self.attr('href').replace("#", "");
+                    var url = "";
+                    var data = null;
+                    switch (id) {
+                        case "ship-trips":
+                            url = '@Url.Action("Trips", "Trip")'; data = { id: '@Model.Id' };
+                            break;
+                        case "comments":
+                            url = '@Url.Action("Comments", "ShipComment")'; data = { id: '@Model.Id' };
+                            break;
+                        case "addresses":
+                            url = '@Url.Action("Addresses", "ShipAddress")'; data = { id: '@Model.Id' };
+                            break;
+                        case "phoneNumbers":
+                            url = '@Url.Action("Phones", "ShipPhone")'; data = { id: '@Model.Id' };
+                            break;
+                        case "logs":
+                            url = '@Url.Action("Logs", "Log")'; data = { id: '@Model.Id' };
+                            break;
+                    }
+                    //alert(id + " " + url);
+                    if ($("#" + id).html().trim().length == 0) {
+                        $("#" + id).html('<p style="margin-top:50px; text-align:center;"><img src="/Content/kendo/2015.1.408/styles/Uniform/loading-image.gif" /></p>');
+                        $.get(url, data, function (html) {
+                            $("#" + id).html(html);
+                        });
+                    }
+                    self.tab('show');
+                });
+
+
+                @*$.getDataAsJson('/api/Ship/SignOns', {
+            'shipId': '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            console.log(json.length);
+            //pvm.add("SignOns", json);
+            //pvm.apply();
+        }, function (error) {
+            console.log(error);
+        });*@
+
+
+
+                $.getDataAsJson('/api/Ship/GetTripInfoForYear', {
+                    'id': '@Model.Id',
+                    //todo: make year dynamic (input)
+                    'year': '@DateTime.Now.Year',
+                    'type': 'json'
+                }, function (json) {
+                    //console.log(json);
+                    //var mapping = ko.mapping.fromJS([]);
+                    //ko.mapping.fromJS(json, mapping);
+                    //$('#LastSignOnFromDate').html(moment(json.SignOn.From).format('LL'));
+                    $('#DayCount').html(json.DayCount);
+                    $('#TripCount').html(json.TripCount);
+                    if (json.LastTripDate) {
+                        $('#LastDate').html(kendo.toString(new Date(json.LastTripDate), "d"));//moment(json.LastTripDate).format('LL'));
+                    }
+                    else {
+                        $('#LastDate').html("-");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+
+            });
+        </script>
+    }
+</div>

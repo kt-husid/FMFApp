@@ -1,0 +1,99 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Útskriva ALKA áminningarlista</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="PrintCrewList" class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.From.ToLower(), new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="100" name="PostalCodeFrom" id="PostalCodeFrom" type="text" class="form-control" placeholder="@Resources.From" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.To.ToLower(), new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="999" name="PostalCodeTo" id="PostalCodeTo" type="text" class="form-control" placeholder="@Resources.To" />
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                @Html.Label(@Resources.Days, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    <input value="180" name="DaysUntilInsuranceExpires" id="DaysUntilInsuranceExpires" type="text" class="form-control" placeholder="@Resources.Days" />
+                </div>
+            </div>*@
+                            <div class="form-group">
+                                @Html.Label(@Resources.Days, new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <input value="180" name="DaysUntilInsuranceExpires" id="DaysUntilInsuranceExpires" type="text" />@*Hans vís Days og broytt til 180*@
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.Label(@Resources.Date, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        <input  name="SignOnTo" id="SignOnTo" type="text" class="form-control datefield" placeholder="@Resources.Date" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-4 text-right">
+                                        <label class="control-label">
+                                            Minni enn 30 dagar við?
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="checkbox" id="IncludeLessThanThirtyDays" name="IncludeLessThanThirtyDays"  />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button id="PrintReport" class="btn btn-primary">@Resources.Print</button>
+                                        <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            activateDatePicker();
+
+            ParseInputDate("#SignOnTo");
+
+            $("#PrintReport").click(function (e) {
+                e.preventDefault();
+                var PostalCodeFrom = $("#PostalCodeFrom").val();
+                var PostalCodeTo = $("#PostalCodeTo").val();
+                var IncludeLessThanThirtyDays = $("#IncludeLessThanThirtyDays").is(":checked");
+                var DaysUntilInsuranceExpires = $("#DaysUntilInsuranceExpires").val();
+                var SignOnTo = $("#SignOnTo").val();
+
+                window.open('/Member/AlkaReminderListReport?PostalCodeFrom=' + PostalCodeFrom + '&PostalCodeTo=' + PostalCodeTo + '&IncludeLessThan30Days=' + IncludeLessThanThirtyDays + '&DaysUntilInsuranceExpires=' + DaysUntilInsuranceExpires + '&SignOnTo=' + SignOnTo);
+                return false;
+            });
+
+            $.post("/Report/ClearReportsCache", function (d) {
+                //console.log("OK");
+            });
+        });
+    </script>

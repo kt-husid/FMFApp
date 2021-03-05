@@ -1,0 +1,167 @@
+﻿<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var title = @Resources.Ships;
+    var controllerName = ViewContext.GetControllerName();
+    ViewBag.Title = title;
+}
+@*<h2>@title</h2>*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShipViewModel>()
+    .Name("gridShips")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Code).ClientTemplate("<text><a href='/Ship/Details/#= Id #'>#= Code # </a></text>").Title(@Resources.Code);
+        columns.Bound(p => p.Name).ClientTemplate("<text><a href='/Ship/Details/#= Id #'>#= Name #</a></text>").Title(@Resources.Name);
+        columns.Bound(p => p.ShipType).Title(@Resources.ShipType);
+        columns.Bound(p => p.Status).Title(@Resources.Status);
+        columns.Bound(p => p.ShippingCompanyName).ClientTemplate("<text><a href='/ShippingCompany/Details/#= ShippingCompanyId #'>#= ShippingCompanyName #</a></text>").Title(@Resources.ShippingCompany);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    //.ToolBar(toolbar => toolbar.Excel())
+    .ToolBar(toolbar => {
+        //toolbar.Create().Text(@Resources.Create);
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @Html.ExportToExcelButton("Excel")
+                <input type="text" id="GridSearch" class="k-textbox" />
+                <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='Ship' data-action-name='Create' data-model-name='Ship'>@Resources.Create</button>
+                <button tabindex="-1" class="edit-action k-button" data-toggle='modal' data-controller-name='Ship' data-action-name='' data-model-name='Ship'>@Resources.Edit</button>
+                <button tabindex="-1" class="delete-action k-button" data-toggle='modal' data-controller-name='Ship' data-action-name='' data-model-name='Ship'>@Resources.Delete</button>
+                <button tabindex="-1" class="k-button" id="GridSaveSettings">@Resources.Save</button>
+            </div>
+        </text>);
+    })
+    .Reorderable(reorderable=>reorderable.Columns(false))
+    //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .Filterable(ftb => ftb.Mode(GridFilterMode.Menu))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable(n=>n.Enabled(true))
+    //.Groupable()
+    .Excel(excel => excel
+        //.ForceProxy(true)
+        .AllPages(true)
+        .FileName("Skip.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Multiple)
+        .Type(GridSelectionType.Row))
+    .AllowCopy(true)
+    .ColumnMenu()
+    .Events(events => events.Change("onShipChange").DataBound("onShipDataBound").DataBinding("onShipDataBinding"))
+    .HtmlAttributes(new { style = "min-height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(true)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("Ship_Create", "Ship"))
+        .Read(read => read.Action("Read", "Ship"))
+        //.Update(update => update.Action("Ship_Update", "Ship"))
+        //.Destroy(update => update.Action("Ship_Destroy", "Ship"))
+    )
+)
+<script>
+    var gridHandler;
+
+    $(function () {
+
+        gridHandler = new GridHandler("#gridShips", "#GridSearch");
+        gridHandler.focusSearch();
+        gridHandler.onDoubleClick = function (item) {
+            navigate('/Ship/Details/' + item.Id);
+        };
+        gridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+        //gridHandler.onSearching = function () {
+        //  //Override search functionality
+        //};
+        //gridHandler.onKeydown = function (e) {
+        //  //Override default shortcuts
+        //}
+        gridHandler.onItemOpen = function (item) {
+            navigate('/Ship/Details/' + item.Id);
+        };
+    });
+
+    function onShipChange(arg) {
+        gridHandler.onChange(arg);
+        var shipId = gridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + shipId);
+        $(".delete-action").data("action-name", "Delete?id=" + shipId);
+        //shipId = gridHandler.currentItem().Id;
+        //console.log(shipId);
+        //console.log(arg);
+        //console.log(this.select());
+        //var selected = $.map(this.select(), function (item, k) {
+        //    console.log(k);
+        //    console.log($(item).text());
+        //    return $(item).text();
+        //});
+        //console.log("Selected: " + selected.length + " item(s), [" + selected.join(", ") + "]");
+    }
+
+    function onShipDataBound(arg) {
+        gridHandler.onDataBound(arg);
+    }
+
+    function onShipDataBinding(e) {
+        gridHandler.onDataBinding(e);
+        //var searchString = $('#GridSearch').val();
+        //console.log(searchString);
+        //e.data = {
+        //    SearchString: searchString
+        //};
+    }
+
+
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

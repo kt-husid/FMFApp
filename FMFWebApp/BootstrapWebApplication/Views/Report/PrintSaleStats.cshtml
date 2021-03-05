@@ -1,0 +1,79 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Útskrift av veiðuvirði</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.FromYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="From" id="From" type="text" class="form-control datefield" placeholder="@Resources.FromYear" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ToYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="To" id="To" type="text" class="form-control datefield" placeholder="@Resources.ToYear" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ShipTypeCode, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="1" name="ShipTypeCode" id="ShipTypeCode" type="text" class="form-control" placeholder="@Resources.ShipTypeCode" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="PrintReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#From, #To");
+
+        var shipTypeDataSource = CreateDataSource(10, "/ShipType/Find", "#ShipTypeCode");
+
+        SetupAutoComplete($("#ShipTypeCode"), "Code", '#: data.Code# (#: data.Description#)', shipTypeDataSource, function (item) {
+            $("#ShipTypeCode").html(item.Code);
+        });
+
+        $("#PrintReport").click(function (e) {
+            e.preventDefault();
+            var From = $("#From").val();
+            var To = $("#To").val();
+            var ShipTypeCode = $("#ShipTypeCode").val();
+
+            window.open('/Report/SaleStatsReport?From=' + From + '&To=' + To + '&ShipTypeCode=' + ShipTypeCode);
+            return false;
+        });
+
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+    });
+</script>

@@ -1,0 +1,70 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Person>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.Person,
+        Titles = @Resources.Persons
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.FirstOrDefault().SSN).ToString(), null, null, new { @class = "sortField", @id = @Html.NameFor(m => m.FirstOrDefault().SSN) })
+                </th>
+                <th>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.FirstOrDefault().FirstName).ToString(), null, null, new { @class = "sortField", @id = @Html.NameFor(m => m.FirstOrDefault().FirstName) })
+                </th>
+                <th>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.FirstOrDefault().MiddleName).ToString(), null, null, new { @class = "sortField", @id = @Html.NameFor(m => m.FirstOrDefault().MiddleName) })
+                </th>
+                <th>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.FirstOrDefault().LastName).ToString(), null, null, new { @class = "sortField", @id = @Html.NameFor(m => m.FirstOrDefault().LastName) })
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Title)
+                </th>*@
+                <th>
+                    @Html.ActionLink(@Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().Birthday).ToString(), null, null, new { @class = "sortField", @id = @Html.NameFor(m => m.FirstOrDefault().Birthday) })
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr>
+                <td>
+                    <span data-bind="text: SSN"></span>
+                    @*<a name="Name" href="" class="editable" data-type="text" data-bind="text: Name, attr: { 'data-pk': Id }"></a>*@
+                </td>
+                <td>
+                    <span data-bind="text: FirstName"></span>
+                </td>
+                <td>
+                    <span data-bind="text: MiddleName"></span>
+                </td>
+                <td>
+                    <span data-bind="text: LastName"></span>
+                </td>
+                @*<td>
+                    <span data-bind="text: Title.Name"></span>
+                </td>*@
+                <td>
+                    @*<input type="text" class="form-control datefield">*@
+                    <span data-bind="text: moment(Birthday).format('LL')"></span>
+                </td>
+                <td class="edit-details-delete">
+                    @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/Person", PagedList = @Model })

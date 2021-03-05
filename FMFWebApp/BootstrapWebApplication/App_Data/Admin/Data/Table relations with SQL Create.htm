@@ -1,0 +1,2520 @@
+
+<!-- saved from url=(0029)http://localhost:8080/relmap/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><style>th{text-align:left;} td{text-align:left; vertical-align:top;}</style><style type="text/css"></style></head><body><table border="1px" width="1200px;"><tbody><tr><th>File name</th><th>Table name</th><th>File ID</th><th>Relates to file and field</th><th>SQL</th></tr><tr><td>ADRESS</td><td>Adress</td><td>File 4.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[ADRESS]
+(
+[ADRESS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[FNAVN] varchar(35) NULL,
+[ENAVN] varchar(35) NULL,
+[ADR1] varchar(20) NULL,
+[ADR2] varchar(25) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>ARBTYPER</td><td>Arbei's-sl|g/b`tispartar</td><td>File 12.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[ARBTYPER]
+(
+[ARBTYPER_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ARB_TYPE] varchar(2) NULL,
+[ARB_TEKST] varchar(30) NULL,
+[PCT_ANDEL] decimal NULL,
+[KR_TILLAG] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>AR_LOG</td><td>Ar_log</td><td>File 83.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[AR_LOG]
+(
+[AR_LOG_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[AR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>DEB_CON</td><td>Deb_con</td><td>File 84.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[DEB_CON]
+(
+[DEB_CON_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[NR_DEB] int NULL,
+[SALDO] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>DUMMY</td><td>Dummy</td><td>File 95.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[DUMMY]
+(
+[DUMMY_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[TXT] varchar(250) NULL,
+[TXT2] varchar(250) NULL,
+[OK] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>F100</td><td>F100</td><td>File 90.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[F100]
+(
+[F100_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FODT] datetime NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[FN5] varchar(MAX) NULL,
+[STRIKA] varchar(1) NULL,
+[KYN] varchar(1) NULL,
+[EN5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[KOTA] varchar(1) NULL,
+[ENFO] varchar(6) NULL,
+[CPR] int NULL,
+[MNAVN] varchar(30) NULL,
+[UPPHADD] decimal NULL,
+[OPRET] varchar(1) NULL,
+[OPDAT] varchar(1) NULL,
+[OLD_NR] int NULL,
+[ARSTAL] varchar(2) NULL,
+[NY_F_DATO] varchar(1) NULL,
+[FUNDET] varchar(1) NULL,
+[PRI] varchar(1) NULL,
+[STATUS] varchar(1) NULL,
+[ARB_NR] int NULL,
+[REG_NR] int NULL,
+[KONTO] int NULL,
+[REG_NR_FF] int NULL,
+[KONTO_FF] int NULL,
+[FLYT_DATO] datetime NULL,
+[KOYR_DATO] datetime NULL,
+[ART] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FAXNR</td><td>Faxnr</td><td>File 41.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FAXNR]
+(
+[FAXNR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FAX_NR] int NULL,
+[DEILD] varchar(40) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FF_GR</td><td>Ff_gr</td><td>File 155.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FF_GR]
+(
+[FF_GR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FFNR] int NULL,
+[GRNR] int NULL,
+[RET_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>FIRMA</td><td>Firma</td><td>File 21.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FIRMA]
+(
+[FIRMA_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[ADR2] varchar(30) NULL,
+[ADR3] varchar(30) NULL,
+[ORDNR] int NULL,
+[PERS_NR] int NULL,
+[SKJAL_NR] int NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[RENS_OK] varchar(1) NULL,
+[AVIS_NR] int NULL,
+[FF] varchar(1) NULL,
+[FORELDNR] int NULL,
+[FRI_MIN] int NULL,
+[UDSKR_NR] int NULL,
+[CHK_KALL] varchar(1) NULL,
+[KOYR_NR] int NULL,
+[UD_OK] varchar(1) NULL,
+[NAT_ADD] int NULL,
+[BARN] int NULL,
+[LARARANR] int NULL,
+[GREIN_NR] int NULL,
+[OP_SYS] varchar(1) NULL,
+[STROKE_TIME] int NULL,
+[JOB_NR] int NULL,
+[OPR_LOG] varchar(1) NULL,
+[MI_NR] int NULL,
+[LG_NR] int NULL,
+[VIS_BETALER] varchar(1) NULL,
+[S_SEKUND] int NULL,
+[TR_NR] int NULL,
+[TRP_NR] int NULL,
+[FRT_NR] int NULL,
+[A_TAL_LG] int NULL,
+[LJG_VID] varchar(1) NULL,
+[FRT_TOT_NR] int NULL,
+[LO_NR] int NULL,
+[F_REG] int NULL,
+[F_KTO] int NULL,
+[F_PCT] decimal NULL,
+[DIRT] varchar(1) NULL,
+[DIRT2] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FISKART</td><td>Fiskart</td><td>File 8.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FISKART]
+(
+[FISKART_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(30) NULL,
+[STUTT] varchar(10) NULL,
+[ALIAS] varchar(5) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[LINK] int NULL,
+[RAD] varchar(3) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>FISKKODE</td><td>Fiskasl|g</td><td>File 6.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FISKKODE]
+(
+[FISKKODE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FISK_ART] varchar(2) NULL,
+[FISK_TEKST] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FISKPRIS</td><td>Fiskpris</td><td>File 10.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FISKPRIS]
+(
+[FISKPRIS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ART] varchar(5) NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[PRIS] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FLEXERRS</td><td>@dataflex error file</td><td>File 50.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FLEXERRS]
+(
+[FLEXERRS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ERROR_DESCR] varchar(40) NULL,
+[NOTE] varchar(24) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FRAD_ART</td><td>Frad_art</td><td>File 55.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FRAD_ART]
+(
+[FRAD_ART_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(30) NULL,
+[STUTT] varchar(10) NULL,
+[ALIAS] varchar(5) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[LINK] int NULL,
+[RAD] varchar(3) NULL,
+[TYPA] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>FRM_LINK</td><td>Frm_link</td><td>File 68.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FRM_LINK]
+(
+[FRM_LINK_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FRT_NR] int NULL,
+[TR_NR] int NULL,
+[PERS_NR] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[SKIB_ID] varchar(6) NULL,
+[TUR_ID] varchar(6) NULL,
+[FRT_TOT_NR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>FRT_HOVD</td><td>Frt_hovd</td><td>File 53.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[FRT_HOVD]
+(
+[FRT_HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ARB_NR] int NULL,
+[FLYT_DATO] datetime NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[UPPH_ELE] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[ART] varchar(1) NULL,
+[KOYR_DATO] datetime NULL,
+[FRT_NR] int NULL,
+[KONTO] int NULL,
+[REG_NR] int NULL,
+[KONTO_FF] int NULL,
+[REG_NR_FF] int NULL,
+[FRT_TOT_NR] int NULL,
+[PLUS] varchar(1) NULL,
+[TR_NR] int NULL,
+[X] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>FRT_LINK</td><td>Frt_link</td><td>File 58.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FRT_LINK]
+(
+[FRT_LINK_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FRT_NR] int NULL,
+[TR_NR] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[SKIB_ID] varchar(6) NULL,
+[TUR_ID] varchar(6) NULL,
+[FRT_TOT_NR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>FRT_LON</td><td>Frt_lon</td><td>File 81.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[FRT_LON]
+(
+[FRT_LON_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[AR] varchar(2) NULL,
+[FRTLON] decimal NULL,
+[TRSP] decimal NULL,
+[FRT_DATO] datetime NULL,
+[TRS_DATO] datetime NULL,
+[LO_KR_A] decimal NULL,
+[LO_KR_F] decimal NULL,
+[LO_KR_FRT] decimal NULL,
+[LO_DATO] datetime NULL,
+[DG_AR] int NULL,
+[TU_AR] int NULL,
+[DATO_AR] datetime NULL,
+[ID_AR] varchar(6) NULL,
+[SAML_KR] decimal NULL,
+[SAML_KR2] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>FRT_TOT</td><td>Frt_tot</td><td>File 57.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FRT_TOT]
+(
+[FRT_TOT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ARB_NR] int NULL,
+[FLYT_DATO] datetime NULL,
+[UPPH_KR] decimal NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[UPPH_ELE] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[IN_LN] int NULL,
+[KOYR_DATO] datetime NULL,
+[ART] varchar(1) NULL,
+[KOYR_DIV] int NULL,
+[FRT_TOT_NR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>FR_LINE</td><td>Fr_line</td><td>File 66.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[FR_LINE]
+(
+[FR_LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(4) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>FR_TMP</td><td>Fr_tmp</td><td>File 91.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[FR_TMP]
+(
+[FR_TMP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[KR92_0] decimal NULL,
+[KR93_0] decimal NULL,
+[KR93_1] decimal NULL,
+[KR92_1] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>G100</td><td>G100</td><td>File 100.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 11 &amp; field 1<br>Relates to file 15 &amp; field 1<br>Relates to file 35 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[G100]
+(
+[G100_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FODT] datetime NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[FN5] varchar(MAX) NULL,
+[STRIKA] varchar(1) NULL,
+[KYN] varchar(1) NULL,
+[PRI_OWN] int NULL,
+[BETALER] int NULL,
+[EN5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[M_STATUS] varchar(1) NULL,
+[TXT_LN] int NULL,
+[TLF_HEIMA] int NULL,
+[TYPE] int NULL,
+[ENFO] varchar(6) NULL,
+[CPR] int NULL,
+[STARV] varchar(4) NULL,
+[FK_STARV_Id] INT FOREIGN KEY REFERENCES [dbo].[STARV](STARV_Id),
+[BURT_DG] decimal NULL,
+[TUR_IALT] decimal NULL,
+[INN_IALT] decimal NULL,
+[DG] varchar(2) NULL,
+[MD] varchar(2) NULL,
+[STAT] varchar(2) NULL,
+[FK_TURHEAD_Id] INT FOREIGN KEY REFERENCES [dbo].[TURHEAD](TURHEAD_Id),
+[TXT_DATO] datetime NULL,
+[LAST_DATO] datetime NULL,
+[MNAVN] varchar(30) NULL,
+[MI_TOT] int NULL,
+[LG_TOT] int NULL,
+[MI_AR] varchar(2) NULL,
+[MI_ID] varchar(8) NULL,
+[LG_AR] varchar(2) NULL,
+[LG_KR] decimal NULL,
+[LAST_ID] varchar(8) NULL,
+[ETI_DATO] datetime NULL,
+[ETI_HH] varchar(2) NULL,
+[ETI_MM] varchar(2) NULL,
+[ETI_ID] varchar(2) NULL,
+[SLAG] varchar(3) NULL,
+[FK_LSLAG_Id] INT FOREIGN KEY REFERENCES [dbo].[LSLAG](LSLAG_Id),
+[TRANSPORT] decimal NULL,
+[LG_IALT] decimal NULL,
+[LAST_KONTO] int NULL,
+[LAST_REG] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>HOVD</td><td>Hovd</td><td>File 5.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[HOVD]
+(
+[HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[SKIP] varchar(6) NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[SKJAL_NR] int NULL,
+[PAR_SKIP] varchar(6) NULL,
+[PAR_SKJAL] int NULL,
+[MANTAL] decimal NULL,
+[PRIS_DATO] datetime NULL,
+[STUD_DATO] datetime NULL,
+[AVR_STAD] varchar(3) NULL,
+[SKIP_ART] varchar(2) NULL,
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[UDSKREVET] varchar(1) NULL,
+[UPPTALD] varchar(1) NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[KG_IALT] decimal NULL,
+[UPPH_IALT] decimal NULL,
+[TIL_SKIP_PCT] decimal NULL,
+[TIL_SKIP_KR] decimal NULL,
+[TIL_MANN_PCT] decimal NULL,
+[TIL_MANN_KR] decimal NULL,
+[LOBNR] int NULL,
+[VIDAR] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[LN_IALT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>INFOSYS</td><td>Uppl`sningar um virki'</td><td>File 1.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[INFOSYS]
+(
+[INFOSYS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(30) NULL,
+[ADR_1] varchar(30) NULL,
+[ADR_2] varchar(30) NULL,
+[POSTNR] varchar(3) NULL,
+[TLF] varchar(5) NULL,
+[KONTO_1] varchar(8) NULL,
+[KONTO_2] varchar(8) NULL,
+[GIRO_1] varchar(8) NULL,
+[DAGSDATO] datetime NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>KONTTXT</td><td>Konttxt</td><td>File 8.</td><td>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[KONTTXT]
+(
+[KONTTXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[NAVN] varchar(30) NULL,
+[ANTAL] int NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVNKEY] varchar(MAX) NULL
+);
+
+GO
+</pre></td></tr><tr><td>K_DATO</td><td>K_dato</td><td>File 56.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[K_DATO]
+(
+[K_DATO_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[KOYR_DATO] datetime NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LEV</td><td>Leverand›r</td><td>File 2.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LEV]
+(
+[LEV_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LEVNR] int NULL,
+[LEVNAVN] varchar(40) NULL,
+[ADR1] varchar(40) NULL,
+[ADR2] varchar(40) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TELEFON] varchar(15) NULL,
+[TELEFAX] varchar(15) NULL,
+[KONTAKT] varchar(40) NULL,
+[KONTAKT2] varchar(40) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[NATJOB] varchar(1) NULL,
+[LN_IALT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>LGJALD</td><td>Lgjald</td><td>File 12.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LGJALD]
+(
+[LGJALD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LG_NR] int NULL,
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[AR] varchar(2) NULL,
+[STARV] varchar(4) NULL,
+[PRIS] decimal NULL,
+[ING_DATO] datetime NULL,
+[ING_NR] int NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[ING_HH] varchar(2) NULL,
+[ING_MM] varchar(2) NULL,
+[ING_ID] varchar(2) NULL,
+[SJ_NR] int NULL,
+[ANT_LN_TXT] int NULL,
+[REG_NR] int NULL,
+[KONTO] int NULL,
+[FRT_LON] decimal NULL,
+[LGJ] decimal NULL,
+[KOTA] varchar(1) NULL,
+[TRANSP_IALT] decimal NULL,
+[SLAG] varchar(2) NULL,
+[K1] varchar(1) NULL,
+[UDS] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LGJALD2</td><td>Lgjald2</td><td>File 75.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LGJALD2]
+(
+[LGJALD2_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LG_NR] int NULL,
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[U1] decimal NULL,
+[U2] decimal NULL,
+[U3] decimal NULL,
+[U4] decimal NULL,
+[U5] decimal NULL,
+[U6] decimal NULL,
+[U7] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>LG_TXT</td><td>Lg_txt</td><td>File 64.</td><td>Relates to file 12 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LG_TXT]
+(
+[LG_TXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LG_NR] int NULL,
+[FK_LGJALD_Id] INT FOREIGN KEY REFERENCES [dbo].[LGJALD](LGJALD_Id),
+[LINJE] int NULL,
+[TEKST] varchar(50) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LIMAGJ</td><td>Skr#setingar av limagjaldi</td><td>File 13.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 3 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LIMAGJ]
+(
+[LIMAGJ_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LIMART] varchar(1) NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[ME_NUMMER] varchar(8) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[ARSTAL] int NULL,
+[BELOB] decimal NULL,
+[ING_DATO] datetime NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LIMART</td><td>Limatypir</td><td>File 20.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[LIMART]
+(
+[LIMART_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LIMART] varchar(1) NULL,
+[TXT] varchar(30) NULL,
+[MEDL_IALT] int NULL,
+[MEDL_HAN] int NULL,
+[MEDL_HUN] int NULL,
+[OPTALT] datetime NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LINE</td><td>Line</td><td>File 6.</td><td>Relates to file 5 &amp; field 4<br><br><br></td><td><pre>CREATE TABLE [dbo].[LINE]
+(
+[LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[SKJAL_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(4) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LOYVIR</td><td>Loyvir</td><td>File 45.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[LOYVIR]
+(
+[LOYVIR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PROG_ID] varchar(6) NULL,
+[PER_ID] varchar(2) NULL,
+[RUN_OK] varchar(1) NULL,
+[LES_OK] varchar(1) NULL,
+[SKRIV_OK] varchar(1) NULL,
+[DEL_OK] varchar(1) NULL,
+[KEY] varchar(MAX) NULL,
+[DAG_STAT] varchar(7) NULL,
+[FRA_HH] varchar(2) NULL,
+[FRA_MM] varchar(2) NULL,
+[TIL_HH] varchar(2) NULL,
+[TIL_MM] varchar(2) NULL,
+[FRA_HH1] varchar(2) NULL,
+[FRA_MM1] varchar(2) NULL,
+[TIL_HH1] varchar(2) NULL,
+[TIL_MM1] varchar(2) NULL,
+[LOG] varchar(1) NULL,
+[STROKE_TIME] int NULL,
+[STROKE_CHK] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>LO_HOVD</td><td>Lo_hovd</td><td>File 70.</td><td>Relates to file 2 &amp; field 1<br>Relates to file 3 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LO_HOVD]
+(
+[LO_HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LO_NR] int NULL,
+[ARB_NR] int NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[SKIB_ID] varchar(6) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[ANT_LN_TXT] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[KR_IALT_A] decimal NULL,
+[KR_IALT_F] decimal NULL,
+[KR_IALT_FRT] decimal NULL,
+[SK_A] int NULL,
+[KO_A] int NULL,
+[SK_FR] int NULL,
+[KO_FR] int NULL,
+[MANS_IALT] int NULL,
+[SKEI] varchar(5) NULL,
+[UT_DATO] datetime NULL,
+[UT_HH] varchar(2) NULL,
+[UT_MM] varchar(2) NULL,
+[UT_ID] varchar(2) NULL,
+[UT_ANT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>LO_LINE</td><td>Lo_line</td><td>File 71.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[LO_LINE]
+(
+[LO_LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LO_NR] int NULL,
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[ANT_LN_TXT] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[KR_A] decimal NULL,
+[KR_F] decimal NULL,
+[SK_P] int NULL,
+[KO_P] int NULL,
+[KR_FRT] decimal NULL,
+[SK_F] int NULL,
+[KO_F] int NULL,
+[FODT] datetime NULL,
+[CPR] int NULL,
+[ARB_NR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>LSLAG</td><td>Lslag</td><td>File 35.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[LSLAG]
+(
+[LSLAG_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TEKSTUR] varchar(40) NULL,
+[STUTT] varchar(9) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[BREV_UT] varchar(1) NULL,
+[FLYTAST] varchar(1) NULL,
+[DLISTA] varchar(1) NULL,
+[BLISTA] varchar(1) NULL,
+[ARS_LISTI] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>MANGLA</td><td>Mangla</td><td>File 157.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[MANGLA]
+(
+[MANGLA_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[MI_NR] int NULL,
+[FRA] datetime NULL,
+[TIL] datetime NULL,
+);
+
+GO
+</pre></td></tr><tr><td>MANNING</td><td>Limir/manningar</td><td>File 3.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 5 &amp; field 1<br>Relates to file 12 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[MANNING]
+(
+[MANNING_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LIMART] varchar(1) NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[ME_NUMMER] int NULL,
+[FODT] datetime NULL,
+[TLF] varchar(5) NULL,
+[FOEN] varchar(4) NULL,
+[FNAVN] varchar(30) NULL,
+[MNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR_1] varchar(30) NULL,
+[ADR_2] varchar(30) NULL,
+[POSTNR] varchar(4) NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[POSTBOX] int NULL,
+[KON] varchar(1) NULL,
+[BE_ME_NUMMER] int NULL,
+[M_TYPE] varchar(1) NULL,
+[SALDO] decimal NULL,
+[ARB_TYPE] varchar(2) NULL,
+[FK_LGJALD_Id] INT FOREIGN KEY REFERENCES [dbo].[LGJALD](LGJALD_Id),
+[CPR] int NULL,
+[PCT_PART] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MA_LINE</td><td>Ma_line</td><td>File 65.</td><td>Relates to file 5 &amp; field 5<br>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[MA_LINE]
+(
+[MA_LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[PARTAR] decimal NULL,
+[KR] decimal NULL,
+[TILLAG1] decimal NULL,
+[TILLAG2] decimal NULL,
+[FRADRATT1] decimal NULL,
+[KR_IALT] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[FRA_DATO] datetime NULL,
+[SKIB_ID] varchar(6) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MDAGAR</td><td>Mdagar</td><td>File 101.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[MDAGAR]
+(
+[MDAGAR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[AR] varchar(4) NULL,
+[TYPA] varchar(2) NULL,
+[DAGAR] decimal NULL,
+[MANS] decimal NULL,
+[IALT] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>MI2_HOVD</td><td>Mi2_hovd</td><td>File 156.</td><td>Relates to file 1 &amp; field 1<br>Relates to file 3 &amp; field 1<br>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[MI2_HOVD]
+(
+[MI2_HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[MI_NR] int NULL,
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[SKIB_ID] varchar(6) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[AR] varchar(2) NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[ANT_LN_TXT] int NULL,
+[SK_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[PART] decimal NULL,
+[KR_IALT] decimal NULL,
+[KG_IALT] decimal NULL,
+[ID_TUR] varchar(4) NULL,
+[STARV] varchar(4) NULL,
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[FRT_PART] decimal NULL,
+[TIL_PR_DG] decimal NULL,
+[TIL_PR_TUR] decimal NULL,
+[PART_NETTO] decimal NULL,
+[FODT] datetime NULL,
+[ARB_NR] int NULL,
+[I_PART] decimal NULL,
+[FRT_NR] int NULL,
+[JN] varchar(1) NULL,
+[TRYG_JN] varchar(1) NULL,
+[TRYG_KR] decimal NULL,
+[TRYG_KVT] varchar(1) NULL,
+[STARV20] varchar(20) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MINLON</td><td>Minlon</td><td>File 7.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[MINLON]
+(
+[MINLON_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[PR_MD] decimal NULL,
+[PR_DG] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[KOTA] varchar(5) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MI_HNOT</td><td>Mi_hnot</td><td>File 73.</td><td>Relates to file 60 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[MI_HNOT]
+(
+[MI_HNOT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[MI_NR] int NULL,
+[FK_MI_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[MI_HOVD](MI_HOVD_Id),
+[PAGE] int NULL,
+[LAST_USED_LIN] int NULL,
+[L01] varchar(55) NULL,
+[L02] varchar(55) NULL,
+[L03] varchar(55) NULL,
+[L04] varchar(55) NULL,
+[L05] varchar(55) NULL,
+[L06] varchar(55) NULL,
+[L07] varchar(55) NULL,
+[L08] varchar(55) NULL,
+[L09] varchar(55) NULL,
+[L10] varchar(55) NULL,
+[L11] varchar(55) NULL,
+[L12] varchar(55) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MI_HOVD</td><td>Mi_hovd</td><td>File 60.</td><td>Relates to file 1 &amp; field 1<br>Relates to file 3 &amp; field 1<br>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[MI_HOVD]
+(
+[MI_HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[MI_NR] int NULL,
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[SKIB_ID] varchar(6) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[AR] varchar(2) NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[ANT_LN_TXT] int NULL,
+[SK_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[PART] decimal NULL,
+[KR_IALT] decimal NULL,
+[KG_IALT] decimal NULL,
+[ID_TUR] varchar(4) NULL,
+[STARV] varchar(4) NULL,
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[FRT_PART] decimal NULL,
+[TIL_PR_DG] decimal NULL,
+[TIL_PR_TUR] decimal NULL,
+[PART_NETTO] decimal NULL,
+[FODT] datetime NULL,
+[ARB_NR] int NULL,
+[I_PART] decimal NULL,
+[FRT_NR] int NULL,
+[JN] varchar(1) NULL,
+[TRYG_JN] varchar(1) NULL,
+[TRYG_KR] decimal NULL,
+[TRYG_KVT] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MI_TMP</td><td>Mi_tmp</td><td>File 202.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[MI_TMP]
+(
+[MI_TMP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PERS_NR] int NULL,
+[FRA_DATO] datetime NULL,
+[AR] varchar(2) NULL,
+[STARV] varchar(4) NULL,
+[ANT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>MI_TXT</td><td>Mi_txt</td><td>File 62.</td><td>Relates to file 60 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[MI_TXT]
+(
+[MI_TXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[MI_NR] int NULL,
+[FK_MI_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[MI_HOVD](MI_HOVD_Id),
+[LINJE] int NULL,
+[TEKST] varchar(50) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>MUNUR</td><td>Munur</td><td>File 150.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[MUNUR]
+(
+[MUNUR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[KR_OK] decimal NULL,
+[KR_NOT_OK] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>NOTEPAD</td><td>@notepad dummy file</td><td>File 47.</td><td><br><br></td><td></td></tr><tr><td>P100</td><td>P100 limir</td><td>File 1.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 11 &amp; field 1<br>Relates to file 15 &amp; field 1<br>Relates to file 35 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P100]
+(
+[P100_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FODT] datetime NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[FN5] varchar(MAX) NULL,
+[STRIKA] varchar(1) NULL,
+[KYN] varchar(1) NULL,
+[PRI_OWN] int NULL,
+[BETALER] int NULL,
+[EN5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[M_STATUS] varchar(1) NULL,
+[TXT_LN] int NULL,
+[TLF_HEIMA] int NULL,
+[TYPE] int NULL,
+[ENFO] varchar(6) NULL,
+[CPR] int NULL,
+[STARV] varchar(4) NULL,
+[FK_STARV_Id] INT FOREIGN KEY REFERENCES [dbo].[STARV](STARV_Id),
+[BURT_DG] decimal NULL,
+[TUR_IALT] decimal NULL,
+[INN_IALT] decimal NULL,
+[DG] varchar(2) NULL,
+[MD] varchar(2) NULL,
+[STAT] varchar(2) NULL,
+[FK_TURHEAD_Id] INT FOREIGN KEY REFERENCES [dbo].[TURHEAD](TURHEAD_Id),
+[TXT_DATO] datetime NULL,
+[LAST_DATO] datetime NULL,
+[MNAVN] varchar(30) NULL,
+[MI_TOT] int NULL,
+[LG_TOT] int NULL,
+[MI_AR] varchar(2) NULL,
+[MI_ID] varchar(8) NULL,
+[LG_AR] varchar(2) NULL,
+[LG_KR] decimal NULL,
+[LAST_ID] varchar(8) NULL,
+[ETI_DATO] datetime NULL,
+[ETI_HH] varchar(2) NULL,
+[ETI_MM] varchar(2) NULL,
+[ETI_ID] varchar(2) NULL,
+[SLAG] varchar(3) NULL,
+[FK_LSLAG_Id] INT FOREIGN KEY REFERENCES [dbo].[LSLAG](LSLAG_Id),
+[TRANSPORT] decimal NULL,
+[LG_IALT] decimal NULL,
+[LAST_KONTO] int NULL,
+[LAST_REG] int NULL,
+[FKOTA] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>P1_NOT</td><td>P1_not</td><td>File 93.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P1_NOT]
+(
+[P1_NOT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[PAGE] int NULL,
+[LAST_USED_LIN] int NULL,
+[L01] varchar(55) NULL,
+[L02] varchar(55) NULL,
+[L03] varchar(55) NULL,
+[L04] varchar(55) NULL,
+[L05] varchar(55) NULL,
+[L06] varchar(55) NULL,
+[L07] varchar(55) NULL,
+[L08] varchar(55) NULL,
+[L09] varchar(55) NULL,
+[L10] varchar(55) NULL,
+[L11] varchar(55) NULL,
+[L12] varchar(55) NULL
+);
+
+GO
+</pre></td></tr><tr><td>P200</td><td>P200 skip</td><td>File 3.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 2 &amp; field 1<br>Relates to file 16 &amp; field 1<br>Relates to file 15 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P200]
+(
+[P200_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(40) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TLF] int NULL,
+[FAX] int NULL,
+[KONTAKT] varchar(40) NULL,
+[KONTAKT2] varchar(40) NULL,
+[IND_REG] datetime NULL,
+[UD_REG] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[LN_IALT] int NULL,
+[SK_TYPA] varchar(2) NULL,
+[REDERI] int NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[TONNAGE] decimal NULL,
+[HK] decimal NULL,
+[TXT_LN] int NULL,
+[TXT_DATO] datetime NULL,
+[BURT_DG] int NULL,
+[TUR_IALT] int NULL,
+[LAST_DATO] datetime NULL,
+[TYPA] varchar(2) NULL,
+[FK_TYPA_Id] INT FOREIGN KEY REFERENCES [dbo].[TYPA](TYPA_Id),
+[STRIKA] varchar(1) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STAT] varchar(2) NULL,
+[FK_TURHEAD_Id] INT FOREIGN KEY REFERENCES [dbo].[TURHEAD](TURHEAD_Id),
+[AV_IALT] int NULL,
+[KG_IALT] decimal NULL,
+[DG_IALT] decimal NULL,
+[ALT_ID] varchar(6) NULL,
+[GRUPPE] int NULL,
+[ETI_DATO] datetime NULL,
+[ETI_HH] varchar(2) NULL,
+[ETI_MM] varchar(2) NULL,
+[ETI_ID] varchar(2) NULL,
+[ARB_NR] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>P2000</td><td>P2000</td><td>File 158.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[P2000]
+(
+[P2000_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ID_FF] varchar(6) NULL,
+[NAVN] varchar(40) NULL,
+[ID_GR] varchar(6) NULL,
+[RET_DATO] datetime NULL,
+);
+
+GO
+</pre></td></tr><tr><td>P300</td><td>P300 reiÐar¡</td><td>File 2.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 15 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P300]
+(
+[P300_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(40) NULL,
+[ADR1] varchar(30) NULL,
+[ADR2] varchar(15) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TLF] int NULL,
+[FAX] int NULL,
+[KONTAKT] varchar(20) NULL,
+[KONTAKT2] varchar(20) NULL,
+[IND_REG] datetime NULL,
+[UD_REG] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[LN_IALT] int NULL,
+[TXT_LN] int NULL,
+[TXT_DATO] datetime NULL,
+[AVR_IALT] int NULL,
+[KG_IALT] decimal NULL,
+[LAST_DATO] datetime NULL,
+[LAST_ID] varchar(6) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STUTT] varchar(10) NULL,
+[MODEM] int NULL,
+[DISK_DATO] datetime NULL,
+[DISK_NU] int NULL,
+[DISK_IALT] int NULL,
+[PREFIX] varchar(3) NULL,
+[SKIB_IALT] int NULL,
+[ALT_ID] int NULL,
+[ETI_DATO] datetime NULL,
+[ETI_HH] varchar(2) NULL,
+[ETI_MM] varchar(2) NULL,
+[ETI_ID] varchar(2) NULL,
+[STAT] varchar(2) NULL,
+[FK_TURHEAD_Id] INT FOREIGN KEY REFERENCES [dbo].[TURHEAD](TURHEAD_Id),
+[ARB_NR] int NULL,
+[FRT_LON] decimal NULL,
+[FRT_LON_DATO] datetime NULL,
+[FRT_LON_NU] decimal NULL,
+[A_REG] int NULL,
+[A_KTO] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>P400</td><td>P400</td><td>File 74.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P400]
+(
+[P400_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[FNAVN] varchar(5) NULL,
+[ENAVN] varchar(5) NULL,
+[POST] int NULL,
+[KR] decimal NULL,
+[ART] varchar(1) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[REG] int NULL,
+[KONTO] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>P600</td><td>P600</td><td>File 23.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[P600]
+(
+[P600_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(40) NULL,
+[ADR1] varchar(30) NULL,
+[ADR2] varchar(15) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TLF] int NULL,
+[FAX] int NULL,
+[KONTAKT] varchar(20) NULL,
+[KONTAKT2] varchar(20) NULL,
+[IND_REG] datetime NULL,
+[UD_REG] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[LN_IALT] int NULL,
+[TXT_LN] int NULL,
+[TXT_DATO] datetime NULL,
+[AVR_IALT] int NULL,
+[KG_IALT] decimal NULL,
+[LAST_DATO] datetime NULL,
+[LAST_ID] varchar(6) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STUTT] varchar(10) NULL,
+[MODEM] int NULL,
+[DISK_DATO] datetime NULL,
+[DISK_NU] int NULL,
+[DISK_IALT] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>PASSORD</td><td>Passord</td><td>File 46.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[PASSORD]
+(
+[PASSORD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PASSORD] varchar(8) NULL,
+[PR_NAME] varchar(20) NULL,
+[PAGEEND] int NULL,
+[FORMFEED] int NULL,
+[L_PR_NAME] varchar(20) NULL,
+[L_FORMFEED] int NULL,
+[L_PAGEEND] int NULL,
+[L_PNR] int NULL,
+[F_PNR] int NULL,
+[AKTIV] varchar(1) NULL,
+[LOGIN_DATO] datetime NULL,
+[LOGIN_HH] varchar(2) NULL,
+[LOGIN_MM] varchar(2) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[PRI_OWN] int NULL,
+[PRI_GRP] int NULL,
+[CONV] int NULL,
+[CHK_KAL] varchar(1) NULL,
+[LOYNA1] varchar(5) NULL,
+[LOYND2] varchar(5) NULL,
+[RENS_OK] varchar(1) NULL,
+[TRIAL] int NULL,
+[LOYNA2] varchar(5) NULL,
+[TYPA] varchar(1) NULL,
+[PR_DEV] varchar(8) NULL,
+[LPR_DEV] varchar(8) NULL,
+[LOG] varchar(1) NULL,
+[LOGOUT_DATO] datetime NULL,
+[LOGOUT_HH] varchar(2) NULL,
+[LOGOUT_MM] varchar(2) NULL,
+[SESSION_NOW_MM] int NULL,
+[SESSION_TOT_MM] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>PCTST</td><td>Pctst</td><td>File 99.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[PCTST]
+(
+[PCTST_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[TXT1] varchar(40) NULL,
+[TXT2] varchar(40) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[T5] varchar(MAX) NULL,
+[STATUS] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>POSTNR</td><td>Uppl`sningar um bygd/postnummar</td><td>File 5.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[POSTNR]
+(
+[POSTNR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[POSTNR] varchar(4) NULL,
+[BYGD] varchar(30) NULL,
+[MEDL_IALT] int NULL,
+[MEDL_HAN] int NULL,
+[MEDL_HUN] int NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>PTXT</td><td>Ptxt</td><td>File 18.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[PTXT]
+(
+[PTXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[LINJE] int NULL,
+[TEKST] varchar(50) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>REDERI</td><td>Rederi</td><td>File 2.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[REDERI]
+(
+[REDERI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[NAVN] varchar(40) NULL,
+[ADR1] varchar(40) NULL,
+[ADR2] varchar(40) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TELEFON] varchar(15) NULL,
+[TELEFAX] varchar(15) NULL,
+[KONTAKT] varchar(40) NULL,
+[KONTAKT2] varchar(40) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[LN_IALT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>REG_NR</td><td>Reg_nr</td><td>File 40.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[REG_NR]
+(
+[REG_NR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[REG_NR] int NULL,
+[REG_NAVN] varchar(60) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>REIDARI</td><td>Upplysningar um rei'ar$</td><td>File 2.</td><td>Relates to file 5 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[REIDARI]
+(
+[REIDARI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[RE_NUMMER] varchar(8) NULL,
+[TLF] varchar(5) NULL,
+[FOEN] varchar(4) NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR_1] varchar(30) NULL,
+[ADR_2] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>REMINDER</td><td>Reminder</td><td>File 204.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[REMINDER]
+(
+[REMINDER_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[DATO] datetime NULL,
+[NR] int NULL,
+[JN] varchar(1) NULL,
+[ANT] int NULL,
+[UTDATO] datetime NULL,
+[ER_P] varchar(1) NULL,
+[AVM_DATO] datetime NULL,
+[AVM_ID] varchar(8) NULL,
+[DAGAR] int NULL,
+[BRV_OK] varchar(1) NULL,
+[KOTA] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>S100</td><td>S100</td><td>File 99.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[S100]
+(
+[S100_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FODT] datetime NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[FN5] varchar(MAX) NULL,
+[STRIKA] varchar(1) NULL,
+[KYN] varchar(1) NULL,
+[EN5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[KOTA] varchar(1) NULL,
+[ENFO] varchar(6) NULL,
+[CPR] int NULL,
+[MNAVN] varchar(30) NULL,
+[REG_NR] int NULL,
+[KONTO] int NULL,
+[FRT_LON] decimal NULL,
+[LGJ] decimal NULL,
+[ING] decimal NULL,
+[OPRET] varchar(1) NULL,
+[OPDAT] varchar(1) NULL,
+[OLD_NR] int NULL,
+[ARSTAL] varchar(2) NULL,
+[NY_F_DATO] varchar(1) NULL,
+[FUNDET] varchar(1) NULL,
+[PRI] varchar(1) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SADRESS</td><td>Sadress</td><td>File 17.</td><td>Relates to file 2 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SADRESS]
+(
+[SADRESS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] varchar(6) NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[FNAVN] varchar(35) NULL,
+[ENAVN] varchar(35) NULL,
+[ADR1] varchar(20) NULL,
+[ADR2] varchar(20) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SB</td><td>Sb</td><td>File 80.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 11 &amp; field 1<br>Relates to file 15 &amp; field 1<br>Relates to file 35 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SB]
+(
+[SB_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FODT] datetime NULL,
+[FNAVN] varchar(30) NULL,
+[ENAVN] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[FN5] varchar(MAX) NULL,
+[STRIKA] varchar(1) NULL,
+[KYN] varchar(1) NULL,
+[PRI_OWN] int NULL,
+[BETALER] int NULL,
+[EN5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[M_STATUS] varchar(1) NULL,
+[TXT_LN] int NULL,
+[TLF_HEIMA] int NULL,
+[TYPE] int NULL,
+[ENFO] varchar(6) NULL,
+[CPR] int NULL,
+[STARV] varchar(4) NULL,
+[FK_STARV_Id] INT FOREIGN KEY REFERENCES [dbo].[STARV](STARV_Id),
+[BURT_DG] decimal NULL,
+[TUR_IALT] decimal NULL,
+[INN_IALT] decimal NULL,
+[DG] varchar(2) NULL,
+[MD] varchar(2) NULL,
+[STAT] varchar(2) NULL,
+[FK_TURHEAD_Id] INT FOREIGN KEY REFERENCES [dbo].[TURHEAD](TURHEAD_Id),
+[TXT_DATO] datetime NULL,
+[LAST_DATO] datetime NULL,
+[MNAVN] varchar(30) NULL,
+[MI_TOT] int NULL,
+[LG_TOT] int NULL,
+[MI_AR] varchar(2) NULL,
+[MI_ID] varchar(8) NULL,
+[LG_AR] varchar(2) NULL,
+[LG_KR] decimal NULL,
+[LAST_ID] varchar(8) NULL,
+[ETI_DATO] datetime NULL,
+[ETI_HH] varchar(2) NULL,
+[ETI_MM] varchar(2) NULL,
+[ETI_ID] varchar(2) NULL,
+[SLAG] varchar(3) NULL,
+[FK_LSLAG_Id] INT FOREIGN KEY REFERENCES [dbo].[LSLAG](LSLAG_Id),
+[LG_IALT] decimal NULL,
+[TRANSPORT] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>SHAG</td><td>Shag</td><td>File 25.</td><td>Relates to file 3 &amp; field 1<br>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SHAG]
+(
+[SHAG_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[AR] varchar(2) NULL,
+[MD] varchar(2) NULL,
+[FISK] varchar(5) NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[KG] decimal NULL,
+[KR] decimal NULL,
+[TUR_IALT] decimal NULL,
+[DAG_IALT] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>SKIB</td><td>Skib</td><td>File 3.</td><td>Relates to file 20 &amp; field 1<br>Relates to file 2 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SKIB]
+(
+[SKIB_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(40) NULL,
+[ADR1] varchar(30) NULL,
+[ADR2] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TELEFON] varchar(10) NULL,
+[TELEFAX] varchar(10) NULL,
+[KONTAKT] varchar(30) NULL,
+[KONTAKT2] varchar(30) NULL,
+[IND_REG] datetime NULL,
+[UD_REG] datetime NULL,
+[STATUS] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[NAVN5] varchar(MAX) NULL,
+[ILUL] varchar(2) NULL,
+[LN_IALT] int NULL,
+[SK_TYPA] varchar(2) NULL,
+[REDERI] int NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[TONNAGE] decimal NULL,
+[HK] decimal NULL,
+[TXT_LN_IALT] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>SKIBMAN</td><td>Skibman</td><td>File 14.</td><td>Relates to file 3 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SKIBMAN]
+(
+[SKIBMAN_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ME_NUMMER] int NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[ARSTAL] int NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[SKIBS_KODE] varchar(6) NULL,
+[SKIBS_NAVN] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] int NULL,
+[RET_MM] int NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SKIP</td><td>Uppl`sningar um skip</td><td>File 8.</td><td>Relates to file 7 &amp; field 1<br>Relates to file 2 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SKIP]
+(
+[SKIP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[SK_NUMMER] varchar(6) NULL,
+[FOEN] varchar(4) NULL,
+[FNAVN] varchar(30) NULL,
+[SK_TYPE] varchar(1) NULL,
+[FK_SKIPTYPE_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIPTYPE](SKIPTYPE_Id),
+[RE_NUMMER] varchar(8) NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[TONNAGE] decimal NULL,
+[HK] int NULL,
+[IND_REG] datetime NULL,
+[UD_REG] datetime NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SKIPMAN</td><td>Skipman</td><td>File 13.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[SKIPMAN]
+(
+[SKIPMAN_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[SKIP_ID] varchar(6) NULL,
+[STARV] varchar(4) NULL,
+[PCT_PART] decimal NULL,
+[TILLAG] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SKIPTYPA</td><td>Skiptypa</td><td>File 9.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[SKIPTYPA]
+(
+[SKIPTYPA_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ART] varchar(5) NULL,
+[TEKST] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SKIPTYPE</td><td>Skipasl|g</td><td>File 7.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[SKIPTYPE]
+(
+[SKIPTYPE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[SK_TYPE] varchar(1) NULL,
+[SK_TEKST] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>SKOTA</td><td>Skota</td><td>File 198.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[SKOTA]
+(
+[SKOTA_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PERS_NR] int NULL,
+[AR] varchar(2) NULL,
+[STARV] varchar(2) NULL,
+[LOBNR] int NULL,
+[ANT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>STARV</td><td>Starv</td><td>File 11.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[STARV]
+(
+[STARV_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TEKSTUR] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[TEKSTUR2] varchar(30) NULL,
+[STUTT] varchar(15) NULL,
+[TXT5] varchar(MAX) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[ANTAL] int NULL,
+[TAL_DATO] datetime NULL,
+[TAL_HH] varchar(2) NULL,
+[TAL_MM] varchar(2) NULL,
+[TAL_ID] varchar(2) NULL,
+[PART] decimal NULL,
+[TIL_DG] decimal NULL,
+[TIL_TUR] decimal NULL,
+[FELAG] varchar(3) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>STAT</td><td>Stat</td><td>File 17.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[STAT]
+(
+[STAT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TEKSTUR] varchar(40) NULL,
+[STUTT] varchar(9) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[BREV_UT] varchar(1) NULL,
+[FLYTAST] varchar(1) NULL,
+[DLISTA] varchar(1) NULL,
+[BLISTA] varchar(1) NULL,
+[ARS_LISTI] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>STUDART</td><td>Studart</td><td>File 51.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[STUDART]
+(
+[STUDART_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NAVN] varchar(30) NULL,
+[STUTT] varchar(10) NULL,
+[ALIAS] varchar(5) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[LINK] int NULL,
+[RAD] varchar(3) NULL,
+[TYPA] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>STUDDATO</td><td>Studnings-dato</td><td>File 10.</td><td>Relates to file 9 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[STUDDATO]
+(
+[STUDDATO_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[STUD_DATO] varchar(6) NULL,
+[STUD_KODE] varchar(4) NULL,
+[FK_VARETXT_Id] INT FOREIGN KEY REFERENCES [dbo].[VARETXT](VARETXT_Id),
+[STUD_PRIS] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>STUDPRIS</td><td>Studpris</td><td>File 52.</td><td>Relates to file 51 &amp; field 1<br>Relates to file 16 &amp; field 1<br>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[STUDPRIS]
+(
+[STUDPRIS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ART] varchar(5) NULL,
+[FK_STUDART_Id] INT FOREIGN KEY REFERENCES [dbo].[STUDART](STUDART_Id),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[PRIS] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[KOTA] varchar(5) NULL,
+[SKIP] varchar(2) NULL,
+[FK_TYPA_Id] INT FOREIGN KEY REFERENCES [dbo].[TYPA](TYPA_Id),
+[FID] varchar(5) NULL
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+);
+
+GO
+</pre></td></tr><tr><td>STUDTYPE</td><td>Studnings-typir</td><td>File 9.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[STUDTYPE]
+(
+[STUDTYPE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[STUD_KODE] varchar(4) NULL,
+[STUD_TEKST] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>STXFI</td><td>Stxfi</td><td>File 54.</td><td>Relates to file 51 &amp; field 1<br>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[STXFI]
+(
+[STXFI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ST_ID] varchar(5) NULL,
+[FK_STUDART_Id] INT FOREIGN KEY REFERENCES [dbo].[STUDART](STUDART_Id),
+[FI_ID] varchar(5) NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>STXSK</td><td>Stxsk</td><td>File 27.</td><td>Relates to file 11 &amp; field 1<br>Relates to file 16 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[STXSK]
+(
+[STXSK_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ST_ID] varchar(4) NULL,
+[FK_STARV_Id] INT FOREIGN KEY REFERENCES [dbo].[STARV](STARV_Id),
+[SK_ID] varchar(2) NULL,
+[FK_TYPA_Id] INT FOREIGN KEY REFERENCES [dbo].[TYPA](TYPA_Id),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[PCT_PART] decimal NULL,
+[TILLAG] decimal NULL,
+[LGJALD] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>STXT</td><td>Stxt</td><td>File 19.</td><td>Relates to file 3 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[STXT]
+(
+[STXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] varchar(6) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[LINJE] int NULL,
+[TEKST] varchar(48) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>TELUP</td><td>Telup</td><td>File 69.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TELUP]
+(
+[TELUP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>TLF_IN</td><td>Tlf_in</td><td>File 91.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TLF_IN]
+(
+[TLF_IN_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[DATO] datetime NULL,
+[HH] varchar(2) NULL,
+[MM] varchar(2) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>TLF_TMP</td><td>Tlf_tmp</td><td>File 59.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TLF_TMP]
+(
+[TLF_TMP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[PERS_NR] int NULL,
+[SKIB_ID] varchar(6) NULL,
+[FRA_DATO] datetime NULL,
+[MI_NR] int NULL,
+[INX] int NULL,
+[DAGE] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TMP_522</td><td>Tmp_522</td><td>File 85.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TMP_522]
+(
+[TMP_522_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TMP_BYTI</td><td>Tmp_byti</td><td>File 87.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TMP_BYTI]
+(
+[TMP_BYTI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[RAD] varchar(6) NULL,
+[F0] decimal NULL,
+[F1] decimal NULL,
+[F2] decimal NULL,
+[F3] decimal NULL,
+[F4] decimal NULL,
+[F5] decimal NULL,
+[F6] decimal NULL,
+[F7] decimal NULL,
+[F8] decimal NULL,
+[F9] decimal NULL,
+[F10] decimal NULL,
+[F11] decimal NULL,
+[F12] decimal NULL,
+[F13] decimal NULL,
+[P0] decimal NULL,
+[P1] decimal NULL,
+[P2] decimal NULL,
+[P3] decimal NULL,
+[P4] decimal NULL,
+[P5] decimal NULL,
+[P6] decimal NULL,
+[P7] decimal NULL,
+[P8] decimal NULL,
+[P9] decimal NULL,
+[P10] decimal NULL,
+[P11] decimal NULL,
+[P12] decimal NULL,
+[P13] decimal NULL,
+);
+
+GO
+</pre></td></tr><tr><td>TMP_UTS</td><td>Tmp_uts</td><td>File 86.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TMP_UTS]
+(
+[TMP_UTS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[STAT] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>TRANSPRT</td><td>Transprt</td><td>File 67.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANSPRT]
+(
+[TRANSPRT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[PERS_NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[TRP_NR] int NULL,
+[AR] varchar(2) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[SJ_NR] int NULL,
+[ANT_LN_TXT] int NULL,
+[REG_NR] int NULL,
+[KONTO] int NULL,
+[UPPH_IALT] decimal NULL,
+[UTG_DATO] datetime NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[UD_NR] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[HEINTA] varchar(1) NULL,
+[FAX_NR] int NULL,
+[REG_FRA] int NULL,
+[KONTO_FRA] int NULL,
+[EN] varchar(15) NULL,
+[FN] varchar(15) NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_LG</td><td>Trans_lg</td><td>File 63.</td><td>Relates to file 12 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_LG]
+(
+[TRANS_LG_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[LG_NR] int NULL,
+[FK_LGJALD_Id] INT FOREIGN KEY REFERENCES [dbo].[LGJALD](LGJALD_Id),
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_MI</td><td>Trans_mi</td><td>File 61.</td><td>Relates to file 60 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_MI]
+(
+[TRANS_MI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[MI_NR] int NULL,
+[FK_MI_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[MI_HOVD](MI_HOVD_Id),
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_P</td><td>Trans_p</td><td>File 30.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_P]
+(
+[TRANS_P_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(4) NULL,
+[PERSNR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_R</td><td>Trans_r</td><td>File 34.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_R]
+(
+[TRANS_R_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[R_NR] int NULL,
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(19) NULL,
+[TIL] varchar(19) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_S</td><td>Trans_s</td><td>File 31.</td><td>Relates to file 3 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_S]
+(
+[TRANS_S_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(18) NULL,
+[TIL] varchar(18) NULL,
+[FELT] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_TP</td><td>Trans_tp</td><td>File 39.</td><td>Relates to file 67 &amp; field 2<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_TP]
+(
+[TRANS_TP_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[TRP_NR] int NULL,
+[FK_TRANSPRT_Id] INT FOREIGN KEY REFERENCES [dbo].[TRANSPRT](TRANSPRT_Id),
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_TR</td><td>Trans_tr</td><td>File 33.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_TR]
+(
+[TRANS_TR_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL
+);
+
+GO
+</pre></td></tr><tr><td>TRANS_V</td><td>Trans_v</td><td>File 32.</td><td>Relates to file 23 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TRANS_V]
+(
+[TRANS_V_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[IND_DATO] datetime NULL,
+[IND_HH] varchar(2) NULL,
+[IND_MM] varchar(2) NULL,
+[IND_ID] varchar(2) NULL,
+[IND_TTY] int NULL,
+[PROG] varchar(6) NULL,
+[STATUS] varchar(1) NULL,
+[UDSKR_NR] int NULL,
+[FRA] varchar(20) NULL,
+[TIL] varchar(20) NULL,
+[FELT] int NULL,
+);
+
+GO
+</pre></td></tr><tr><td>TR_HOVD</td><td>Tr_hovd</td><td>File 5.</td><td>Relates to file 3 &amp; field 1<br>Relates to file 23 &amp; field 1<br>Relates to file 2 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_HOVD]
+(
+[TR_HOVD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ID_SKIB] varchar(6) NULL,
+[FK_SKIB_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIB](SKIB_Id),
+[ID_TUR] varchar(4) NULL,
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[TR_NR] int NULL,
+[PAR_SKIP] varchar(6) NULL,
+[PAR_SKJAL] int NULL,
+[MANNING] decimal NULL,
+[AVR_STAD] varchar(3) NULL,
+[FK_P600_Id] INT FOREIGN KEY REFERENCES [dbo].[P600](P600_Id),
+[SK_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(1) NULL,
+[UDSKREVET] varchar(1) NULL,
+[UPPTALD] varchar(1) NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[KG_IALT] decimal NULL,
+[UPPH_IALT] decimal NULL,
+[TIL_SKIP_PCT] decimal NULL,
+[TIL_SKIP_KR] decimal NULL,
+[TIL_MANN_PCT] decimal NULL,
+[TIL_MANN_KR] decimal NULL,
+[LOBNR] int NULL,
+[VIDAR] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[LN_IALT] int NULL,
+[ANT_LN_TXT] int NULL,
+[TUR_NR] int NULL,
+[AVR_DATO] datetime NULL,
+[DAGAR] decimal NULL,
+[ID_REDERI] int NULL,
+[FK_REIDARI_Id] INT FOREIGN KEY REFERENCES [dbo].[REIDARI](REIDARI_Id),
+[MANNING_I] decimal NULL,
+[SKIP_STUD] decimal NULL,
+[MAN_STUD] decimal NULL,
+[TILSKOT] decimal NULL,
+[FRADRAG] decimal NULL,
+[TIL_MANN_TOT] decimal NULL,
+[FRADRAG2] decimal NULL,
+[MANN_PART] decimal NULL,
+[PR_DAG] decimal NULL,
+[MINLON] decimal NULL,
+[DAGLON] decimal NULL,
+[SKIB_TXT] varchar(15) NULL,
+[TOTAL_KR] decimal NULL,
+[MANN_PART_IS] decimal NULL,
+[MID_AR] int NULL,
+[MANN_PART_I] decimal NULL,
+[ARB_NR] int NULL,
+[PAR_ART] varchar(1) NULL,
+[PAR_TUR_ID] varchar(4) NULL,
+[MANNING_X] decimal NULL,
+[ALT_MP] varchar(1) NULL,
+[ALT_MA] int NULL,
+[CHECK] varchar(1) NULL,
+[TRYG_ANT] int NULL,
+[TRYG_KR] decimal NULL,
+[TRYG_KRHB] decimal NULL,
+[TRYG_KVIT] varchar(1) NULL,
+[TRYG_BILAG] int NULL,
+[TRYG_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_KRED</td><td>Tr_kred</td><td>File 36.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_KRED]
+(
+[TR_KRED_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(5) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[ALT_PRIS] decimal NULL,
+[KR] decimal NULL,
+[AVR_STAD] varchar(2) NULL,
+[AVR_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_LINE</td><td>Tr_line</td><td>File 6.</td><td>Relates to file 5 &amp; field 5<br>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_LINE]
+(
+[TR_LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(5) NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[ALT_PRIS] decimal NULL,
+[KR] decimal NULL,
+[AVR_STAD] varchar(2) NULL,
+[AVR_DATO] datetime NULL,
+[RAD] varchar(3) NULL,
+[AR] varchar(2) NULL,
+[SK_ID] varchar(2) NULL,
+[STUD_M] decimal NULL,
+[STUD_S] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_STUD</td><td>Tr_stud</td><td>File 37.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_STUD]
+(
+[TR_STUD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(5) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[ALT_PRIS] decimal NULL,
+[KR] decimal NULL,
+[AVR_STAD] varchar(2) NULL,
+[AVR_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_STUDM</td><td>Tr_studm</td><td>File 38.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_STUDM]
+(
+[TR_STUDM_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(5) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[ALT_PRIS] decimal NULL,
+[KR] decimal NULL,
+[AVR_STAD] varchar(2) NULL,
+[AVR_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_STUDS</td><td>Tr_studs</td><td>File 37.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_STUDS]
+(
+[TR_STUDS_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[ART] varchar(5) NULL,
+[NOGD] decimal NULL,
+[PRIS] decimal NULL,
+[S_STUD_JN] varchar(1) NULL,
+[M_STUD_JN] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL,
+[STATUS] varchar(2) NULL,
+[ALT_PRIS] decimal NULL,
+[KR] decimal NULL,
+[AVR_STAD] varchar(2) NULL,
+[AVR_DATO] datetime NULL
+);
+
+GO
+</pre></td></tr><tr><td>TR_TXT</td><td>Tr_txt</td><td>File 28.</td><td>Relates to file 5 &amp; field 5<br><br><br></td><td><pre>CREATE TABLE [dbo].[TR_TXT]
+(
+[TR_TXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TR_NR] int NULL,
+[FK_TR_HOVD_Id] INT FOREIGN KEY REFERENCES [dbo].[TR_HOVD](TR_HOVD_Id),
+[LINJE] int NULL,
+[TEKST] varchar(48) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>TURHEAD</td><td>Header fyri avrei'ing</td><td>File 15.</td><td>Relates to file 8 &amp; field 1<br>Relates to file 11 &amp; field 2<br>Relates to file 10 &amp; field 1<br>Relates to file 7 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[TURHEAD]
+(
+[TURHEAD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[SK_NUMMER] varchar(6) NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[TUR_START] datetime NULL,
+[TUR_SLUT] datetime NULL,
+[PAR_SK_NUMMER] varchar(6) NULL,
+[MANTAL] decimal NULL,
+[PRIS_DATO] varchar(6) NULL,
+[FK_STARV_Id] INT FOREIGN KEY REFERENCES [dbo].[STARV](STARV_Id),
+[STUD_DATO] varchar(6) NULL,
+[FK_STUDDATO_Id] INT FOREIGN KEY REFERENCES [dbo].[STUDDATO](STUDDATO_Id),
+[AVR_STED] varchar(2) NULL,
+[SK_TYPE] varchar(1) NULL,
+[FK_SKIPTYPE_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIPTYPE](SKIPTYPE_Id),
+[INCL_AAR] varchar(1) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>TYPA</td><td>Typa</td><td>File 16.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[TYPA]
+(
+[TYPA_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[TEKSTUR] varchar(40) NULL,
+[STUTT] varchar(9) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[BREV_UT] varchar(1) NULL,
+[FLYTAST] varchar(1) NULL,
+[DLISTA] varchar(1) NULL,
+[BLISTA] varchar(1) NULL,
+[ARS_LISTI] varchar(1) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>UM_LINE</td><td>Um_line</td><td>File 82.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[UM_LINE]
+(
+[UM_LINE_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[FRA_DATO] datetime NULL,
+[TIL_DATO] datetime NULL,
+[DG] int NULL,
+[ALM_UPPH] decimal NULL,
+[PR_DG] decimal NULL,
+[FF_IALT] decimal NULL,
+[AR] varchar(2) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+[UD_DATO] datetime NULL,
+[UD_HH] varchar(2) NULL,
+[UD_MM] varchar(2) NULL,
+[UD_ID] varchar(2) NULL,
+[UD_ANT] int NULL,
+[REG] varchar(4) NULL,
+[KONTO] int NULL,
+[OPR_DATO] datetime NULL,
+[OPR_HH] varchar(2) NULL,
+[OPR_MM] varchar(2) NULL,
+[OPR_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>VARETXT</td><td>Varetxt</td><td>File 9.</td><td><br><br></td><td><pre>CREATE TABLE [dbo].[VARETXT]
+(
+[VARETXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[VORUNR] int NULL,
+[LNR] int NULL,
+[TEKST] varchar(60) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>VHAG</td><td>Vhag</td><td>File 26.</td><td>Relates to file 23 &amp; field 1<br>Relates to file 8 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[VHAG]
+(
+[VHAG_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[AR] varchar(2) NULL,
+[MD] varchar(2) NULL,
+[FISK] varchar(5) NULL,
+[FK_SKIP_Id] INT FOREIGN KEY REFERENCES [dbo].[SKIP](SKIP_Id),
+[KG] decimal NULL,
+[KR] decimal NULL,
+[TUR_IALT] decimal NULL,
+[DAG_IALT] decimal NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>VIRKI</td><td>Virki</td><td>File 14.</td><td>Relates to file 20 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[VIRKI]
+(
+[VIRKI_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[ART] varchar(3) NULL,
+[TEKST] varchar(30) NULL,
+[ADR1] varchar(30) NULL,
+[POSTNR] int NULL,
+[FK_LIMART_Id] INT FOREIGN KEY REFERENCES [dbo].[LIMART](LIMART_Id),
+[TELEFON] varchar(10) NULL,
+[FAX] varchar(10) NULL,
+[KONTAKT] varchar(30) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL
+);
+
+GO
+</pre></td></tr><tr><td>VTXT</td><td>Vtxt</td><td>File 24.</td><td>Relates to file 23 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[VTXT]
+(
+[VTXT_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[LINJE] int NULL,
+[TEKST] varchar(48) NULL,
+[RET_DATO] datetime NULL,
+[RET_HH] varchar(2) NULL,
+[RET_MM] varchar(2) NULL,
+[RET_ID] varchar(2) NULL,
+);
+
+GO
+</pre></td></tr><tr><td>frt_lon7</td><td>Frt_lon7</td><td>File 199.</td><td>Relates to file 1 &amp; field 1<br><br><br></td><td><pre>CREATE TABLE [dbo].[frt_lon7]
+(
+[frt_lon7_Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+[NR] int NULL,
+[FK_P100_Id] INT FOREIGN KEY REFERENCES [dbo].[P100](P100_Id),
+[AR] varchar(2) NULL,
+[FRTLON] decimal NULL,
+[TRSP] decimal NULL,
+[FRT_DATO] datetime NULL,
+[TRS_DATO] datetime NULL,
+[LO_KR_A] decimal NULL,
+[LO_KR_F] decimal NULL,
+[LO_KR_FRT] decimal NULL,
+[LO_DATO] datetime NULL,
+[DG_AR] int NULL,
+[TU_AR] int NULL,
+[DATO_AR] datetime NULL,
+[ID_AR] varchar(6) NULL,
+[SAML_KR] decimal NULL,
+[SAML_KR2] decimal NULL
+);
+
+GO
+</pre></td></tr><tr><td>tmp_byt2</td><td>Tmp_byt2</td><td>File 88.</td><td><br><br></td><td></td></tr></tbody></table></body></html>

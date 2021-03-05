@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Lundin_fff_fffModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bokingar">
+          <Key>
+            <PropertyRef Name="BokID" />
+          </Key>
+          <Property Name="BokID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Dato" Type="date" Nullable="false" />
+          <Property Name="Skjal" Type="int" Nullable="false" />
+          <Property Name="Upphadd" Type="decimal" Precision="22" Scale="2" Nullable="false" />
+          <Property Name="Tekstur" Type="nvarchar" MaxLength="60" />
+          <Property Name="DatoReelt" Type="date" Nullable="false" />
+          <Property Name="Klokka" Type="time" Precision="7" Nullable="false" />
+          <Property Name="Valuta" Type="decimal" Precision="22" Scale="2" />
+          <Property Name="Hagtol" Type="decimal" Precision="22" Scale="2" />
+          <Property Name="Fjala" Type="bit" Nullable="false" />
+          <Property Name="HeimaBanki" Type="int" />
+          <Property Name="HeimaBankaKonto" Type="nvarchar" MaxLength="20" />
+          <Property Name="SubSkjal" Type="int" />
+          <Property Name="BokingarSlag" Type="int" Nullable="false" />
+          <Property Name="DebitKontolistiId" Type="int" />
+          <Property Name="KreditKontolistiId" Type="int" />
+          <Property Name="TidarskeidId" Type="int" />
+          <Property Name="SkuffurId" Type="int" />
+          <Property Name="UpprunaSkuffurId" Type="int" />
+          <Property Name="UsersId" Type="int" />
+          <Property Name="rv" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="KreditKontoNummar" Type="int" />
+        </EntityType>
+        <EntityContainer Name="Lundin_fff_fffModelStoreContainer">
+          <EntitySet Name="Bokingar" EntityType="Self.Bokingar" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Lundin_fff_fffModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bokingar">
+          <Key>
+            <PropertyRef Name="BokID" />
+          </Key>
+          <Property Name="BokID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Dato" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Skjal" Type="Int32" Nullable="false" />
+          <Property Name="Upphadd" Type="Decimal" Precision="22" Scale="2" Nullable="false" />
+          <Property Name="Tekstur" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="DatoReelt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Klokka" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="Valuta" Type="Decimal" Precision="22" Scale="2" />
+          <Property Name="Hagtol" Type="Decimal" Precision="22" Scale="2" />
+          <Property Name="Fjala" Type="Boolean" Nullable="false" />
+          <Property Name="HeimaBanki" Type="Int32" />
+          <Property Name="HeimaBankaKonto" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SubSkjal" Type="Int32" />
+          <Property Name="BokingarSlag" Type="Int32" Nullable="false" />
+          <Property Name="DebitKontolistiId" Type="Int32" />
+          <Property Name="KreditKontolistiId" Type="Int32" />
+          <Property Name="TidarskeidId" Type="Int32" />
+          <Property Name="SkuffurId" Type="Int32" />
+          <Property Name="UpprunaSkuffurId" Type="Int32" />
+          <Property Name="UsersId" Type="Int32" />
+          <Property Name="rv" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="KreditKontoNummar" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="Lundin_fff_fffConnection" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bokingar" EntityType="Self.Bokingar" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Lundin_fff_fffModelStoreContainer" CdmEntityContainer="Lundin_fff_fffConnection">
+          <EntitySetMapping Name="Bokingar">
+            <EntityTypeMapping TypeName="Lundin_fff_fffModel.Bokingar">
+              <MappingFragment StoreEntitySet="Bokingar">
+                <ScalarProperty Name="BokID" ColumnName="BokID" />
+                <ScalarProperty Name="Dato" ColumnName="Dato" />
+                <ScalarProperty Name="Skjal" ColumnName="Skjal" />
+                <ScalarProperty Name="Upphadd" ColumnName="Upphadd" />
+                <ScalarProperty Name="Tekstur" ColumnName="Tekstur" />
+                <ScalarProperty Name="DatoReelt" ColumnName="DatoReelt" />
+                <ScalarProperty Name="Klokka" ColumnName="Klokka" />
+                <ScalarProperty Name="Valuta" ColumnName="Valuta" />
+                <ScalarProperty Name="Hagtol" ColumnName="Hagtol" />
+                <ScalarProperty Name="Fjala" ColumnName="Fjala" />
+                <ScalarProperty Name="HeimaBanki" ColumnName="HeimaBanki" />
+                <ScalarProperty Name="HeimaBankaKonto" ColumnName="HeimaBankaKonto" />
+                <ScalarProperty Name="SubSkjal" ColumnName="SubSkjal" />
+                <ScalarProperty Name="BokingarSlag" ColumnName="BokingarSlag" />
+                <ScalarProperty Name="DebitKontolistiId" ColumnName="DebitKontolistiId" />
+                <ScalarProperty Name="KreditKontolistiId" ColumnName="KreditKontolistiId" />
+                <ScalarProperty Name="TidarskeidId" ColumnName="TidarskeidId" />
+                <ScalarProperty Name="SkuffurId" ColumnName="SkuffurId" />
+                <ScalarProperty Name="UpprunaSkuffurId" ColumnName="UpprunaSkuffurId" />
+                <ScalarProperty Name="UsersId" ColumnName="UsersId" />
+                <ScalarProperty Name="rv" ColumnName="rv" />
+                <ScalarProperty Name="KreditKontoNummar" ColumnName="KreditKontoNummar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

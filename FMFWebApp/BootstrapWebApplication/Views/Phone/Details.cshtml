@@ -1,0 +1,61 @@
+﻿@model BootstrapWebApplication.Models.Phone
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Details;
+
+    <h2>@BootstrapResources.Resources.Details</h2>
+}
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        <h4>@Resources.PhoneNumber</h4>
+        <hr />
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPrimary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPrimary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Extension)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Extension)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CountryCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CountryCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+
+    </dl>
+</div>
+@if (!@Request.IsAjaxRequest())
+{
+    Html.Partial("_EditBackToListPartial", Model);
+}

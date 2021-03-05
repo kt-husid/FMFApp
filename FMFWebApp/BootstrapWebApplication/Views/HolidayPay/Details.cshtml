@@ -1,0 +1,146 @@
+﻿@model BootstrapWebApplication.Models.HolidayPay
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>HolidayPay</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Member.JobTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Member.JobTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FRTLON)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FRTLON)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TRSP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TRSP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FRT_DATO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FRT_DATO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TRS_DATO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TRS_DATO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LO_KR_A)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LO_KR_A)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LO_KR_F)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LO_KR_F)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LO_KR_FRT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LO_KR_FRT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LO_DATO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LO_DATO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DG_AR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DG_AR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TU_AR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TU_AR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DATO_AR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DATO_AR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ID_AR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID_AR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAML_KR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAML_KR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAML_KR2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAML_KR2)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

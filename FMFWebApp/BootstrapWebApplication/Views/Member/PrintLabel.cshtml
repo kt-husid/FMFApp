@@ -1,0 +1,309 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>@Resources.PrintMemberLabels</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="PrintMemberLabels" class="form-horizontal">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <span class="text-danger" id="errorMsg"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <span id="statusMsg"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.From.ToLower(), new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="100" name="PostalFrom" id="PostalFrom" type="text" class="form-control" placeholder="@Resources.From" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Postal + " " + @Resources.To.ToLower(), new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="999" name="PostalTo" id="PostalTo" type="text" class="form-control" placeholder="@Resources.To" />
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                                @Html.Label(@Resources.MembershipType, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="ff" name="MemberTypeCode" id="MemberTypeCode" type="text" class="form-control" placeholder="@Resources.MembershipType" />
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MemberType, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-4">
+                                    <input id="MemberTypeCode" name="MemberTypeCode" type="text" class="form-control" placeholder="@Resources.MembershipType" />
+                                </div>
+                                <div class="col-md-5">
+                                    <span id="MemberTypeDescription"></span>
+                                    <input type="hidden" id="MemberTypeId" name="MemberTypeId" />
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                                <label class="col-md-3 control-label">@Resources.JobCode @Resources.From.ToLower()</label>
+                                <div class="col-md-4">
+                                    <input id="MemberJobCodeFrom" name="MemberJobCodeFrom" type="text" class="form-control" placeholder="@Resources.JobCode" />
+                                </div>
+                                <div class="col-md-5">
+                                    <span id="MemberJobCodeFromDescription"></span>
+                                    <input type="hidden" id="MemberJobCodeFromId" name="MemberJobCodeFromId" />
+                                </div>
+                            </div>*@
+
+                            @*<div class="form-group">
+                                <label class="col-md-3 control-label">@Resources.JobCode @Resources.To.ToLower()</label>
+                                 <div class="col-md-4">
+                                    <input id="MemberJobCodeTo" name="MemberJobCodeTo" type="text" class="form-control" placeholder="@Resources.JobCode" />
+                                </div>
+                                <div class="col-md-5">
+                                    <span id="MemberJobCodeToDescription"></span>
+                                    <input type="hidden" id="MemberJobCodeToId" name="MemberJobCodeToId" />
+                                </div>
+                            </div>*@
+
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">@Resources.JobCode @Resources.From.ToLower()</label>
+                                <div class="col-md-9">
+                                    <input name="MemberJobCodeFrom" id="MemberJobCodeFrom" type="text" class="form-control" placeholder="@Resources.JobCode" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">@Resources.JobCode @Resources.To.ToLower()</label>
+                                <div class="col-md-9">
+                                    <input name="MemberJobCodeTo" id="MemberJobCodeTo" type="text" class="form-control" placeholder="@Resources.JobCode" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.FromYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="SignOnFrom" id="SignOnFrom" type="text" class="form-control datefield" placeholder="@Resources.From" value="@(new DateTime(DateTime.Now.Year-1, 1, 1))" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ToYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="SignOnTo" id="SignOnTo" type="text" class="form-control datefield" placeholder="@Resources.To" value="@DateTime.Now" />
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                                @Html.Label(@Resources.Job, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="de" name="FromJobCode" id="FromJobCode" type="text" class="form-control" placeholder="@Resources.Job" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Job, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="zz" name="ToJobCode" id="ToJobCode" type="text" class="form-control" placeholder="@Resources.Job" />
+                                </div>
+                            </div>*@
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="printLabelReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <span id="progress">...</span>
+                                <br />
+                                <div id="reportLink"></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/js/signalr")
+    @Scripts.Render("~/signalr/hubs")
+}
+
+<script>
+    var progressCheck = null;
+
+    $(function () {
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+        //$("#From,#To").kendoMaskedTextBox({
+        //    mask: "00" + dateSeparator + "00" + dateSeparator + "0000",
+        //});
+        activateDatePicker();
+
+        ParseInputDate("#SignOnFrom, #SignOnTo");
+
+        var memberTypeDataSource = CreateDataSource(10, "/MemberType/Find", "#MemberTypeCode");
+        //var jobDataSource = CreateDataSource(10, "/Job/Find", "#JobCode");
+
+        SetupAutoComplete($("#MemberTypeCode"), "Code", '#: data.Code# (#: data.Description#)', memberTypeDataSource, function (item) {
+            $("#MemberTypeId").val(item.Id);
+            $("#MemberTypeDescription").html(item.Description);
+        });
+
+        //SetupAutoComplete($("#MemberJobCodeFrom"), "Code", '#: data.Code# (#: data.Description#)', jobDataSource, function (item) {
+        //    $("#MemberJobCodeFromId").val(item.Id);
+        //    $("#MemberJobCodeFromDescription").html(item.Description);
+        //});
+        //SetupAutoComplete($("#MemberJobCodeTo"), "Code", '#: data.Code# (#: data.Description#)', jobDataSource, function (item) {
+        //    $("#MemberJobCodeToId").val(item.Id);
+        //    $("#MemberJobCodeToDescription").html(item.Description);
+        //});
+
+
+        $("#printLabelReport").click(function (e) {
+            e.preventDefault();
+            $('#progress').text("");
+            var PostalFrom = $("#PostalFrom").val();
+            var PostalTo = $("#PostalTo").val();
+            var MemberTypeCode = $("#MemberTypeCode").val();
+            var MemberJobCodeFrom = $("#MemberJobCodeFrom").val();
+            var MemberJobCodeTo = $("#MemberJobCodeTo").val();
+            var SignOnFrom = $("#SignOnFrom").val();
+            var SignOnTo = $("#SignOnTo").val();
+            //var FromJobCode = $("#FromJobCode").val();
+            //var ToJobCode = $("#ToJobCode").val();
+            
+            setStatusUI("Bíða við... Hetta kann taka eina løtu... Rapportin verður víst aftaná hetta er liðugt.");
+            setInputActive(false);
+            
+            var url = "/Member/PrintLabelReport";
+            var data = JSON.stringify({
+                "obj": {
+                    "PostalFrom": PostalFrom,
+                    "PostalTo": PostalTo,
+                    "MemberTypeCode": MemberTypeCode,
+                    "SignOnFrom": SignOnFrom,
+                    "SignOnTo": SignOnTo,
+                    "MemberJobCodeFrom": MemberJobCodeFrom,
+                    "MemberJobCodeTo": MemberJobCodeTo
+                    //"FromJobCode": FromJobCode,
+                    //"ToJobCode": ToJobCode
+                },
+                "isPartialView": false,
+                "type": "json"
+            });
+            console.log(data);
+            var reportUrl = '/Member/LabelReport?PostalFrom=' + PostalFrom + '&PostalTo=' + PostalTo + '&MemberTypeCode=' + MemberTypeCode + '&MemberJobCodeFrom=' + MemberJobCodeFrom + '&MemberJobCodeTo=' + MemberJobCodeTo + '&SignOnFrom=' + SignOnFrom + '&SignOnTo=' + SignOnTo;
+            $("#reportLink").html("<a target='_blank' href=" + reportUrl + ">Vís rapport</a>");
+            window.open(reportUrl);
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: data,
+                success: function (result) {
+                    console.log("done");
+                    onFinished(result);
+                },
+                error: function (error) {
+                    console.clear();
+                    console.log("error");
+                    onFinished(error);
+                }
+            });
+
+            //progressCheck = setInterval(function () {
+            //    getStatus(function (json) {
+            //        println("get status..");
+            //        console.log(json);
+            //        if (json && json != null && json.ItemsDone > 0) {
+            //            setStatusUI(json.ItemsDone + " / " + json.ItemsTotal + ". Time spent: " + json.TimeSpent);
+            //        }
+            //    }, function (error) {
+            //        println("get status error!");
+            //        console.log(json);
+            //    });
+            //}, 1000);
+            return false;
+        });
+
+
+        var connection = $.hubConnection();
+        var contosoChatHubProxy = connection.createHubProxy('messageHub');
+        contosoChatHubProxy.on('broadcastProgress', function (progress) {
+            $('#progress').text(progress);
+        });
+        connection.start()
+            .done(function () { console.log('Now connected, connection ID=' + connection.id); })
+            .fail(function () { console.log('Could not connect'); });
+
+
+    });
+
+    function onFinished(result) {
+        console.log(result);
+        //clearInterval(progressCheck);
+        //setStatusUI(result.Message.length > 0 ? result.Message : "");
+        if (result.Message && result.Message.length > 0) {
+            getStatus(function (json) {
+                if (json && json != null && json.ItemsDone > 0) {
+                    setStatusUI("Eydnaðist. Dagført " + json.ItemsDone + " limir. Tók " + json.TimeSpent + " sekund.");
+                }
+            }, function (error) {
+                setStatusUI("Feilur uppstóð");
+                println("get status error!");
+                console.log(json);
+            });
+        }
+        setInputActive(true);
+    }
+    function setInputActive(value) {
+        $("#PrintMemberLabels input, textarea, button").prop('disabled', !value);
+    }
+
+    function setStatusUI(text) {
+        $("#statusMsg").html(text);
+    }
+
+    function getStatus(callbackSuccess, callbackError) {
+        $.ajax({
+            type: "GET",
+            url: "/Member/GetTimeElapsedForLabelReportPrintJob",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                callbackSuccess(result);
+            },
+            error: function (error) {
+                callbackError(error);
+            }
+        });
+    }
+</script>

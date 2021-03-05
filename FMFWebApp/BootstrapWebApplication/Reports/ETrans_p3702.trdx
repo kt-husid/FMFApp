@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="20.10000047942cm" Culture="(Default)" Name="MemberSignOnsReport" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT&#xD;&#xA;hp.EmployerNumber,&#xD;&#xA;(SELECT COUNT(*) FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL  AND (hp2.TransferDate &gt;= @From) AND (hp2.TransferDate &lt;= @WeekTo)) AS Pcs,&#xD;&#xA;(SELECT SUM(hp2.Amount) - ISNULL((SELECT SUM(hp3.Amount) FROM HolidayPay_HOVD AS hp3 LEFT OUTER JOIN ChangeEvent AS ce3 ON ce3.Id = hp3.ChangeEventId WHERE ce3.DeletedOn IS NULL AND ((hp3.ART = '9') OR (hp3.ART = 'R')) AND (hp3.TransferDate &gt; @From) AND (hp3.TransferDate &lt;= @WeekTo)), 0)&#xD;&#xA;FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART &lt;&gt; '9') AND (hp2.ART &lt;&gt; 'R') AND (hp2.TransferDate &gt;= @From) AND (hp2.TransferDate &lt;= @WeekTo)) AS AmountTotal,&#xD;&#xA;(SELECT SUM(hp2.Amount) - ISNULL((SELECT SUM(hp3.Amount) FROM HolidayPay_HOVD AS hp3 LEFT OUTER JOIN ChangeEvent AS ce3 ON ce3.Id = hp3.ChangeEventId WHERE ce3.DeletedOn IS NULL AND ((hp3.ART = '9') OR (hp3.ART = 'R')) AND (hp3.TransferDate &gt;= @WeekFrom) AND (hp3.TransferDate &lt;= @WeekTo)), 0)&#xD;&#xA;FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART &lt;&gt; '9') AND (hp2.ART &lt;&gt; 'R') AND (hp2.TransferDate &gt;= @WeekFrom) AND (hp2.TransferDate &lt;= @WeekTo)) AS WeekAmountTotal,&#xD;&#xA;(SELECT TOP 1 TransferDate FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.EmployerNumber = hp.EmployerNumber) AND (TransferDate &gt;= @From) AND (TransferDate &lt;= @WeekTo) ORDER BY TransferDate ASC) AS DateFrom,&#xD;&#xA;(SELECT TOP 1 TransferDate FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.EmployerNumber = hp.EmployerNumber) AND (TransferDate &gt;= @From) AND (TransferDate &lt;= @WeekTo) ORDER BY TransferDate DESC) AS DateTo,&#xD;&#xA;sc.Name,&#xD;&#xA;Pcs.[Count] AS WeekCount, &#xD;&#xA;Pcs.Amount AS WeekAmount,&#xD;&#xA;PcsDeduction.[Count] AS WeekDeductionCount, &#xD;&#xA;PcsDeduction.Amount AS WeekDeductionAmount, &#xD;&#xA;Total.[Count] AS TotalCount, &#xD;&#xA;Total.Amount AS TotalAmount,&#xD;&#xA;TotalDeduction.[Count] AS TotalDeductionCount, &#xD;&#xA;TotalDeduction.Amount AS TotalDeductionAmount,&#xD;&#xA;WeekDeduction.Amount AS WeekDeductionAmount,&#xD;&#xA;WeekDeduction.[Count] AS WeekDeductionCount&#xD;&#xA;FROM HolidayPay_HOVD AS hp  LEFT OUTER JOIN&#xD;&#xA;ChangeEvent as ce ON hp.ChangeEventId = ce.Id&#xD;&#xA;LEFT OUTER JOIN ShippingCompany AS sc ON sc.EmployerNumber = hp.EmployerNumber &#xD;&#xA;LEFT OUTER JOIN ChangeEvent as ce2 ON ce2.Id = sc.ChangeEventId&#xD;&#xA;LEFT OUTER JOIN (SELECT DISTINCT hp2.EmployerNumber, COUNT(*) AS &quot;Count&quot;, SUM(hp2.Amount) AS Amount FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART = '1') AND (hp2.TransferDate &gt;= @WeekFrom) AND (hp2.TransferDate &lt;= @WeekTo) GROUP BY hp2.EmployerNumber) AS Pcs ON hp.EmployerNumber = Pcs.EmployerNumber&#xD;&#xA;LEFT OUTER JOIN (SELECT DISTINCT hp2.EmployerNumber, COUNT(*) AS &quot;Count&quot;, SUM(hp2.Amount) AS Amount FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART &lt;&gt; '1') AND (hp2.TransferDate &gt;= @WeekFrom) AND (hp2.TransferDate &lt;= @WeekTo) GROUP BY hp2.EmployerNumber) AS PcsDeduction ON hp.EmployerNumber = PcsDeduction.EmployerNumber&#xD;&#xA;LEFT OUTER JOIN (SELECT DISTINCT hp2.EmployerNumber, COUNT(*) AS &quot;Count&quot;, SUM(hp2.Amount) AS Amount FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART = '1') AND (hp2.TransferDate &gt;= @From) AND (hp2.TransferDate &lt;= @WeekTo) GROUP BY hp2.EmployerNumber) AS Total ON hp.EmployerNumber = Total.EmployerNumber&#xD;&#xA;LEFT OUTER JOIN (SELECT DISTINCT hp2.EmployerNumber, COUNT(*) AS &quot;Count&quot;, SUM(hp2.Amount) AS Amount FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART = 'R') AND (hp2.TransferDate &gt;= @From) AND (hp2.TransferDate &lt;= @WeekTo) GROUP BY hp2.EmployerNumber) AS TotalDeduction ON hp.EmployerNumber = TotalDeduction.EmployerNumber&#xD;&#xA;LEFT OUTER JOIN (SELECT DISTINCT hp2.EmployerNumber, COUNT(*) AS &quot;Count&quot;, SUM(hp2.Amount) AS Amount FROM HolidayPay_HOVD AS hp2 LEFT OUTER JOIN ChangeEvent AS ce2 ON ce2.Id = hp2.ChangeEventId WHERE ce2.DeletedOn IS NULL AND (hp2.ART = 'R') AND (hp2.TransferDate &gt;= @WeekFrom) AND (hp2.TransferDate &lt;= @WeekTo) GROUP BY hp2.EmployerNumber) AS WeekDeduction ON hp.EmployerNumber = WeekDeduction.EmployerNumber&#xD;&#xA;WHERE ce.DeletedOn IS NULL AND ce2.DeletedOn IS NULL AND (hp.TransferDate &gt;= @From) AND (hp.TransferDate &lt;= @WeekTo) AND (pcs.[Count] IS NOT NULL) --AND hp.ART &lt;&gt; '9'AND hp.ART &lt;&gt; 'R' --AND ((PcsDeduction.Amount IS NULL) OR (Pcs.Amount - PcsDeduction.Amount &gt; 0))&#xD;&#xA;GROUP BY hp.EmployerNumber, sc.Name, Pcs.[Count], Pcs.Amount, Total.[Count], Total.Amount, TotalDeduction.[Count], TotalDeduction.Amount, PcsDeduction.[Count], PcsDeduction.Amount, WeekDeduction.[Count], WeekDeduction.Amount&#xD;&#xA;ORDER BY hp.EmployerNumber" CommandTimeout="60" Name="sqlDataSource1" ParameterValues="{&quot;@From&quot;:&quot;01-04-2016&quot;,&quot;@WeekTo&quot;:&quot;08-04-2016&quot;,&quot;@WeekFrom&quot;:&quot;01-04-2016&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="DateTime" Name="@From">
+          <Value>
+            <String>= Parameters.From.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@WeekTo">
+          <Value>
+            <String>= Parameters.WeekTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@WeekFrom">
+          <Value>
+            <String>= Parameters.WeekFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="0.500300109386444cm" Name="detailSection1">
+      <Style>
+        <Font Name="Courier New" Size="9pt" />
+      </Style>
+      <Items>
+        <Panel Width="20.0998018121663cm" Height="0.500100255012512cm" Left="0.00019943872532746cm" Top="0cm" Name="panel2">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="6.04171867769611cm" Height="0.500000178813934cm" Left="1.90000045418738cm" Top="0cm" Value="=Fields.Name" Format="{0:d}" Name="textBox13">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.12747756445168cm" Height="0.500000178813934cm" Left="7.94192134382944cm" Top="0cm" Value="= Format(&quot;{0:d}&quot;,  Fields.DateFrom)" Format="{0:d}" Name="textBox14">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.12999956014691cm" Height="0.500000178813934cm" Left="10.0695990686131cm" Top="0cm" Value="= Format(&quot;{0:d}&quot;,  Fields.DateTo)" Format="" Name="textBox16">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.4998037153537cm" Height="0.5cm" Left="12.1997968268451cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.TotalAmount)&#xD;&#xA;" Format="" TextWrap="False" Name="textBox17">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.89422021562504cm" Height="0.500000178813934cm" Left="0.00558024708802796cm" Top="0cm" Value="=Fields.EmployerNumber" Format="{0:d}" Name="textBox1">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.39979941209152cm" Height="0.500000178813934cm" Left="15.6998019238368cm" Top="0cm" Value="= Format(&quot;{0:N0}&quot;, Fields.WeekCount + IsNull(WeekDeductionCount,0))" Format="" Name="textBox2">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.00000111023582cm" Height="0.5cm" Left="17.0998009649968cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.WeekAmount - IIf(Fields.WeekDeductionAmount &gt; 0, (Fields.WeekDeductionAmount/Fields.WeekDeductionCount)*IsNull(Fields.WeekDeductionCount, 1), 0))&#xD;&#xA;" Format="" Name="textBox18">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="1.80009986066541cm" Name="pageHeaderSection1">
+      <Items>
+        <Panel Width="10.0302018806134cm" Height="1.28134267157307cm" Left="10.0697985073384cm" Top="0.0185562796199562cm" Name="panel3">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="9.83039997869209cm" Height="0.500000357627869cm" Left="0.199800460344143cm" Top="0.0369128524178665cm" Value="= &quot;Síða: &quot; + PageNumber + &quot; Skriva: &quot; + Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Now()) + &quot; &quot; + Parameters.UserIdCode.Value" Name="textBox15">
+              <Style TextAlign="Left" VerticalAlign="Middle">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="9.8304015806801cm" Height="0.500000357627869cm" Left="0.199800460344143cm" Top="0.555569422288791cm" Value="= &quot;tíðarskeið: frá &quot; + Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Parameters.From.Value) + &quot; til &quot; +  Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Parameters.To.Value)" Name="ReportNameTextBox">
+              <Style TextAlign="Left" VerticalAlign="Middle">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <Panel Width="10.063817076248cm" Height="1.28134280299303cm" Left="0.00577968581335624cm" Top="0.018556312737786cm" Name="panel5">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="9.79422175732567cm" Height="0.500000342130657cm" Left="0.00577968581335624cm" Top="0.0184563583962341cm" Value="= &quot; ** Frítíðarløn ****&quot;" Name="textBox12">
+              <Style TextAlign="Left" VerticalAlign="Top">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="9.79422145453405cm" Height="0.500000357627869cm" Left="0.00577887836912414cm" Top="0.51865655410053cm" Value="=&quot;  Vikukoyring frá: &quot; + Format(&quot;{0:d}&quot;, Parameters.WeekFrom.Value) + &quot; til &quot; + Format(&quot;{0:d}&quot;, Parameters.WeekTo.Value)" Name="textBox9">
+              <Style TextAlign="Left" VerticalAlign="Top">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <TextBox Width="7.93614154039626cm" Height="0.500000178813934cm" Left="0.00577968581335624cm" Top="1.30009956796687cm" Value="" Format="" Name="textBox23">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+          </Style>
+        </TextBox>
+        <TextBox Width="1.39980026483531cm" Height="0.500000178813934cm" Left="15.6999989402294cm" Top="1.30009956796687cm" Value="ant" Format="{0:d}" Name="textBox3">
+          <Style TextAlign="Right">
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+            <Padding Left="5pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.49980309538689cm" Height="0.500000178813934cm" Left="12.1999978804589cm" Top="1.30009956796687cm" Value="upphædd" Format="{0:d}" Name="textBox43">
+          <Style TextAlign="Right">
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.13cm" Height="0.5cm" Left="10.0697976998942cm" Top="1.30009956796687cm" Value="dato til" Format="" Name="textBox10">
+          <Style TextAlign="Center">
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.12747749989731cm" Height="0.500000178813934cm" Left="7.94211836022207cm" Top="1.30009956796687cm" Value="dato frá" Format="" Name="textBox44">
+          <Style TextAlign="Center">
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.9999985314608cm" Height="0.5cm" Left="17.1000001261632cm" Top="1.30009956796687cm" Value="munur" Format="{0:d}" Name="textBox41">
+          <Style TextAlign="Right">
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Courier New" Size="10pt" Bold="False" />
+            <Padding Left="5pt" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="0.799599759987199cm" Name="pageFooterSection1">
+      <Items>
+        <Panel Width="20.0943203868061cm" Height="0.500100324945838cm" Left="0.0056795627285755cm" Top="0cm" Name="panel4">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="12.1940166111465cm" Height="0.500000151395794cm" Left="0.00010012308478013cm" Top="0cm" KeepTogether="True" Value=" Samanlagt fyri alt" Name="textBox4">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.39980456334684cm" Height="0.500000178813934cm" Left="15.6943209923893cm" Top="0cm" Value="=Format(&quot;{0:N0}&quot;, Fields.Pcs - SUM(IsNull(Fields.WeekDeductionCount,0)))" Name="textBox8">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.49980588536008cm" Height="0.5cm" Left="12.1943158953976cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.AmountTotal - IsNull(Fields.TotalDeductionAmount,0))" Name="textBox6">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.00000111023582cm" Height="0.5cm" Left="17.0943200335493cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, SUM(Fields.WeekAmount) - SUM(IIf(Fields.WeekDeductionAmount &gt; 0, Fields.WeekDeductionAmount/Fields.WeekDeductionCount, 0)))" Name="textBox5">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="0.25cm" Right="0.25cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="From" Type="DateTime" Visible="True">
+      <Value>
+        <String>31-03-2016</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="To" Type="DateTime" Visible="True">
+      <Value>
+        <String>31-03-2017</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="UserIdCode">
+      <Value>
+        <String>*</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="WeekFrom" Type="DateTime" Text="WeekFrom" Visible="True">
+      <Value>
+        <String>01-04-2016</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="WeekTo" Type="DateTime" Text="WeekTo" Visible="True">
+      <Value>
+        <String>08-04-2016</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

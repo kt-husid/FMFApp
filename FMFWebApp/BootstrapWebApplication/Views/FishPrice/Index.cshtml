@@ -1,0 +1,131 @@
+﻿@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var title = @Resources.Country;
+    var controllerName = ViewContext.GetControllerName();
+    ViewBag.Title = title;
+}
+@*<h2>@title</h2>*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.FishPriceViewModel>()
+    .Name("gridFishPrice")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.FishSpeciesCode).Title(@Resources.Code);
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.Price).Title(@Resources.Price);
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:d}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @Html.ExportToExcelButton("Excel")
+                <input type="text" id="GridSearch" class="k-textbox" />
+                <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='FishPrice' data-action-name='Create' data-model-name='FishPrice'>@Resources.Create</button>
+                <button tabindex="-1" class="edit-action k-button" data-toggle='modal' data-controller-name='FishPrice' data-action-name='' data-model-name='FishPrice'>@Resources.Edit</button>
+                <button tabindex="-1" class="delete-action k-button" data-toggle='modal' data-controller-name='FishPrice' data-action-name='' data-model-name='FishPrice'>@Resources.Delete</button>
+
+            </div>
+        </text>);
+    })
+    .Reorderable(reorderable=>reorderable.Columns(false))
+    //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+    .Filterable(ftb => ftb.Mode(GridFilterMode.Menu))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Fiskaprísir.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+    //.HtmlAttributes(new { style = "min-height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(true)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+                            .Read(read => read.Action("Read", "FishPrice"))
+    )
+)
+<script>
+    var gridHandler;
+    $(function () {
+
+        gridHandler = new GridHandler("#gridFishPrice", "#GridSearch");
+        gridHandler.focusSearch();
+        gridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        gridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+    });
+
+
+    function onChange(arg) {
+        gridHandler.onChange(arg);
+        var id = gridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id);
+        $(".delete-action").data("action-name", "Delete?id=" + id);
+    }
+
+    function onDataBound(arg) {
+        gridHandler.onDataBound(arg);
+    }
+
+    function onDataBinding(arg) {
+        gridHandler.onDataBinding(arg);
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

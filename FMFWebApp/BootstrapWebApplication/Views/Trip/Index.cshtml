@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Trip>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.Trip,
+        Titles = @Resources.Trips
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width:350px;">
+                    @Html.SortField(model => model.FirstOrDefault().TripId)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().From)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().To)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().Days)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().CrewIncludingStayingAtHome)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().CrewSharePercentage)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().VIDAR)
+                </th>
+                <th>
+                    <!-- todo: MANN_PART, MANN_PART_IS or MANN_PART_I -->
+                    @Html.SortField(model => model.FirstOrDefault().MANN_PART)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().TotalWeight)
+                </th>
+                <th>
+                    @Html.SortField(model => model.FirstOrDefault().TotalAmount)
+                </th>
+                @*<th></th>*@
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr class="data">
+                <td>
+                    <a data-bind="text: TripId, attr: { href: '/Trip/Details/'+Id}"></a>
+                </td>
+                @*<td data-bind="text: ShippingCompany ? ShippingCompany.Name : ''"></td>*@
+                @*<td data-bind="text: moment(From()).format('LL')"></td>*@
+                @*<td data-bind="text: moment(To()).format('LL')"></td>*@
+                <td></td>
+                <td></td>
+                <td data-bind="text: Days"></td>
+                <td data-bind="text: MANNING_I"></td>
+                <td data-bind="text: CrewSharePercentage"></td>
+                <td data-bind="text: VIDAR"></td>
+                <td data-bind="text: MANN_PART"></td>
+                <td data-bind="text: TotalWeight"></td>
+                @*<td class="data" style="width:250px; text-align:left;">
+                        @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                    </td>*@
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/Trip", PagedList = @Model })

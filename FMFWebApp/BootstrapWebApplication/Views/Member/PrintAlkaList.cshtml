@@ -1,0 +1,81 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Útskrift av mynstringum til ALKA</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form id="PrintAlkaList" class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.FromYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="SignOnFrom" id="SignOnFrom" type="text" class="form-control datefield" placeholder="@Resources.FromYear" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ToYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="SignOnTo" id="SignOnTo" type="text" class="form-control datefield" placeholder="@Resources.ToYear" />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Code, new { @class = "control-label col-md-3" }) 
+                                <div class="col-md-9">
+                                    <input name="AlkaKota" id="AlkaKota" type="text" class="form-control" placeholder="@Resources.Code" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.Gender, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input value="M" name="GenderCode" id="GenderCode" type="text" class="form-control" placeholder="@Resources.Gender" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="PrintAlkaListReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#SignOnFrom, #SignOnTo");
+
+        $("#PrintAlkaListReport").click(function (e) {
+            e.preventDefault();
+            var GenderCode = $("#GenderCode").val();
+            var SignOnFrom = $("#SignOnFrom").val();
+            var SignOnTo = $("#SignOnTo").val();
+
+            window.open('/Member/AlkaListReport?SignOnFrom=' + SignOnFrom + '&SignOnTo=' + SignOnTo + '&GenderCode=' + GenderCode);
+            return false;
+        });
+
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+    });
+</script>

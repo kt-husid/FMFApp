@@ -1,0 +1,63 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.PersonTitle>
+@using PagedList.Mvc;
+
+@*<table class="table">
+
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "PersonTitle", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })
+            </td>
+        </tr>
+    }
+</table>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Titles">
+        <tr>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: Description"></td>
+            <td>
+                <div data-bind="attr: {id:Id}" class="actionButtons">
+                    <input type="hidden" name="title" data-bind="value: '@Resources.Title'" />
+                    <button class='btn btn-primary btn-xs edit-action'>@Resources.Edit</button>
+                    <button class='btn btn-info btn-xs details-action'>@Resources.Details</button>
+                    <button class='btn btn-danger btn-xs delete-action'>@Resources.Delete</button>
+                </div>
+                @*@Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "PersonTitle", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })*@
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br />
+@Html.Partial("_PagedListFooterPartial")
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/ViewModel/PersonTitle/Index.js")
+}

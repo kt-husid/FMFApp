@@ -1,0 +1,112 @@
+﻿@{
+    var from = @DateTime.Now.Year - 4;
+    var to = @DateTime.Now.Year;
+}
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberHolidayPayYearTotal>()
+    .Name("gridHolidayPayForPeriod")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Year).Title(@Resources.Year);
+        columns.Bound(p => p.Sum).Title(@Resources.Sum).Format("{0:C}");
+        columns.Bound(p => p.LastDate).Format("{0:d}").Title(@Resources.Date);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                <form class="form-inline">
+                    @Resources.HolidayPays @Resources.From.ToLower()
+                    <input id="HolidayPaysForPeriod_From" type="number" value="@from" />
+                    @Resources.To.ToLower()
+                    <input id="HolidayPaysForPeriod_To" type="number" value="@to" />
+                    @*<a id="getHolidayPaysForPeriod" href="#" class="k-button">@Resources.Load</a>*@
+                    @Html.ExportToExcelButton("Excel")
+                </form>
+            </div>
+        </text>);
+    })
+    .Selectable()
+    .Navigatable()
+    .Events(events => events.Change("onHolidayPayForPeriodChange").DataBound("onHolidayPayForPeriodDataBound").DataBinding("onHolidayPayForPeriodDataBinding"))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima frítíðarlønir fyri tíðarskeið.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .HtmlAttributes(new { style = "min-height:250px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("MemberHolidayPaysForPeriod_Read", "Member", new { id = @Model.Id, from = @from, to = @to }))
+    )
+)
+
+<script>
+    function onHolidayPayForPeriodChange(arg) {
+        memberHolidayPayPeriodGridHandler.onChange(arg);
+        @*var id = memberHolidayPayPeriodGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&shipId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&shipId=" + @Model.Id);*@
+    }
+
+    function onHolidayPayForPeriodDataBound(e) {
+        memberHolidayPayPeriodGridHandler.onDataBound(e);
+    }
+
+    function onHolidayPayForPeriodDataBinding(e) {
+        memberHolidayPayPeriodGridHandler.onDataBinding(e);
+    }
+
+    var memberHolidayPayPeriodGridHandler;
+    $(function () {
+
+        memberHolidayPayPeriodGridHandler = new GridHandler("#gridHolidayPayForPeriod");
+        memberHolidayPayPeriodGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        memberHolidayPayPeriodGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            //$(".delete-action").filter(":visible").click();
+        };
+
+        $("#HolidayPaysForPeriod_From, #HolidayPaysForPeriod_To").kendoNumericTextBox({
+            format: "0",
+            min: 1970,
+            max: 2070,
+            step: 1
+        });
+
+        $("#HolidayPaysForPeriod_From, #HolidayPaysForPeriod_To").change(function (e) {
+            //$("#getHolidayPaysForPeriod").click(function (e) {
+            var from = $("#HolidayPaysForPeriod_From").val();
+            var to = $("#HolidayPaysForPeriod_To").val();
+
+            var grid = $("#gridHolidayPayForPeriod").data("kendoGrid");
+            if (from && to) {
+                grid.dataSource.filter([{ field: "from", operator: "eq", value: from }, { field: "to", operator: "eq", value: to }]);
+            } else {
+                grid.dataSource.filter({});
+            }
+        });
+    });
+</script>

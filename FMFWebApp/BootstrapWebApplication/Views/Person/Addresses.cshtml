@@ -1,0 +1,58 @@
+﻿@model BootstrapWebApplication.Models.Person
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.Address,
+        Titles = @Resources.Addresses
+    };
+    var editDetailsDeleteData = new EditDetailsDelete2Data()
+    {
+        Title = pageData.Title,
+        ControllerName = "Address",
+        ModelName = "Addresses"
+    };
+}
+<h2>@pageData.Titles</h2>
+@Html.ActionModalButton2(@editDetailsDeleteData.ControllerName, "", @editDetailsDeleteData.ModelName, @Resources.Create, new { @class = "btn btn-primary btn-xs create-action" })
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().AddressLine1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Postal.PostalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Postal.CityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Country.CountryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().StateProvinceRegion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().IsPrimary)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: pvm.data.Addresses">
+        <tr>
+            <td data-bind="text: AddressLine1"></td>
+            <td data-bind="text: ZipCode"></td>
+            <td data-bind="text: CityName"></td>
+            <td data-bind="text: Country.CountryName"></td>
+            <td data-bind="text: StateProvinceRegion"></td>
+            <td data-bind="text: IsActive"></td>
+            <td data-bind="text: IsPrimary"></td>
+            <td class="edit-details-delete">
+                @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title, ModelName="Addresses" })
+            </td>
+        </tr>
+    </tbody>
+</table>

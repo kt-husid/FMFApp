@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    var culture = Kthusid.Helpers.CultureHelper.GetCurrentCulture();
+    var cultureUILowerInvariant = Kthusid.Helpers.CultureHelper.GetCurrentUICultureLowerInvariant();
+    //TempData["Culture"] = culture;
+    ViewBag.Title = Core.Settings.Instance.AppName;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/css/kthusid")
+    @Scripts.Render("~/js/jquery")
+    @Scripts.Render("~/js/modernizr")
+    @*@Scripts.Render("~/css/jqueryui")*@
+    @Styles.Render("~/css/bootstrap")
+    @*@Styles.Render("~/css/fuelux")*@
+    @*@Styles.Render("~/css/bootstrap-datepicker")*@
+    @*@Styles.Render("~/css/editable")*@
+    @*@Styles.Render("~/css/datatable")*@
+    @Styles.Render("~/Content/kendo/2015.1.408/styles/kendocss")
+    @*@RenderSection("head", required: false)*@
+    @Scripts.Render("~/Content/telerik/reporting/js/telerikReportViewer-8.2.14.1204.min.js")
+    @Styles.Render("~/Content/telerik/reporting/styles/telerikReportViewer-8.2.14.1204.css")
+
+    @*@Styles.Render("~/Content/kendo/styles/kendo.metro.min.css")*@
+    @Styles.Render("~/Content/font-awesome.css")
+    <style>
+        #reportViewer1 {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            min-height: 800px;
+            overflow: hidden;
+            font-family: Verdana, Arial;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        @RenderBody()
+    </div><!--/.container-->
+    @Scripts.Render("~/js/bootstrap")
+    @*@Scripts.Render("~/js/bootstrap-datepicker")*@
+    @Scripts.Render("~/js/knockout")
+    @*@Scripts.Render("~/js/linq")*@
+    @*@Scripts.Render("~/js/maskedinput")*@
+    @*@Scripts.Render("~/js/sammy")*@
+    @*@Scripts.Render("~/js/jqueryui")*@
+    @Scripts.Render("~/js/jqueryval")
+    @Scripts.Render("~/js/underscore")
+    @Scripts.Render("~/js/json2")
+    @Scripts.Render("~/js/kthusid")
+    @*@Scripts.Render("~/js/shortcuts")*@
+    @*@Scripts.Render("~/js/editable")
+        @Scripts.Render("~/js/datatable")*@
+    @*@Scripts.Render("~/js/fuelux")*@
+    @Scripts.Render("~/js/moment")
+    @Scripts.Render("~/js/kendo")
+    <script src="@Url.Content("~/Content/kendo/2015.1.408/js/cultures/kendo.culture." + culture.ToLower() + ".min.js")"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        kendo.culture("@culture.ToLower()");
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+﻿<script>
+    function onMemberSignOnChange(arg) {
+        memberSignOnGridHandler.onChange(arg);
+        @*var id = memberSignOnGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);*@
+        }
+
+    function onMemberSignOnDataBound(e) {
+        memberSignOnGridHandler.onDataBound(e);
+    }
+
+    function onMemberSignOnDataBinding(e) {
+        memberSignOnGridHandler.onDataBinding(e);
+    }
+
+    var memberSignOnGridHandler;
+</script>
+@{
+    var from = DateTime.Now.AddYears(-2).ToString("ddMMyyyy");
+    var to = DateTime.Now.ToString("ddMMyyyy");
+}
+@model BootstrapWebApplication.Models.Member
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberSignOnViewModel>()
+    .Name("gridMemberSignOn")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.TripId).Title(@Resources.Trip).Hidden();
+        columns.Bound(p => p.TripNumber).Title(@Resources.Trip).ClientTemplate("<text><a href='/Trip/Details/#= TripId #'>#= TripNumber # </a></text>");
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.Days).Title(@Resources.Days).ClientFooterTemplate("<text>#if(data.TIL_PR_DG){#<span>#= sum #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.ShipCode).Title(@Resources.Ship).ClientTemplate("<text><a href='/Ship/Details/#= ShipId #'>#= ShipCode # - #= ShipName #</a></text>");
+        columns.Bound(p => p.JobCode).Title(@Resources.Job);
+        columns.Bound(p => p.PART).Title(@Resources.Share);
+        columns.Bound(p => p.TIL_PR_DG).Title(@Resources.PerDay).Format("{0:C}").ClientFooterTemplate("<text>#if(data.TIL_PR_DG){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber);
+        columns.Bound(p => p.KR_IALT).Title("KR_IALT").Format("{0:C}").ClientFooterTemplate("<text>#if(data.KR_IALT){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.KR_I).Title("kr-i").Format("{0:C}").ClientFooterTemplate("<text>#if(data.KR_I){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.KR_FF).Title("kr-ff").Format("{0:C}").ClientFooterTemplate("<text>#if(data.KR_FF){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        columns.Bound(p => p.MembershipPayment).Title("Limagjald").Format("{0:C2}").ClientFooterTemplate("<text>#if(data.MembershipPayment){#<span>#= kendo.toString(sum, 'C2') #</span>#}else{#<span>0</span>#}#</text>");
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @*<button class="create-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='CreateBankAccount' data-model-name='BankAccount'>@Resources.Create</button>*@
+                <form class="form-inline">
+                    @Html.ExportToExcelButton("Excel")
+                    @Resources.From <input id="MemberSignOn_From" type="text" class="k-textbox" value="@from" />
+                    @Resources.To <input id="MemberSignOn_To" type="text" class="k-textbox" value="@to" />
+                    <a id="printSignOnReport" href="#" class="k-button">@Resources.Print</a>
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        //.ForceProxy(true)
+        .AllPages(true)
+        .FileName("Mynstringar.xlsx")
+        .Filterable(false)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onMemberSignOnChange").DataBound("onMemberSignOnDataBound").DataBinding("onMemberSignOnDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberSignOn_Create", "Member"))
+        .Read(read => read.Action("MemberSignOn_Read", "Member", new { id = @Model.Id }))
+        .Aggregates(aggregates =>
+        {
+            aggregates.Add(p => p.Days).Sum();
+            aggregates.Add(p => p.TIL_PR_DG).Sum();
+            aggregates.Add(p => p.KR_IALT).Sum();
+            aggregates.Add(p => p.KR_I).Sum();
+            aggregates.Add(p => p.KR_FF).Sum();
+            aggregates.Add(p => p.MembershipPayment).Sum();
+        })
+        //.Update(update => update.Action("MemberSignOn_Update", "Member"))
+        //.Destroy(update => update.Action("MemberSignOn_Destroy", "Member"))
+    )
+)
+<script>
+    $(function () {
+
+        memberSignOnGridHandler = new GridHandler("#gridMemberSignOn");
+        memberSignOnGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        memberSignOnGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    $(function () {
+        //$("#MemberSignOn_From,#MemberSignOn_To").kendoMaskedTextBox({
+        //    mask: "00" + dateSeparator + "00" + dateSeparator + "0000",
+        //});
+
+        $("#printSignOnReport").click(function (e) {
+            var from = $("#MemberSignOn_From").val();
+            var to = $("#MemberSignOn_To").val();
+            window.open('/Member/MemberSignOnReport?MemberId=' + '@Model.Id' + '&From=' + from + '&To=' + to);// + '&isPartialView=false');
+
+            //from = replaceAll(dateSeparator, "", from);
+            //to = replaceAll(dateSeparator, "", to);
+
+            @*var modal = $.showModal("<h4>@Resources.ReportFor @Resources.SignOns</h4>", null, "", {
+                keyboard: true
+            });
+
+            $.get("/Member/MemberSignOnReport", {
+                "MemberId": "@Model.Id",
+                "From": from,
+                "To": to
+            }, function (data) {
+                setTimeout(function () {
+                    modal.setContent(data);
+                }, 500);
+            });*@
+        });
+
+        $("#MemberSignOn_From, #MemberSignOn_To").change(function (e) {
+            var from = $("#MemberSignOn_From").val();
+            var to = $("#MemberSignOn_To").val();
+
+            var grid = $("#gridMemberSignOn").data("kendoGrid");
+            if (from && to) {
+                grid.dataSource.filter([{ field: "from", operator: "eq", value: from }, { field: "to", operator: "eq", value: to }]);
+            } else {
+                grid.dataSource.filter({});
+            }
+        });
+
+        setTimeout(function () {
+            $("#MemberSignOn_From").change();
+        }, 250);
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

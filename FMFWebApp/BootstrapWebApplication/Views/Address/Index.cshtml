@@ -1,0 +1,60 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Address>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.Address,
+        Titles = @Resources.Addresses
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().AddressLine1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Postal.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Postal.CityName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Country.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().StateProvinceRegion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrimary)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr>
+                <td data-bind="text: AddressLine1"></td>
+                <td data-bind="text: ZipCode"></td>
+                <td data-bind="text: CityName"></td>
+                <td data-bind="text: Country.CountryName"></td>
+                <td data-bind="text: StateProvinceRegion"></td>
+                <td data-bind="text: IsActive"></td>
+                <td data-bind="text: IsPrimary"></td>
+                <td class="edit-details-delete">
+                    @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/Address", PagedList = @Model })

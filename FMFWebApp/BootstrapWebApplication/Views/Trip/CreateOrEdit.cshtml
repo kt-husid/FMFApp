@@ -1,0 +1,382 @@
+﻿@model BootstrapWebApplication.Models.ShipTripCreateViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @Resources.Create;
+    <h2>@Resources.Create</h2>
+}
+@{
+    int shipId = -1;
+    if (@Request != null)
+    {
+        int.TryParse(@Request.QueryString["shipId"], out shipId);
+    }
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateOrEditTrip" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Trip</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="ShipId" value="@shipId" />
+
+        <input type="hidden" name="VIDAR" value="@Model.VIDAR" />
+
+        
+        <div class="form-group">
+            <div class="col-md-9 col-lg-offset-3">
+                <input type="hidden" name="ErrorMessage" id="ErrorMessage" />
+                @Html.ValidationMessageFor(model => model.ErrorMessage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TripId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.TripId, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessageFor(model => model.TripId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Days, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Days, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @tabindex = "-1" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CrewIncludingStayingAtHome, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.CrewIncludingStayingAtHome, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CrewIncludingStayingAtHome, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CrewSharePercentage, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.CrewSharePercentage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CrewSharePercentage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CrewSharePart, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.CrewSharePart, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CrewSharePart, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PortOfLandingId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-2">
+                <input id="CompanyCode" name="CompanyCode" type="text" class="form-control" placeholder="@Resources.Company" value='@(Model.PortOfLanding != null ? Model.PortOfLanding.Code : "")' />
+                @*<input id="CompanyCode" type="text" class="form-control" disabled="disabled" />*@
+            </div>
+            <div class="col-md-7">
+                <span id="PortOfLandingInfo">@(Model.PortOfLanding != null ? Model.PortOfLanding.Name : "")</span>
+                <input type="hidden" id="PortOfLandingId" name="PortOfLandingId" value="@Model.PortOfLandingId" />
+                @*@Html.DropDownList("PortOfLandingId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.PortOfLandingId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3 text-right">
+                <label class="control-label">
+                    Manningarpartur kr.
+                </label>
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.MANN_PART, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MANN_PART, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.TotalWeight, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.TotalWeight, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TotalWeight, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        @if (ViewBag.HasPairShip)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.PairShipId, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-2">
+                    <input id="PairShip_ShipCode" name="PairShip_ShipCode" type="text" class="form-control" placeholder="@Resources.ShipCode" value='@(Model.PairShip != null ? Model.PairShip.Code : "")' />
+                    @*<input id="PairShip_ShipCode" type="text" class="form-control" disabled="disabled" />*@
+                </div>
+                <div class="col-md-7">
+                    <span id="PairShipInfo">@(Model.PairShip != null ? Model.PairShip.Name : "")</span>
+                    <input type="hidden" id="PairShipId" name="PairShipId" value="@Model.PairShipId" />
+                    @*@Html.DropDownList("PairShipId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.PairShipId, "", new { @class = "text-danger" })*@
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.PairTrawlerDocumentId, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.PairTrawlerDocumentId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PairTrawlerDocumentId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+        }
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}
+<script>
+    //var companies,
+    //    ships;
+
+    $(function () {
+
+        //$("#From,#To").kendoMaskedTextBox({
+        //    mask: "00/00/0000",
+        //    clearPromptChar: true
+        //});
+        //$("#TripId").mask('9999', { placeholder: '_' });
+        //$("#From").kendoMaskedTextBox({
+        //    mask: "00/00/0000",
+        //    clearPromptChar: true
+        //});
+        //$("#To").mask('99/99/9999', { placeholder: '_' });
+        //$("#CrewSharePercentage").mask('99.99 %', { placeholder: '_' });
+        //$("#TotalAmount").kendoMaskedTextBox({
+        //    mask: "0,0.00 $"
+        //});
+        //$("#TotalAmount").mask('999.99', { placeholder: '_' });
+        //$("#TotalAmount").mask('99/99/9999', { placeholder: '_' });
+        //$("#TotalAmount").kendoMaskedTextBox({
+        //    mask: "0,0.00 $"
+        //});
+
+        $("#TripId").focus();
+        ParseInputDate("#From,#To");
+        ParseInputDecimal("#Crew, #TotalWeight, #TotalAmount");
+        ParseInputPercentage("#CrewSharePercentage, #CrewSharePart, #MANN_PART");
+
+        var companyDataSource = CreateDataSource(10, "/Company/Find", "#CompanyCode");
+        SetupAutoComplete($("#CreateOrEditTrip").find("#CompanyCode"), "Code", '#: data.Code# (#: data.Name#)', companyDataSource, function (item) {
+            $("#PortOfLandingId").val(item.Id);
+            $("#PortOfLandingInfo").html(item.Name);
+        });
+        //var companyDataSource = null;
+        //CreateLocalDataSource("/Company/GetAll", "#CompanyCode", "Companies", companyDataSource, function (dataSource) {
+        //    companyDataSource = dataSource;
+        //    SetupAutoComplete($("#CreateOrEditTrip").find("#CompanyCode"), "Code", '#: data.Code# (#: data.Name#)', companyDataSource, function (item) {
+        //        $("#PortOfLandingId").val(item.Id);
+        //        $("#PortOfLandingInfo").html(item.Name);
+        //    });
+        //});
+
+        var shipDataSource = CreateDataSource(10, "/Ship/Find", "#PairShip_ShipCode");
+        SetupAutoComplete($("#CreateOrEditTrip").find("#PairShip_ShipCode"), "Code", '#: data.Code# (#: data.Name#)', shipDataSource, function (item) {
+            $("#PairShipId").val(item.Id);
+            $("#PairShipInfo").html(item.Name);
+        });
+        //var shipDataSource = null;
+        //CreateLocalDataSource("/Ship/GetAll", "#PairShip_ShipCode", "Ships", shipDataSource, function (dataSource) {
+        //    shipDataSource = dataSource;
+        //    SetupAutoComplete($("#CreateOrEditTrip").find("#PairShip_ShipCode"), "Code", '#: data.Code# (#: data.Name#)', shipDataSource, function (item) {
+        //        $("#PairShipId").val(item.Id);
+        //        $("#PairShipInfo").html(item.Name);
+        //    });
+        //});
+
+        $(document.body).off("blur", "#To, #From").on("blur", "#To, #From", function (e) {
+            setTimeout(function () {
+                var to = parseDate($("#CreateOrEditTrip #To").val());
+                var from = parseDate($("#CreateOrEditTrip #From").val());
+                var diffMS = to - from;
+                var one_day = 1000 * 60 * 60 * 24;
+                days = Math.round(diffMS / one_day) + 1;
+                //console.log("to: " + to + ", from: " + from + ", days: " + days);
+                if (days > 0) {
+                    $("#Days").val(days);
+                }
+                else {
+                    $("#Days").val("");
+                }
+            }, 100);
+        });
+
+        @*$.getDataAsJson('/api/Trip/GetTripCreateRelatedDataListViewModel', {
+            'type': 'json'
+        }, function (json) {
+            //console.log(json);
+            companies = Rx.Observable.fromArray(json.Companies);
+            ships = Rx.Observable.fromArray(json.Ships);
+            $("#PortOfLandingId, #CompanyCode, #PairShipId, #PairShip_ShipCode").prop('disabled', false);
+            setTimeout(function () {
+
+                AddInputCodeFilter('#CompanyCode', companies, function (x, y) { return x.Code == y; }, function (z) { $('#PortOfLandingId').val(z.Id); });
+                AddDropdownFilter('#PortOfLandingId', companies, function (x, y) { return x.Id == y; }, function (z) { $('#CompanyCode').val(z.Code); });
+
+                AddInputCodeFilter('#PairShip_ShipCode', ships, function (x, y) { return x.Code == y; }, function (z) { println(z); $('#PairShipId').val(z.Id); });
+                AddDropdownFilter('#PairShipId', ships, function (x, y) { return x.Id == y; }, function (z) { println(z); $('#PairShip_ShipCode').val(z.Code); });
+
+                $("#PortOfLandingId").prop('disabled', false);
+                $("#PairShipId").prop('disabled', false);
+
+                $("#CompanyCode").prop('disabled', false).val('@Model.CompanyCode').keyup();
+                $("#PairShip_ShipCode").prop('disabled', false).val('@Model.PairShip_ShipCode').keyup();
+            }, 100);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+
+        @*$.getDataAsJson('/api/Company/GetAll', {
+            'type': 'json'
+        }, function (json) {
+            companies = Rx.Observable.fromArray(json);
+            $("#PortOfLandingId").prop('disabled', false);
+            setTimeout(function () {
+                $("#CompanyCode").prop('disabled', false).val('@Model.CompanyCode').keyup();
+            }, 100);
+
+            //$("#CompanyCode").
+            //companies = json;
+        }, function (error) {
+            console.log(error);
+        });
+
+        $.getDataAsJson('/api/Ship/GetAll', {
+            'type': 'json'
+        }, function (json) {
+            ships = Rx.Observable.fromArray(json);
+            $("#PairShipId").prop('disabled', false);
+            setTimeout(function () {
+                $("#PairShip_ShipCode").prop('disabled', false).val('@Model.PairShip_ShipCode').keyup();
+            }, 100);
+            //ships = json;
+            //console.log(ships);
+        }, function (error) {
+            console.log(error);
+        });
+
+        $('#PairShip_ShipCode').keyup(function (e) {
+            $.getDataAsJson('/api/Ship/GetFromCode', {
+                'code': $(this).val(),
+                'type': 'json'
+            }, function (json) {
+                console.log(json);
+                $('#PairShipId').val(json.Id);
+            }, function (error) {
+                console.log(error);
+            });
+        });
+
+        $('#PairShipId').change(function () {
+            var id = $(this).val();
+            //console.log(id);
+            var source = ships.filter(function (x, idx, obs) {
+                return x.Id == id;
+            });
+            var subscription = source.subscribe(
+            function (x) {
+                $('#PairShip_ShipCode').val(x.ShipCode);
+            },
+            function (err) {
+                console.log('Error: %s', err);
+            },
+            function () {
+                //console.log('Completed');
+            });
+        });
+
+        $('#CompanyCode').keyup(function (e) {
+            $.getDataAsJson('/api/Company/GetFromCode', {
+                'code': $(this).val(),
+                'type': 'json'
+            }, function (json) {
+                console.log(json);
+                $('#PortOfLandingId').val(json.Id);
+            }, function (error) {
+                console.log(error);
+            });
+        });
+
+        $('#PortOfLandingId').change(function () {
+            var id = $(this).val();
+            //console.log(id);
+            var source = companies.filter(function (x, idx, obs) {
+                return x.Id == id;
+            });
+            var subscription = source.subscribe(
+            function (x) {
+                $('#CompanyCode').val(x.CompanyCode);
+            },
+            function (err) {
+                console.log('Error: %s', err);
+            },
+            function () {
+                //console.log('Completed');
+            });
+        });*@
+
+        //$(document).off('blur', '#From').on('blur', '#From', function () {
+        //    console.log(Date.parse("22012014"));
+        //    var input = $(this).val();
+        //    var date = new Date(input);
+        //    date.toISOString();
+        //    console.log(date);
+        //});
+        //$("#From").blur(function () {
+
+        //});
+    });
+</script>

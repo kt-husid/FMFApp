@@ -1,0 +1,124 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Person.Birthday)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Person.Birthday) - @Html.DisplayFor(model => model.Person.SSN) (@Html.DisplayFor(model => model.NR))
+    </dd>
+
+    @*<dt>
+        @Html.DisplayNameFor(model => model.PrimaryPhone)
+    </dt>
+
+    <dd>
+        @{
+            if (Model.PrimaryPhone == null || string.IsNullOrEmpty(Model.PrimaryPhone.RawNumber))
+            {
+                <label>-</label>
+            }
+            else
+            {
+                <label>(+@Model.PrimaryPhone.CountryCode) @Model.PrimaryPhone.Number</label>
+            }
+        }
+    </dd>*@
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Person.FullName)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Person.FullName)
+        @*<a href="#" id="@Model.PersonId" class="person-details">@Html.DisplayForHtmlDecoded(model => model.Person.FullName).ToString()</a>*@
+        @*@Html.ActionLink(@Html.DisplayForHtmlDecoded(model => model.Person.FullName).ToString(), "Details", "Person", new { @id = Model.PersonId, @class = "person-details" }, null)*@
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Age)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Age)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Person.Gender)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Person.Gender.Code)
+    </dd>
+
+    @*<dt>
+        @Html.DisplayNameFor(model => model.PrimaryAddress)
+    </dt>
+
+    <dd>
+        @{
+            if (Model.PrimaryAddress == null || string.IsNullOrEmpty(Model.PrimaryAddress.AddressLine1))
+            {
+                <label>-</label>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.PrimaryAddress.AddressLine1)
+            }
+        }
+    </dd>
+
+    <dt>
+        
+    </dt>
+
+    <dd>
+        @{
+            if (Model.PrimaryAddress == null || Model.PrimaryAddress.Postal == null)
+            {
+                <label>-</label>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.PrimaryAddress.Postal.Code) @Html.DisplayFor(model => model.PrimaryAddress.Postal.CityName)
+            }
+        }
+    </dd>*@
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Job)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Job.Description) (@Html.DisplayFor(model => model.Job.Code))
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.MemberType)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.MemberType.Description) (@Html.DisplayFor(model => model.MemberType.Code))
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Person.IsAlive)
+    </dt>
+
+    <dd>
+        @(Model.Person.IsAlive ? Resources.Yes : Resources.No)
+    </dd>
+</dl>
+@if (@Model.PrimaryPhone != null)
+{
+     @Html.Partial("_PhonePartial", Model.PrimaryPhone);
+}
+@if (@Model.PrimaryAddress != null)
+{
+    @Html.Partial("_AddressPartial", Model.PrimaryAddress);
+}
+@if (@Model.PrimaryEmailAddress != null)
+{
+    @Html.Partial("_EmailAddressPartial", Model.PrimaryEmailAddress);
+}

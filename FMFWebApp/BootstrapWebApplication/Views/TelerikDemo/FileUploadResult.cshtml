@@ -1,0 +1,6 @@
+﻿@{
+    foreach (var item in TempData["UploadedFiles"] as IEnumerable<string>)
+    {
+        @Html.Raw("File: " + item);
+    }
+}

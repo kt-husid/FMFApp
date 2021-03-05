@@ -1,0 +1,50 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.Phone>
+@using PagedList.Mvc;
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrimary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Extension)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().CountryCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().AreaCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Number)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPrimary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Extension)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountryCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreaCode)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.Number)
+            </th>
+            <td>
+                @Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "Phone", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+@Html.Partial("_PagedListFooterPartial")

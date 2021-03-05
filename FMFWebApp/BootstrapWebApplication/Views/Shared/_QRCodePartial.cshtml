@@ -1,0 +1,8 @@
+﻿@model string
+@(Html.Kendo().QRCode()
+    .Name("qrUrl")
+    .Value(@Model)
+    .ErrorCorrection(QRErrorCorrectionLevel.M)
+    .Size(120)
+    .Border(border => border.Color("#000000").Width(1))
+)

@@ -1,0 +1,50 @@
+﻿@model BootstrapWebApplication.Models.Person
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.PhoneNumber,
+        Titles = @Resources.PhoneNumbers
+    };
+    var editDetailsDeleteData = new EditDetailsDelete2Data()
+    {
+        Title = pageData.Title,
+        ControllerName = "Phone",
+        ModelName = "Phones"
+    };
+}
+<h2>@pageData.Titles</h2>
+@Html.ActionModalButton2(@editDetailsDeleteData.ControllerName, "", @editDetailsDeleteData.ModelName, @Resources.Create, new { @class = "btn btn-primary btn-xs create-action" })
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Phones.FirstOrDefault().CountryCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phones.FirstOrDefault().AreaCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phones.FirstOrDefault().Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phones.FirstOrDefault().IsPrimary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phones.FirstOrDefault().Extension)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: pvm.data.Phones">
+        <tr>
+            <td data-bind="text: CountryCode"></td>
+            <td data-bind="text: AreaCode"></td>
+            <td data-bind="text: Number"></td>
+            <td data-bind="text: IsPrimary"></td>
+            <td data-bind="text: Extension"></td>
+            <td class="edit-details-delete">
+                @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title, ControllerName = "Phone", ModelName="Phones" })
+            </td>
+        </tr>
+    </tbody>
+</table>

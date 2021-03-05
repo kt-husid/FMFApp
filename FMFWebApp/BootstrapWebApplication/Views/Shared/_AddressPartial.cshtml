@@ -1,0 +1,23 @@
+﻿@model BootstrapWebApplication.Models.Address
+@if (Model != null)
+{
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+
+            <dd>
+                @(!String.IsNullOrEmpty(@Model.AddressLine1) ? @Model.AddressLine1 : "-")
+            </dd>
+
+            <dt>
+
+            </dt>
+
+            <dd>
+                @(@Model.Country != null ? Model.Country.Code + "-" : "")@(@Model.Postal != null ? Model.Postal.Code + " " + Model.Postal.CityName : "-")
+            </dd>
+        </dl>
+    </div>
+}

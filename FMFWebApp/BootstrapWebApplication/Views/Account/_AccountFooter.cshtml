@@ -1,0 +1,15 @@
+﻿<script>
+    $(function () {
+        $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+            '@Html.ActionLink(@Resources.ChangePassword, "ChangePassword", "Account")',
+            '@Html.ActionLink(@Resources.EditBasicInfo, "EditBasicInfo", "Account")',
+            '@Html.ActionLink(@Resources.EditApplicationSettings, "EditAppSettings", "Account")',
+            '@Html.ActionLink(@Resources.EditUserSettings, "EditUserSettings", "Account")'
+            @*"<a href='Manage'>@Resources.ManageAccount</a>",
+            "<a href='EditBasicInfo'>@Resources.EditBasicInfo</a>",
+            "<a href='EditApplicationSettings'>@Resources.EditApplicationSettings</a>"*@
+        ]);
+
+        //new AjaxPageHandler('#main', '/Account', '#/Manage');
+    });
+</script>

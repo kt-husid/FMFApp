@@ -1,0 +1,184 @@
+﻿<script>
+    function onInsuranceChange(arg) {
+        insuranceGridHandler.onChange(arg);
+        @*var id = employmentGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);*@
+    }
+
+    function onInsuranceDataBound(e) {
+        insuranceGridHandler.onDataBound(e);
+    }
+
+    function onInsuranceDataBinding(e) {
+        insuranceGridHandler.onDataBinding(e);
+    }
+
+    var insuranceGridHandler;
+</script>
+
+@model BootstrapWebApplication.Models.Member
+
+@*@(Html.Kendo().Grid<BootstrapWebApplication.Models.InsuranceYearsViewModel>()*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.InsuranceViewModel>()
+    .Name("gridInsurance")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        //columns.Bound(p => p.Year).Title(@Resources.Year);
+        //columns.Bound(p => p.Total).Title(@Resources.Total);
+        //columns.Bound(p => p.TripNumber).ClientTemplate("<text><a href='/Trip/Details/#= TripId #'>#= TripNumber # </a></text>").Title(@Resources.TripNumber);
+        columns.Bound(p => p.TripNumberStr).ClientTemplate("<text><a href='/Trip/Details/#= TripId #'>#= TripNumberStr # </a></text>").Title(@Resources.TripNumber);
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.ShipCode).Title(@Resources.Ship);
+        columns.Bound(p => p.JobCode).Title(@Resources.Job);
+        columns.Bound(p => p.PART).Format("{0:C2}").Title(@Resources.CrewShare);
+        columns.Bound(p => p.PerDay).Format("{0:C2}").Title(@Resources.PerDay);
+        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber);
+        columns.Bound(p => p.Days).Title(@Resources.Days);
+        columns.Bound(p => p.Total).Format("{0:C2}").Title(@Resources.Total);
+        columns.Bound(p => p.MembershipPayment).Format("{0:C2}").Title(@Resources.MembershipPayment);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //        //.HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy().Text(@Resources.Delete);
+        //        //.HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @Html.ExportToExcelButton("Excel")
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    //.Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    //.Sortable()
+    .Scrollable()
+    //.ClientDetailTemplateId("insuranceTemplate")
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima arb. tryggingar.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onInsuranceChange").DataBound("onInsuranceDataBound").DataBinding("onInsuranceDataBinding"))
+    //.HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberBankAccount_Create", "Member"))
+        .Read(read => read.Action("Read_Insurance", "Member", new { id = @Model.Id }))//.Read(read => read.Action("Read_InsuranceYears", "Member", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberBankAccount_Update", "Member"))
+        //.Destroy(update => update.Action("MemberBankAccount_Destroy", "Member"))
+    )
+)
+<script id="insuranceTemplate" type="text/kendo-tmpl">
+    @*@(Html.Kendo().Grid<BootstrapWebApplication.Models.InsuranceViewModel>()
+        .Name("gridInsuranceDetails")
+        //.SelectedIndex(0)
+        //.Animation(animation => animation.Open(open => open.Fade(FadeDirection.In)))
+        .Columns(columns =>
+        {
+            columns.Bound(p => p.Id).Hidden();
+            columns.Bound(p => p.TripNumber).Title(@Resources.TripNumber);
+            columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+            columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+            columns.Bound(p => p.ShipCode).Title(@Resources.Ship);
+            columns.Bound(p => p.JobCode).Title(@Resources.Job);
+            columns.Bound(p => p.PART).Format("{0:0.00}").Title(@Resources.CrewShare);
+            columns.Bound(p => p.PerDay).Format("{0:0.00}").Title(@Resources.PerDay);
+            columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber);
+            columns.Bound(p => p.Days).Title(@Resources.Days);
+            columns.Bound(p => p.Total).Format("{0:0.00}").Title(@Resources.Total);
+        })
+        .Pageable(pageable => pageable
+            .Messages(m=>
+                m.ItemsPerPage(@Resources.ItemsPerPage)
+                .First(@Resources.First)
+                .Previous(@Resources.Previous)
+                .Next(@Resources.Next)
+                .Last(@Resources.Last)
+                .Refresh(@Resources.Refresh)
+                .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+                .Page(@Resources.Page)
+                .Of(@Resources.Of)
+                .Empty(@Resources.NoItemsToDisplay))
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(10))
+        .Scrollable()
+        .Navigatable()
+        .Selectable()
+        //.Events(events => events.Change("onInsuranceChange").DataBound("onInsuranceDataBound").DataBinding("onInsuranceDataBinding"))
+        //.HtmlAttributes(new { style = "height:410px;" })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(10)
+            .ServerOperation(true)
+            //.Events(events => events.Error("error_handler"))
+            .Model(model => model.Id(p => p.Id))
+            //.Create(update => update.Action("MemberBankAccount_Create", "Member"))
+            .Read(read => read.Action("Read_Insurance", "Member", new { id = @Model.Id }))
+            //.Update(update => update.Action("MemberBankAccount_Update", "Member"))
+            //.Destroy(update => update.Action("MemberBankAccount_Destroy", "Member"))
+        )).ToClientTemplate()*@
+</script>
+
+<script>
+    $(function () {
+
+        insuranceGridHandler = new GridHandler("#gridInsurance");
+        insuranceGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        insuranceGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

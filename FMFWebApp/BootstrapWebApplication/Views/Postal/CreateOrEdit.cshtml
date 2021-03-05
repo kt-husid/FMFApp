@@ -1,0 +1,102 @@
+﻿@model BootstrapWebApplication.Models.PostalCreateEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{ 
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@BootstrapResources.Resources.Create</h2>
+}
+@*@{
+    int memberId = -1;
+    if(@Request != null)
+    {
+        int.TryParse(@Request.QueryString["id"], out memberId);
+    }
+}*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Job</h4>
+            <hr />
+        }
+        
+        @Html.ValidationSummary(true)
+
+        @*<input type="hidden" name="MemberId" value="@memberId" />*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CityName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CityName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-1">
+                <input id="CountryCode" type="text" class="form-control" />
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("CountryId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+<script>
+    var countries;
+
+    $(function () {
+
+        $("#Code").focus();
+
+
+        $.getDataAsJson('/api/Country/GetAll', {
+            'type': 'json'
+        }, function (json) {
+            countries = Rx.Observable.fromArray(json);
+            $("#CountryId, #CountryCode").prop('disabled', false);
+            setTimeout(function () {
+
+                AddInputCodeFilter('#CountryCode', countries, function (x, y) { return x.Code.toLowerCase() == y.toLowerCase(); }, function (z) { $('#CountryId').val(z.Id); });
+                AddDropdownFilter('#CountryId', countries, function (x, y) { return x.Id == y; }, function (z) { $('#CountryCode').val(z.Code); });
+
+                $("#CountryId").prop('disabled', false);
+                $("#CountryCode").prop('disabled', false).val("@Model.CountryCode").keyup();
+            }, 100);
+        }, function (error) {
+            console.log(error);
+        });
+
+    });
+</script>
+
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

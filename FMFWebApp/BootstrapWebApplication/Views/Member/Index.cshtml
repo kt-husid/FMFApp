@@ -1,0 +1,190 @@
+﻿@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var title = @Resources.Membership;
+    var controllerName = ViewContext.GetControllerName();
+    ViewBag.Title = title;
+}
+@*<h2>@title</h2>*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberViewModel>()
+    .Name("gridMembers")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Birthday)
+//            .ClientTemplate("<text><a href='/Member/Details/#= Id #'>#= kendo.toString(Birthday, 'd') #</a></text>")
+            .ClientTemplate("<text><a href='/Member/Details/#= Id #'>#= Birthday #</a></text>")
+            .Format("{0:d}")
+            .Filterable(ftb => ftb.Cell(cell => cell.Operator("Contains")));
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.SSN).Title(@Resources.SSN);
+        columns.Bound(p => p.FullName).ClientTemplate("<text><a href='/Member/Details/#= Id #'>#= FullName #</a></text>").Title(@Resources.FullName).Width(350).Filterable(ftb => ftb.Cell(cell => cell.Operator("Contains")));
+        columns.Bound(p => p.MemberType).Title(@Resources.MembershipType);
+        columns.Bound(p => p.JobTitle).ClientTemplate("<text>#= JobTitle # #= JobDescription #</text>").Title(@Resources.JobTitle);
+        columns.Bound(p => p.PhoneNumber).Title(@Resources.PhoneNumber);
+        columns.Bound(p => p.Address).Title(@Resources.Address);
+        columns.Bound(p => p.Age).Title(@Resources.Age);
+        columns.Bound(p => p.GenderCode).Title(@Resources.Gender);
+        columns.Bound(p => p.IsAlive).ClientTemplate("<text>#= IsAlive ? '" + @Resources.Yes + "' : '" + @Resources.No + "' #</text>").Title(@Resources.IsAlive);
+        columns.Command(command =>
+        {
+            command
+                .Edit().Text(@Resources.Edit)
+                .HtmlAttributes(new { @class = "btn-xs" });
+            //command
+            //    .Destroy()
+            //    .HtmlAttributes(new { @class = "hide" });
+        })
+        .Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        //toolbar.Create().Text(@Resources.Create);
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @Html.ExportToExcelButton("Excel")
+                <input type="text" id="GridSearch" class="k-textbox" />
+                <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='Create' data-model-name='Member'>@Resources.Create</button>
+                <button tabindex="-1" class="edit-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='' data-model-name='Member'>@Resources.Edit</button>
+                <button tabindex="-1" class="delete-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='' data-model-name='Member'>@Resources.Delete</button>
+                <button tabindex="-1" class="k-button" id="GridSaveSettings">@Resources.Save</button>
+                @*<label class="category-label" for="category">@Resources.Jobs</label>
+    @(Html.Kendo().DropDownList()
+                .Name("categories")
+                .OptionLabel("All")
+                .DataTextField("JobName")
+                .DataValueField("JobId")
+                .AutoBind(false)
+                .Events(e => e.Change("jobTypesChange"))
+                .DataSource(ds =>
+                {
+                    ds.Read("ToolbarTemplate_Read", "Member");
+                })
+    )*@
+            </div>
+        </text>);
+    })
+    .Reorderable(reorderable=>reorderable.Columns(false))
+    .Editable(editable => editable.Mode(GridEditMode.InLine))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+    .Filterable(ftb => ftb.Mode(GridFilterMode.Menu).Enabled(true))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .FileName("Limir.xlsx")
+        .AllPages(true)
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Multiple)
+        .Type(GridSelectionType.Row))
+    .AllowCopy(true)
+    .ColumnMenu()
+    .Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+    .HtmlAttributes(new { style = "min-height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(true)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("Member_Create", "Member"))
+        .Read(read => read.Action("Read", "Member"))
+        .Update(update => update.Action("InlineUpdate", "Member"))
+        //.Update(update => update.Action("Member_Update", "Member"))
+        //.Destroy(update => update.Action("Member_Destroy", "Member"))
+    )
+)
+<script>
+    var gridHandler;
+
+    $(function () {
+        gridHandler = new GridHandler("#gridMembers", "#GridSearch");
+        gridHandler.focusSearch();
+        gridHandler.onDoubleClick = function (item) {
+            navigate('/Member/Details/' + item.Id);
+        };
+        gridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+        //gridHandler.onSearching = function () {
+        //  //Override search functionality
+        //};
+        //gridHandler.onKeydown = function (e) {
+        //  //Override default shortcuts
+        //}
+        gridHandler.onItemOpen = function (item) {
+            navigate('/Member/Details/' + item.Id);
+        };
+    });
+
+    function onChange(arg) {
+        gridHandler.onChange(arg);
+        var memberId = gridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + memberId);
+        $(".delete-action").data("action-name", "Delete?id=" + memberId);
+
+        //memberId = this.dataItem(this.select()).Id;
+        //console.log(memberId);
+        //console.log(arg);
+        //console.log(this.select());
+        //var selected = $.map(this.select(), function (item, k) {
+        //    console.log(k);
+        //    console.log($(item).text());
+        //    return $(item).text();
+        //});
+        //console.log("Selected: " + selected.length + " item(s), [" + selected.join(", ") + "]");
+    }
+
+    function onDataBound(e) {
+        gridHandler.onDataBound(e);
+    }
+
+    function onDataBinding(e) {
+        gridHandler.onDataBinding(e);
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+    function jobTypesChange() {
+        var value = this.value();
+        console.log(value);
+        if (value) {
+            kendoGrid.dataSource.filter({ field: "JobId", operator: "eq", value: parseInt(value) });
+        } else {
+            kendoGrid.dataSource.filter({});
+        }
+    }
+</script>

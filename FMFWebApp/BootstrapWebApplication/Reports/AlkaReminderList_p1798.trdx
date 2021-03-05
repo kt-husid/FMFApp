@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="28.7000050969917cm" Name="a1709_3" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.9">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="/*declare @SignOnTo date&#xD;&#xA;declare @daysUntilInsuranceExpires int&#xD;&#xA;declare @fromPostalCode int&#xD;&#xA;declare @toPostalCode int&#xD;&#xA;declare @IncludeLessThan30days varchar(25)&#xD;&#xA;set @SignOnTo = '2018-04-14'&#xD;&#xA;set @daysUntilInsuranceExpires = 180&#xD;&#xA;set @fromPostalCode = 100&#xD;&#xA;set @toPostalCode = 999&#xD;&#xA;set @IncludeLessThan30days = 'TRUE'&#xD;&#xA;*/&#xD;&#xA;SELECT &#xD;&#xA;&#x9;m.LastSignOnId, &#xD;&#xA;&#x9;DATEDIFF(day, so.[From], so.[To]) as SignOnDays ,&#xD;&#xA;&#x9;cast(GETDATE() - so.[To] as int) as DaysSinceLastSignOn,&#xD;&#xA;&#x9;so.[From], so.[To],&#xD;&#xA;&#x9;DATEADD(d, iif(upper(@IncludeLessThan30days) = 'TRUE', 30, @daysUntilInsuranceExpires), so.[To]) as InsuranceEndDate,&#xD;&#xA;&#x9;p.Fullname, p.FirstName, p.MiddleName, p.LastName, p.Birthday, &#xD;&#xA;&#x9;m.NR, m.CityName, m.PostalCode, m.CountryName, m.CountryCode, m.AddressLine, &#xD;&#xA;&#x9;so.ShipCode, so.ShipName&#xD;&#xA;&#x9;/*, (select SUM(datediff(day, so_under.[from], so_under.[To]))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from signon so_under&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.PersonNumber = m.NR and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.[To] &gt; DATEADD(year, -1, getdate())) sumdays*/&#xD;&#xA;FROM&#xD;&#xA;&#x9;dbo.SignOn AS so INNER JOIN&#xD;&#xA;&#x9;dbo.Member as m ON so.Id = m.LastSignOnId INNER JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id LEFT OUTER JOIN &#xD;&#xA;&#x9;dbo.ChangeEvent as ce ON ce.Id = so.ChangeEventID &#xD;&#xA;WHERE&#xD;&#xA;&#x9;ce.DeletedOn IS NULL &#xD;&#xA;&#x9;-- Filter by postal code&#xD;&#xA;&#x9;AND m.PostalCode &gt;= @fromPostalCode AND m.PostalCode &lt;= @toPostalCode &#xD;&#xA;&#x9;-- only those members who have insurance&#xD;&#xA;&#x9;AND so.HasInsurance = 'TRUE'&#xD;&#xA;&#x9;-- Only select 180 days back from current SignOnTo date + 40 days&#xD;&#xA;&#x9;AND ((upper(@IncludeLessThan30days) = 'TRUE' and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so.[To] &gt;= DATEADD(day, -40     , @SignOnTo) and &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;(select SUM(datediff(day, so_under.[from], so_under.[To]))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from signon so_under&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.PersonNumber = m.NR and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.[To] &gt; DATEADD(year, -1, getdate())) &lt;= 30)&#xD;&#xA;&#x9;or &#xD;&#xA;&#x9;&#x9;(upper(@IncludeLessThan30days) != 'TRUE' and &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so.[To] &gt;= DATEADD(day, -@daysUntilInsuranceExpires     , @SignOnTo) AND &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so.[To] &lt;= DATEADD(day, -@daysUntilInsuranceExpires + 40, @SignOnTo) and&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;(select SUM(datediff(day, so_under.[from], so_under.[To]))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from signon so_under&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.PersonNumber = m.NR and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;so_under.[To] &gt; DATEADD(year, -1, getdate())) &gt; 30))&#xD;&#xA;ORDER BY m.NR" Name="sqlDataSource1" ParameterValues="{&quot;@IncludeLessThan30days&quot;:&quot;false&quot;,&quot;@daysUntilInsuranceExpires&quot;:&quot;180&quot;,&quot;@fromPostalCode&quot;:&quot;100&quot;,&quot;@toPostalCode&quot;:&quot;999&quot;,&quot;@SignOnTo&quot;:&quot;14-04-18&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="String" Name="@IncludeLessThan30days">
+          <Value>
+            <String>= Parameters.IncludeLessThan30days.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@daysUntilInsuranceExpires">
+          <Value>
+            <String>= Parameters.daysUntilInsuranceExpires.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@fromPostalCode">
+          <Value>
+            <String>= Parameters.FromPostalCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@toPostalCode">
+          <Value>
+            <String>= Parameters.ToPostalCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime2" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="0.400100526806896cm" Name="detailSection1">
+      <Style>
+        <Font Name="Courier New" />
+      </Style>
+      <Items>
+        <TextBox Width="1.19999979813894cm" Height="0.400000334332378cm" Left="0cm" Top="0cm" Value="=Fields.NR" Name="textBox5">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.19959950447083cm" Height="0.400000393390656cm" Left="1.20020014523903cm" Top="0cm" Value="=Format(&quot;{0:d}&quot;, Fields.Birthday)" Name="textBox1">
+          <Style TextAlign="Left">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="7.59979929089547cm" Height="0.400000393390656cm" Left="3.39999969720841cm" Top="0cm" Value="=Fields.Fullname" Name="textBox4">
+          <Style TextAlign="Left">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="4.79959883769914cm" Height="0.400000393390656cm" Left="10.9999992934863cm" Top="0cm" Value="=Fields.AddressLine" Name="textBox7">
+          <Style TextAlign="Left">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.89979862968132cm" Height="0.400000393390656cm" Left="15.7997990473167cm" Top="0cm" Value="=Fields.PostalCode + &quot; &quot; + Fields.CityName" Name="textBox8">
+          <Style TextAlign="Left">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.49979919871253cm" Height="0.4cm" Left="19.6997982903378cm" Top="0cm" Value="=Format(&quot;{0:d}&quot;, Fields.To)" Name="textBox10" />
+        <TextBox Width="1.59980058670044cm" Height="0.400100469589233cm" Left="22.1997974324283cm" Top="0cm" Value="= Fields.ShipCode" Name="textBox11" />
+        <TextBox Width="2.49980217616314cm" Height="0.400100425876367cm" Left="23.7997982398725cm" Top="0cm" Value="=Format(&quot;{0:d}&quot;, Fields.InsuranceEndDate)" Name="textBox12" />
+        <TextBox Width="0.79999798138942cm" Height="0.400100526806896cm" Left="26.2998022266284cm" Top="0cm" Value="= Fields.SignOnDays" Name="textBox9" />
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="1.6cm" Name="pageHeaderSection1">
+      <Items>
+        <TextBox Width="12.9999998990694cm" Height="0.499999949534735cm" Left="0.00010012308478013cm" Top="0.400000201861058cm" Value="= &quot;*** Alka áminningar ***   &quot; + Format(&quot;{0:d}&quot;,Fields.From) + &quot; - &quot; + Format(&quot;{0:d}&quot;,Parameters.SignOnTo.Value) " Name="textBox2">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="6.99960092068829cm" Height="0.499999940395355cm" Left="21.3999996972084cm" Top="0.400000201861058cm" Value="= &quot;prenta tann: &quot; + Format(&quot;{0:g}&quot;, Now()) " Name="textBox6">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.39979983171381cm" Height="0.400000333786011cm" Left="0cm" Top="0.999799551969382cm" Value="persnr fdato" Name="textBox3">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="7.59979931910834cm" Height="0.400000333786011cm" Left="3.39999989906947cm" Top="0.999799652899911cm" Value="Navn" Name="textBox13">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="4.79960026463985cm" Height="0.400000333786011cm" Left="10.9999976785978cm" Top="0.999799854760969cm" Value="Addressa" Name="textBox14">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.89979900796655cm" Height="0.400000333786011cm" Left="15.7997974324283cm" Top="0.999799854760969cm" Value="Postnr. og bý/bygd" Name="textBox15">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.49979900757472cm" Height="0.400000333786011cm" Left="19.6997966754493cm" Top="0.999799854760969cm" Value="av. m" Name="textBox16">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="2.49980223735165cm" Height="0.400000333786011cm" Left="23.799799854761cm" Top="0.999799854760969cm" Value="útg. dato" Name="textBox17">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="0.799998206689473cm" Height="0.400000333786011cm" Left="26.2998022266284cm" Top="0.999799854760969cm" Value="db" Name="textBox18">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Name="Courier New" Size="9pt" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="1.00000010093053cm" Name="pageFooterSection1" />
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="True">
+      <Margins>
+        <MarginsU Left="0.5cm" Right="0.5cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="SignOnTo" Type="DateTime" Mergeable="False" Text="SignOnTo">
+      <Value>
+        <String>14-04-18</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="FromPostalCode" Type="Integer" Text="FromPostalCode">
+      <Value>
+        <String>100</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="ToPostalCode" Type="Integer" Text="ToPostalCode">
+      <Value>
+        <String>999</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="DaysUntilInsuranceExpires" Type="Integer" Text="DaysUntilInsuranceExpires">
+      <Value>
+        <String>180</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="IncludeLessThan30days" Type="Boolean" Text="IncludeLessThan30days">
+      <Value>
+        <String>FALSE</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

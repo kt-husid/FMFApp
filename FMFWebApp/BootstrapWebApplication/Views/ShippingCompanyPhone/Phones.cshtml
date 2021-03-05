@@ -1,0 +1,124 @@
+﻿@(Html.Kendo().Grid<BootstrapWebApplication.Models.PhoneViewModel>()
+    .Name("gridPhoneNumbers")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.IsPrimary).Title(@Resources.IsPrimary).Template(@<text>
+            <strong>@item.IsPrimary ? @Resources.Yes : @Resources.No</strong>
+        </text>);
+        //columns.Bound(p => p.Country).Title(@Resources.Country);
+        columns.Bound(p => p.CountryCode).Title(@Resources.CountryCode);
+        columns.Bound(p => p.PhoneNumber).Title(@Resources.PhoneNumber);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //        //.HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy().Text(@Resources.Delete);
+        //        //.HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='ShippingCompanyPhone' data-action-name='Create?parentId=@Model.Id' data-model-name='Phone'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='ShippingCompanyPhone' data-action-name='' data-model-name='Phone'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='ShippingCompanyPhone' data-action-name='' data-model-name='Phone'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    //.Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    //.Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .FileName("Reiðarí telefonir.xlsx")
+        .AllPages(true)
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onPhoneChange").DataBound("onPhoneDataBound").DataBinding("onPhoneDataBinding"))
+    //.HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Read", "ShippingCompanyPhone", new { id = @Model.Id }))
+    )
+)
+<script>
+
+    function onPhoneChange(arg) {
+        shipPhoneGridHandler.onChange(arg);
+        var id = shipPhoneGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&parentId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&parentId=" + @Model.Id);
+    }
+
+    function onPhoneDataBound(e) {
+        shipPhoneGridHandler.onDataBound(e);
+    }
+
+    function onPhoneDataBinding(e) {
+        shipPhoneGridHandler.onDataBinding(e);
+    }
+    var shipPhoneGridHandler;
+    $(function () {
+
+        shipPhoneGridHandler = new GridHandler("#gridPhoneNumbers");
+        shipPhoneGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        shipPhoneGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

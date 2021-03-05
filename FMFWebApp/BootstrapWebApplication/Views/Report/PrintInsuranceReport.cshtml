@@ -1,0 +1,88 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Samlagstrygging útskrift</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.FromYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="From" id="From" type="text" class="form-control datefield" placeholder="@Resources.FromYear" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ToYear, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input name="To" id="To" type="text" class="form-control datefield" placeholder="@Resources.ToYear" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label(@Resources.ShipCode, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input type="hidden" name="ShipId" id="ShipId" />
+                                    <input name="ShipCode" id="ShipCode" type="text" class="form-control" placeholder="@Resources.ShipCode" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button id="PrintReport" class="btn btn-primary">@Resources.Print</button>
+                                    <button class="clear-form btn btn-warning">@Resources.Clear</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#From, #To");
+
+        var shipDataSource = CreateDataSource(10, "/Ship/Find", "#ShipCode");
+
+        SetupAutoComplete($("#ShipCode"), "Code", '#: data.Code# (#: data.Name#)', shipDataSource, function (item) {
+            $("#ShipId").val(item.Id);
+            $("#ShipCode").html(item.Code);
+        });
+
+        $("#ShipCode").keyup(function (e) {
+            var self = $(this);
+            if (self.val().trim().length == 0) {
+                $("#ShipId").val("");
+            }
+        })
+
+        $("#PrintReport").click(function (e) {
+            e.preventDefault();
+            var From = $("#From").val();
+            var To = $("#To").val();
+            var ShipId = $("#ShipId").val();
+
+            window.open('/Report/InsuranceReport?From=' + From + '&To=' + To + '&ShipId=' + ShipId);
+            return false;
+        });
+
+        $.post("/Report/ClearReportsCache", function (d) {
+            //console.log("OK");
+        });
+    });
+</script>

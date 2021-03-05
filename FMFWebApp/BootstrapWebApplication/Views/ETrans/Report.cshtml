@@ -1,0 +1,37 @@
+﻿@{
+    //ViewBag.Title = @Resources.ReportFor + " " + @Resources.Member + " " + @Resources.SignOns;
+    Layout = "~/Views/Shared/_LayoutReporting.cshtml";
+}
+@{
+    @Html.Partial("_ReportHeaderPartial")
+    var reportSource = new UriReportSource() { Uri = "ETrans_p3702.trdx" };
+//    var weekFrom = DateTimeHelper.ParseForReport(@Request.QueryString["WeekFrom"]);
+//    var weekTo = DateTimeHelper.ParseForReport(@Request.QueryString["WeekTo"]);
+    DateTime weekFrom =  DateTime.Parse(@Request.QueryString["WeekFrom"]);
+    DateTime weekTo = DateTime.Parse(@Request.QueryString["WeekTo"]);
+    var fromYear = weekTo.Year; // = weekFrom.HasValue ? weekFrom.Value.Year : DateTime.Now.Year;
+    int toYear; // = weekTo.HasValue ? weekTo.Value.Year : DateTime.Now.Year;
+   if (weekFrom.Month < 4 && weekTo.Month >= 4)
+    {
+        weekFrom = DateTime.Parse("01-04-" + fromYear);// DateTime.SpecifyKind(new DateTime(fromYear, 4, 1), DateTimeKind.Utc).ToLocalTime();
+    }
+    if (weekTo.Month < 4)
+    {
+        fromYear = fromYear - 1;
+    }
+    toYear = fromYear + 1;
+//    var from = DateTime.SpecifyKind(new DateTime(fromYear, 4, 1), DateTimeKind.Utc).ToLocalTime();
+//    var to = DateTime.SpecifyKind(new DateTime(toYear, 3, DateTime.DaysInMonth(toYear, 3)), DateTimeKind.Utc).ToLocalTime();
+    var from = new DateTime(fromYear, 4, 1);
+    var to   = new DateTime(toYear, 3, DateTime.DaysInMonth(toYear, 3));
+    reportSource.Parameters.Add("From", from);
+    reportSource.Parameters.Add("To", to);
+    reportSource.Parameters.Add("WeekFrom", weekFrom);
+    reportSource.Parameters.Add("WeekTo", weekTo);
+    @Html.Partial("_ReportFooterPartial", reportSource)
+}
+<script>
+    function onPrint() {
+        // Optionally implement code to be executed after the print button on the Telerik Report Viewer has been clicked
+    }
+</script>

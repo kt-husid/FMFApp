@@ -1,0 +1,236 @@
+﻿@model BootstrapWebApplication.Models.SignOn
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SignOn</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeEvent.CreatedByUserIdCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeEvent.CreatedByUserIdCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Company.CID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company.CID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JobCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JobCode)
+        </dd>
+
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Member.MemberType.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Member.MemberType.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ship.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ship.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingCompany.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingCompany.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Trip.TripId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Trip.TripId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShipType.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShipType.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignOnNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignOnNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PersonNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PersonNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.From)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.From)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.To)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.To)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SK_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SK_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PART)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PART)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KR_IALT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KR_IALT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JobCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JobCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TIL_PR_DG)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TIL_PR_DG)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TIL_PR_TUR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TIL_PR_TUR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployerNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployerNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.I_PART)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.I_PART)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FRT_NR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FRT_NR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasInsurance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HasInsurance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LaborInsuranceAmountPerDay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LaborInsuranceAmountPerDay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TRYG_KVT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TRYG_KVT)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

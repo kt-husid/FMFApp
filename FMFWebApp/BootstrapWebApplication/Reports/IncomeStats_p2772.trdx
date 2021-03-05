@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="28.5cm" Culture="fo-FO" Name="MemberSignOnsReport" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="--declare @ShipTypeCode varchar(2) = '2';&#xD;&#xA;--declare @from  datetime = '2014-12-26';&#xD;&#xA;--declare @to  datetime = '2015-12-30';&#xD;&#xA;--declare @minwage money;&#xD;&#xA;&#xD;&#xA;SELECT DISTINCT&#xD;&#xA;ship.Id,&#xD;&#xA;&#x9;ship.Name as ShipName,&#xD;&#xA;&#x9;ship.Code as ShipCode,&#xD;&#xA;&#x9;st.[Description] as ShipTypeDescription,&#xD;&#xA;&#x9;--From&#xD;&#xA;&#x9;(SELECT TOP 1 trip.[From]&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id, trip.[From] ORDER BY trip.[From] asc) as &quot;From&quot;,&#xD;&#xA;&#x9;--To&#xD;&#xA;&#x9;(SELECT TOP 1 trip.[To]&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id, trip.[To] ORDER BY trip.[To] desc) as &quot;To&quot;,&#xD;&#xA;&#x9;--Days&#xD;&#xA;&#x9;(SELECT SUM((DATEDIFF(d, trip.[From], trip.[To]) + 1))&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as &quot;Days&quot;,&#xD;&#xA;&#x9;--TripCount&#xD;&#xA;&#x9;(SELECT COUNT(*)&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as TripCount,&#xD;&#xA;&#x9;--CrewShare&#xD;&#xA;&#x9;(SELECT ROUND(SUM(trip.CrewShareMoney / trip.Crew), 4) --ROUND(SUM(trip.MANN_PART), 4)&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (trip.CrewIncludingStayingAtHome&gt;0 and st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id ) &#xD;&#xA;&#x9;as CrewShare,&#xD;&#xA;&#x9;--Temp&#xD;&#xA;&#x9;(SELECT ROUND(SUM(trip.MANN_PART), 4)&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as Temp,&#xD;&#xA;&#x9;--HolidayPay&#xD;&#xA;&#x9;(SELECT ROUND((SUM(trip.CrewShareMoney / trip.Crew) + SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))) * 0.12, 4)&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE trip.CrewIncludingStayingAtHome&gt;0 and (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as HolidayPay,&#xD;&#xA;&#x9;--MinimumWage&#xD;&#xA;&#x9;(SELECT SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as MinimumWage,&#xD;&#xA;&#x9;--Total&#xD;&#xA;&#x9;(SELECT &#xD;&#xA;&#x9;&#x9;--ROUND(SUM(trip.MANN_PART), 4) + &#xD;&#xA;&#x9;&#x9;--ROUND((SUM(trip.MANN_PART) + SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))) * 0.12, 4) + &#xD;&#xA;&#x9;&#x9;ROUND(SUM(trip.CrewShareMoney / trip.Crew), 4) +&#xD;&#xA;&#x9;&#x9;ROUND(SUM(trip.CrewShareMoney / trip.Crew) * 0.12 ,4) + &#xD;&#xA;&#x9;&#x9;round(SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1)) * 0.12, 4) + &#xD;&#xA;&#x9;&#x9;SUM( trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as Total,&#xD;&#xA;&#x9;--SalaryPerDay&#xD;&#xA;&#x9;(SELECT &#xD;&#xA;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;ROUND(SUM(trip.CrewShareMoney / trip.Crew), 4) +&#xD;&#xA;&#x9;&#x9;ROUND(SUM(trip.CrewShareMoney / trip.Crew) * 0.12 ,4) +&#xD;&#xA;&#x9;&#x9;ROUND(SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1)) * 0.12, 4) + &#xD;&#xA;&#x9;&#x9;SUM( trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1)) &#xD;&#xA;&#x9;&#x9;--ROUND(SUM(trip.MANN_PART), 4) +&#xD;&#xA;&#x9;&#x9;--ROUND((SUM(trip.MANN_PART) + SUM(trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))) * 0.12, 4) + &#xD;&#xA;&#x9;&#x9;--SUM( trip.MinimumWage * (DATEDIFF(d, trip.[From], trip.[To]) + 1))&#xD;&#xA;&#x9;&#x9;) &#xD;&#xA;&#x9;&#x9;/&#xD;&#xA;&#x9;&#x9;SUM((DATEDIFF(d, trip.[From], trip.[To]) + 1))&#xD;&#xA;&#x9;FROM dbo.Trip as trip INNER JOIN dbo.Ship as ship2 ON trip.ShipId = ship2.Id LEFT OUTER JOIN dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;&#x9;WHERE trip.CrewIncludingStayingAtHome&gt;0 and (st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ship2.Id = ship.Id AND ce.DeletedOn IS NULL GROUP BY ship2.Id) &#xD;&#xA;&#x9;as SalaryPerDay&#xD;&#xA;FROM&#xD;&#xA;&#x9;dbo.Trip as trip INNER JOIN&#xD;&#xA;    dbo.Ship as ship ON trip.ShipId = ship.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;dbo.ShipType as st ON trip.ShipTypeId = st.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON ce.Id = trip.ChangeEventId&#xD;&#xA;WHERE&#xD;&#xA;&#x9;(st.Code = @shipTypeCode) AND (trip.[From] &gt;= @from) AND (trip.[From] &lt;= @to) AND ce.DeletedOn IS NULL &#xD;&#xA;&#x9;order by ship.name" Name="sqlDataSource1" ParameterValues="{&quot;@shipTypeCode&quot;:&quot;20&quot;,&quot;@from&quot;:&quot;26-12-2014&quot;,&quot;@to&quot;:&quot;30-10-2015&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@shipTypeCode">
+          <Value>
+            <String>= Parameters.shipTypeCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@from">
+          <Value>
+            <String>= Parameters.From.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@to">
+          <Value>
+            <String>= Parameters.To.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+      <CalculatedFields>
+        <CalculatedField Name="FullName" Expression="= Fields.FirstName + IIf(Len(MiddleName)&gt;0,&quot; &quot; + Fields.MiddleName,&quot; &quot;) + Fields.LastName">
+          <DataType>System.String</DataType>
+        </CalculatedField>
+        <CalculatedField Name="TimeSpan" Expression="=Fields.To.Date - Fields.From.Date">
+          <DataType>System.Object</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Days" Expression="=Fields.TimeSpan.Days + 1">
+          <DataType>System.Int32</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Supplement" Expression="= Fields.Days * Fields.MINLON">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="HolidayPay" Expression="= (Fields.MANN_PART_I + Fields.Supplement) * 0.12">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Total" Expression="= Fields.MANN_PART_I + Fields.Supplement + Fields.HolidayPay">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+      </CalculatedFields>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="0.500300116928018cm" Name="detailSection1">
+      <Style>
+        <Font Name="Courier New" Size="9pt" />
+      </Style>
+      <Items>
+        <Panel Width="28.4997001858636cm" Height="0.500100274480574cm" Left="0.00019943872532746cm" Top="0cm" Name="panel2">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.24230861663818cm" Height="0.500000178813934cm" Left="4.70000126163161cm" Top="0cm" Value="= Format(&quot;{0:dd'/'MM'/'yyyy}&quot;,  Fields.From)" Format="{0:d}" Name="textBox13">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.25709012747649cm" Height="0.500000178813934cm" Left="6.94250966788305cm" Top="0cm" Value="= Format(&quot;{0:dd'/'MM'/'yyyy}&quot;,  Fields.To)" Format="{0:d}" Name="textBox14">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.20000063505704cm" Height="0.500000178813934cm" Left="9.1997999556915cm" Top="0cm" Value="= Fields.Days" Format="" Name="textBox16">
+              <Style TextAlign="Center" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.37221960787695cm" Height="0.500000178813934cm" Left="10.4000004037221cm" Top="0cm" Value="= Fields.TripCount" Format="" TextWrap="False" Name="textBox17">
+              <Style TextAlign="Center" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.02718196554307cm" Height="0.500000178813934cm" Left="14.7990704298278cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, 0) + &quot; &quot;" Format="" Name="textBox18">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.87314539315431cm" Height="0.500000178813934cm" Left="16.8264530842099cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.HolidayPay) + &quot; &quot;" Format="" TextWrap="False" Name="textBox19">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.80000547972242cm" Height="0.500000178813934cm" Left="19.6997982903378cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.MinimumWage) + &quot; &quot;" Format="" TextWrap="False" Name="textBox29">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99960084923163cm" Height="0.500000178813934cm" Left="25.4999996467431cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.SalaryPerDay) + &quot; &quot;" Format="" TextWrap="False" Name="textBox30">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99939975183327cm" Height="0.500000178813934cm" Left="22.5000019681453cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.Total) + &quot; &quot;" Format="" TextWrap="False" Name="textBox11">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.90000010329946cm" Height="0.500000178813934cm" Left="0.799800561274672cm" Top="0cm" Value="= Fields.ShipCode + &quot; &quot; + Fields.ShipName" Format="{0:d}" Name="textBox1">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.02645072386038cm" Height="0.500000178813934cm" Left="11.7724198245726cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.CrewShare) + &quot; &quot;" Format="" Name="textBox2">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="2.40010008944127cm" Name="pageHeaderSection1">
+      <Items>
+        <Panel Width="28.4999016431995cm" Height="0.500100324945838cm" Left="-0.00000080744423236cm" Top="1.90000005046526cm" Name="panel1">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="1.20000032407481cm" Height="0.500000178813934cm" Left="9.20010113239007cm" Top="0cm" Value="dagar" Format="" Name="textBox44">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.37221957873846cm" Height="0.500000178813934cm" Left="10.4003015804207cm" Top="0cm" Value="túrar" Format="{0:d}" Name="textBox43">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.0271827621554cm" Height="0.500000178813934cm" Left="14.7993724139706cm" Top="0cm" Value="viðbót" Format="{0:d}" Name="textBox41">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="5pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.87314532974354cm" Height="0.500000178813934cm" Left="16.8267550683527cm" Top="0cm" Value="frtlon" Format="" TextWrap="False" Name="textBox39">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="5pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99979957344482cm" Height="0.500000178813934cm" Left="22.5003007225112cm" Top="0cm" Value="íalt" Format="{0:d}" TextWrap="False" Name="textBox37">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="5pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.79999977667013cm" Height="0.500000178813934cm" Left="19.7001002744806cm" Top="0cm" Value="mlon" Format="" TextWrap="False" Name="textBox10">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="5pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99959922196808cm" Height="0.500000178813934cm" Left="25.500301630886cm" Top="0cm" Value="dagløn" Format="" TextWrap="False" Name="textBox34">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="8pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.02645157660417cm" Height="0.500000178813934cm" Left="11.7727210012712cm" Top="0cm" Value="manspart" Format="{0:d}" Name="textBox3">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+                <Padding Left="5pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="8.39990056673963cm" Height="0.500000178813934cm" Left="0.800000807444232cm" Top="0cm" Value="" Format="" Name="textBox23">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <Panel Width="9.79969754589942cm" Height="1.29979963923224cm" Left="18.6999998990695cm" Top="0.60000009777645cm" Name="panel3">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="9.79950143329828cm" Height="0.500000357627869cm" Left="0.00009904649050441cm" Top="0.0184564236551523cm" Value="= &quot;Síða: &quot; + PageNumber + &quot; Skrivaður: &quot; + Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Now()) + &quot; &quot; + Parameters.UserIdCode.Value" Name="textBox15">
+              <Style TextAlign="Left" VerticalAlign="Middle">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="9.79960033124741cm" Height="0.500000342130656cm" Left="0cm" Top="0.551789624442548cm" Value="= &quot;tíðarskeið: frá &quot; + Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Parameters.From.Value) + &quot; til &quot; +  Format(&quot;{0:dd'/'MM'/'yyyy}&quot;, Parameters.To.Value)" Name="ReportNameTextBox">
+              <Style TextAlign="Left" VerticalAlign="Middle">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <Panel Width="17.8998001239091cm" Height="1.29979949729868cm" Left="0.8cm" Top="0.600000100930529cm" Name="panel5">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="12.46826171875cm" Height="0.500000342130657cm" Left="0.499999747673678cm" Top="0.551789624442548cm" Value="= &quot;***** Uppgerð *****      fyri &quot; + Fields.ShipTypeDescription" Name="textBox12">
+              <Style TextAlign="Left" VerticalAlign="Top">
+                <Font Name="Courier New" Size="10pt" Bold="False" Underline="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="1.29929928980233cm" Name="pageFooterSection1">
+      <Items>
+        <Panel Width="27.6999008357552cm" Height="0.500100324945838cm" Left="0.8cm" Top="0cm" Name="panel4">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="8.39979910238962cm" Height="0.500000178813934cm" Left="0cm" Top="0cm" KeepTogether="True" Value="=&quot;miðaltøl fyri &quot; + Count(Fields.ShipCode) + &quot; skip&quot;" Name="textBox4">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.02645050056503cm" Height="0.500000178813934cm" Left="10.9726196670201cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(Fields.CrewShare)) + &quot; &quot;" Name="textBox8">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.37221923030639cm" Height="0.500000178813934cm" Left="9.60020024616956cm" Top="0cm" Value="=Format(&quot;{0:0.0}&quot;,Avg(Fields.TripCount))" Name="textBox6">
+              <Style TextAlign="Center" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.2000009774995cm" Height="0.500000178813934cm" Left="8.39999899069471cm" Top="0cm" Value="=Format(&quot;{0:0.0}&quot;,Avg(Fields.Days))" Name="textBox7">
+              <Style TextAlign="Center" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.02718325215526cm" Height="0.500000178813934cm" Left="13.9992710797195cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(0)) + &quot; &quot;" Name="textBox5">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.87314580390108cm" Height="0.500000178813934cm" Left="16.0266537341015cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(Fields.HolidayPay)) + &quot; &quot;" Name="textBox9">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.80000429038998cm" Height="0.500000178813934cm" Left="18.8999989402294cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(Fields.MinimumWage)) + &quot; &quot;" Name="textBox20">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99989679937658cm" Height="0.500000178813934cm" Left="21.700202618037cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(Fields.Total)) + &quot; &quot;" Name="textBox21">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99970139787241cm" Height="0.500000178813934cm" Left="24.7002002966348cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;,Avg(Fields.SalaryPerDay)) + &quot; &quot;" Name="textBox22">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="False" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="True">
+      <Margins>
+        <MarginsU Left="0.25cm" Right="0.25cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="From" Type="DateTime">
+      <Value>
+        <String>26-12-2014</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="To" Type="DateTime">
+      <Value>
+        <String>16-06-2015</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="shipTypeCode" Type="Integer" Text="shipTypeCode">
+      <Value>
+        <String>3</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="UserIdCode">
+      <Value>
+        <String>bha</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

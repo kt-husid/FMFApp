@@ -1,0 +1,76 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.SignOn>
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.SignOn,
+        Titles = @Resources.SignOns
+    };
+}
+@Html.Partial("_PagedListHeaderJSPartial", new PagedListHeaderData() { Title = pageData.Titles })
+<div class="paged-area">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().ID_TUR)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().Year)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().From)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().To)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().ShipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().JobCode)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().PART)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().TIL_PR_DG)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().EmployerNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameForHtmlDecoded(model => model.FirstOrDefault().KR_IALT)
+                </th>
+                <th>
+                    kr-ff(!)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: List">
+            <tr>
+                <td data-bind="text: ID_TUR"></td>
+                <td data-bind="text: Year"></td>
+                <td data-bind="text: moment(From()).format('LL')"></td>
+                <td data-bind="text: moment(To()).format('LL')"></td>
+                <td><!--todo: data-bind ShipCode (currently can't handle NULL)--></td>@*<td data-bind="text: ShipCode"></td>*@
+                <td data-bind="text: JobCode"></td>
+                <td data-bind="text: PART"></td>
+                <td data-bind="text: TIL_PR_DG"></td>
+                <td data-bind="text: ARB_NR"></td>
+                <td data-bind="text: KR_IALT_PART"></td>
+                <td><!--todo: data-bind kr-ff --></td>@*<td data-bind="text: "></td>*@
+                <td class="edit-details-delete">
+                    @Html.Partial("_EditDetailsDeletePartial2", new EditDetailsDelete2Data() { Title = @pageData.Title })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_PagedListFooterJSPartial", new PagedListFooterData() { ViewModelUrl = "/api/SignOn", PagedList = @Model })

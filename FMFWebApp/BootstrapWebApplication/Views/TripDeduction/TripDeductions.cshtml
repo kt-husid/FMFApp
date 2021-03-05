@@ -1,0 +1,380 @@
+﻿@model BootstrapWebApplication.Models.Trip
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.TripDeductionViewModel>()
+    .Name("gridTripDeductions")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.TripId).Hidden();
+        columns.Bound(p => p.DeductionTypeCode).Title(@Resources.DeductionType + " " + @Resources.Code);
+        columns.Bound(p => p.Amount).Title(@Resources.Amount2);
+        columns.Bound(p => p.UnitPrice).Title(@Resources.Price);
+        columns.Bound(p => p.TotalPrice);
+        columns.Bound(p => p.UpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.UpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="width:100%;">
+    @*@(Html.Kendo().Button()
+                .HtmlAttributes(new { @class = "create-action" })
+                .Content(@Resources.Create)
+                .Name("grid-create-button")
+                .
+                .Events(e => e.Click("createComment"))
+        )*@
+    
+                <form class="form-inline form-group" id="tripDeductionForm">
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(false)*@
+                    <input type="hidden" name="Id" id="Id" />
+                    <input type="hidden" name="TripId" id="TripId" value="@Model.Id" />
+                    <input name="DeductionTypeCode" id="DeductionTypeCode" type="text" class="k-textbox" disabled="disabled" placeholder="@Resources.DeductionType" />
+                    @*<select name="DeductionTypeId" id="DeductionTypeId" data-bind="options: DeductionTypes, optionsText: function(item) { return item.Code() + ' ' + item.Name() }, value: SelectedDeductionType, optionsCaption: '@Resources.Choose...'" class=" k-textbox" tabindex="-1" disabled="disabled"></select>*@
+                    <input type="text" name="Amount" id="Amount" class="k-textbox" placeholder="@Resources.Amount2" />
+                    <input type="text" name="UnitPrice" id="UnitPrice" class="k-textbox" placeholder="@Resources.UnitPrice" />
+                    <input type="text" name="TotalPrice" id="TotalPrice" class="k-textbox" placeholder="@Resources.TotalPrice" />
+                    <span class="text-danger" id="tripDeductionErrorMsg"></span>
+                    <button class="k-button clear-form">@Resources.Clear</button>
+                    <button class="delete-action k-button" data-toggle='modal' data-controller-name='TripDeduction' data-action-name='' data-model-name='TripDeduction'>@Resources.Delete</button>
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+        //.Groupable()
+    .Selectable()
+    .Events(events => events.Change("onTripDeductionChange").DataBound("onTripDeductionDataBound").DataBinding("onTripDeductionDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("TripTripCreate", "Trip"))
+        .Read(read => read.Action("Read", "TripDeduction", new { id = @Model.Id }))
+        //.Update(update => update.Action("TripTripUpdate", "Trip"))
+        //.Destroy(update => update.Action("TripTripDestroy", "Trip"))
+    )
+)
+<script>
+
+    var isTripDeductionEditMode = false;
+
+    function clearTripDeductionForm() {
+        //$("#tripDeductionForm")[0].reset();
+        println($(this).closest("form"));
+        //$(this).closest("form").find("input[type=text], textarea").val("");
+        resetForm("#tripDeductionForm"); 
+        $("#DeductionTypeCode").focus();
+        isTripDeductionEditMode = false;
+        pageNeedsReload = true;
+    }
+
+    function CalcTripDeductionTotal() {
+        var amount = ParseDecimal($("#tripDeductionForm > #Amount").val());
+        var unitPrice = ParseDecimal($("#tripDeductionForm > #UnitPrice").val());
+        console.log(amount + " x " + unitPrice);
+        var total = amount * unitPrice;
+        console.log(total);
+        return MathRound(amount * unitPrice, 2);
+    }
+
+    function onTripDeductionChange(arg) {
+        tripDeductionGridHandler.onChange(arg);
+        var item = tripDeductionGridHandler.currentItem();
+        //println(item);
+        var id = item.Id;
+
+        isTripDeductionEditMode = true;
+
+        //$("#DeductionTypeCode").val(item.DeductionTypeCode);
+        //$("#Amount").val(item.Amount);
+        //$("#UnitPrice").val(item.UnitPrice);
+        //$("#TotalPrice").val(CalcTripDeductionTotal());
+        tripDeductionForm.find("#Id").val(item.Id);
+        tripDeductionForm.find("#TripId").val(item.TripId);
+        tripDeductionForm.find("#DeductionTypeCode").val(item.DeductionTypeCode);
+        tripDeductionForm.find("#Amount").val(item.Amount);
+        tripDeductionForm.find("#UnitPrice").val(item.UnitPrice);
+        tripDeductionForm.find("#TotalPrice").val(CalcTripDeductionTotal());
+
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&tripId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&tripId=" + @Model.Id);
+    }
+
+    function onTripDeductionDataBound(e) {
+        tripDeductionGridHandler.onDataBound(e);
+        LoadTripInfo();
+    }
+
+    function onTripDeductionDataBinding(e) {
+        tripDeductionGridHandler.onDataBinding(e);
+    }
+
+    //function TripDeductionVM() {
+    //    var self = this;
+    //    self.Amount = ko.observable(1);
+    //    self.UnitPrice = ko.observable();
+    //    self.TotalPrice = ko.pureComputed(function () {
+    //        return self.Amount() * self.UnitPrice();
+    //    }, self);
+    //    return self;
+    //};
+
+    var tripDeductionForm;
+    var tripDeductionGridHandler;
+
+    $(function () {
+        
+        tripDeductionForm = $("#tripDeductionForm");
+        tripDeductionGridHandler = new GridHandler("#gridTripDeductions");
+        tripDeductionGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        tripDeductionGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+            clearTripDeductionForm();
+        };
+
+        ParseInputDecimal("#tripDeductionForm > #Amount, #tripDeductionForm > #UnitPrice");
+
+        tripDeductionForm.find("#Amount, #UnitPrice").keydown(function() {
+            $("#tripDeductionForm > #TotalPrice").val(CalcTripDeductionTotal());
+        });
+
+        //$(document.body).closest("form").find(".clear-form").click(function(e){
+        tripDeductionForm.find(".clear-form").click(function(e) {
+            e.preventDefault();
+            clearTripDeductionForm();
+            return false;
+        });
+        // Remove the bindings before using 'applyBindings' again !
+        // Catuion: It will also remove other bindings such as those made by jQuery (e.g. click events)
+        //ko.cleanNode(tripDeductionForm[0]);
+        //viewModel = new TripDeductionVM();
+        //ko.applyBindings(viewModel, tripDeductionForm[0]);
+
+        //$.getDataAsJson('/api/TripLine/GetTripLineCreateRelatedDataListViewModel', {
+        //    'type': 'json'
+        //}, function (json) {
+        //    ko.mapping.fromJS(json.FishSpecies, {}, viewModel.FishSpecies);
+        //    fishSpecies = Rx.Observable.fromArray(json.FishSpecies);
+        //    $("#FishSpeciesId, #FishSpeciesCode").prop('disabled', false);
+        //    setTimeout(function () {
+        //        AddInputCodeFilter('#FishSpeciesCode', fishSpecies, function (x, y) { return x.Code == y; }, function (z) { viewModel.SelectedFishSpecies(z); /*('#FishSpeciesId').val(z.Id);*/ });
+        //        AddDropdownFilter('#FishSpeciesId', fishSpecies, function (x, y) { return x.Id == y; }, function (z) { println(z); $('#FishSpeciesCode').val(z.Code); });
+
+        //        $("#FishSpeciesCode").prop('disabled', false).val('').keyup();
+        //    }, 100);
+        //}, function (error) {
+        //    console.log(error);
+        //});
+
+        tripDeductionForm
+            .find("#DeductionTypeCode")
+            .prop('disabled', false)
+            .keyup(function(e) {
+                var self = $(this);
+                var keyCode = e.keyCode || e.which;
+                if(self.val().trim().length == 0 || keyCode == 46)
+                {
+                    clearTripDeductionForm();
+                }
+            });
+
+
+        @*$.getDataAsJson('/TripDeduction/GetCreateData', {
+            'tripId' : '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            println(json.CompanyId);
+            println(json.DateOfLanding);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+        //$("form").keydown(function(e){
+        //    if(e.keyCode === 13) {
+        //        e.preventDefault();
+        //        return false;
+        //    }
+        //});
+
+        tripDeductionForm.find("#TotalPrice").keydown(function (e) {
+            var id = $(this).attr("id")
+            if ((e.keyCode == 9 || e.keyCode == 13) && id == "TotalPrice") {
+                if(!e.shiftKey) {
+                    e.preventDefault();
+                    pageNeedsReload = true;
+                    $("#tripDeductionForm > #TotalPrice").filter(":visible").val("").prop('disabled', true);
+                    var data = "";
+                    var url = "/TripDeduction";
+                    if(isTripDeductionEditMode) {
+                        data = tripDeductionForm.serialize(); 
+                        url += "/Edit";
+                    }
+                    else {
+                        data = tripDeductionForm.find('input[name!=Id]').serialize();
+                        url += "/Create";
+                    }
+                    //var data = tripDeductionForm.serialize();
+                    console.log(data);
+                    $.post(url, data, function (d, s, xhr) {
+                        //console.log(d);
+                        //console.log(s);
+                        //console.log(xhr);
+                        //console.log(xhr.responseJSON);
+                        var json = xhr.responseJSON;
+                        if (json) { // has json object data
+                            //println(json);
+                            //UpdateVisibleGrids();
+                            $("#tripDeductionErrorMsg").html("");
+                            tripDeductionGridHandler.reload();
+                            $("#tripDeductionForm > #Amount").val("");
+                            $("#tripDeductionForm > #UnitPrice").val("");
+                            $("#tripDeductionForm > #TotalPrice").filter(":visible").val("").prop('disabled', false);
+                            $("#DeductionTypeCode").filter(":visible").val("").focus();
+                        }
+                        else {
+                            $("#tripDeductionErrorMsg").html("@Resources.Error");
+                        }
+                    })
+                    .fail(function (error) {
+                        $("#tripDeductionErrorMsg").html("@Resources.Error");
+                        console.log(error);
+                    });
+                }
+            }
+        });
+
+        
+        var deductionDataSource = null;
+
+        CreateLocalDataSource("/DeductionType/GetAll", "#DeductionTypeCode", "DeductionTypes", deductionDataSource, function (dataSource) {
+            deductionDataSource = dataSource;
+            SetupAutoComplete($("#DeductionTypeCode"), "Code", '#: data.Code# (#: data.Name#)', deductionDataSource, function (item) {
+                setTimeout(function() {
+                    $("#tripDeductionForm > #Amount").focus();
+                },10);
+            });
+        });
+
+        var dataSour@*ce = new kendo.data.DataSource({
+            type: "json",
+            serverFiltering: true,
+            serverPaging: true,
+            pageSize: 10,
+            //filter: { field: "filter", operator: "eq", value: $("#MemberId").val() },
+            //filtering: function(e) {
+            //    //get filter descriptor
+            //    var filter = e.filter;
+            //    console.log(filter);
+            //},
+            transport: {
+                //data : {
+                read: {
+                    url: "/DeductionType/Find",
+                    data: {
+                        filter: function () { return $("#DeductionTypeCode").data("kendoAutoComplete").value(); }
+                    },
+                    dataType: "json",
+                    type: "GET"
+                    //data: {
+                    //    //filter: { operator: "eq", value: $("#MemberId").val() },
+                    //    filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+                    //}
+                    //maxRows: 10
+                }
+            }
+        });
+
+        $("#DeductionTypeCode").kendoAutoComplete({
+            minLength: 1,
+            delay: 150,
+            dataTextField: "Code",
+            template: '#: data.Code# (#: data.Name#)',
+            highlightFirst: true,
+            ignoreCase: true,
+            //suggest: true,
+            dataSource: dataSource,
+            //placeholder: "@Resources.Search",
+            select: function(e) {
+                //var item = e.item;
+                //var text = item.text();
+                //console.log(item.text());
+                var dataItem = this.dataItem(e.item.index());
+                //console.log(dataItem);
+                //$("#FishSpeciesId").val(dataItem.Id);
+                //$("#UnitPrice").val(dataItem.UnitPrice);
+                //console.log(dataItem.Id);
+                
+                setTimeout(function() {
+                    $("#tripDeductionForm > #Amount").focus();
+                },10);
+            }
+        });*@
+
+    })
+    .keyup(function(e) {
+        var self = $(this);
+        var keyCode = e.keyCode || e.which;
+        var value = self.val().trim();
+        if(value.length > 0) {
+            if(keyCode == 13) {
+                $("#tripDeductionForm > #Amount").focus();
+            }
+            else if(keyCode == 46)
+            {
+                clearTripDeductionForm();
+            }
+        }
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

@@ -1,0 +1,147 @@
+﻿@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShippingCompanyHolidayPayForMemberViewModel>()
+    .Name("gridShippingCompanyHolidayPayForMember")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.BirthDay).Title(@Resources.Birthday).Format("{0:d}");
+        columns.Bound(p => p.FullName).Title(@Resources.FullName);
+        columns.Bound(p => p.Amount).Title(@Resources.Amount).Format("{0:C}");
+        columns.Bound(p => p.TransferDate).Title(@Resources.TransactionDate).Format("{0:d}");
+        columns.Bound(p => p.ART).Title("ART");
+        columns.Bound(p => p.TripNumber).Title(@Resources.TripNumber);
+        columns.Bound(p => p.REG_NR_FF).ClientTemplate("<text>#= REG_NR_FF # - #= KONTO_FF #</text>").Title(@Resources.BankAccount);
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        columns.Bound(p => p.ChangeEventCreatedOn).Format("{0:g}").Title(@Resources.CreatedOn);
+        columns.Bound(p => p.ChangeEventCreatedByUserIdCode).Title(@Resources.CreatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*<button class="create-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='CreateBankAccount' data-model-name='BankAccount'>@Resources.Create</button>*@
+                <form class="form-inline" id="holidayPayForMembersForm">
+                    @Html.ExportToExcelButton("Excel")
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(false)*@
+                    @*<input type="hidden" name="TripId" value="@Model.Id" />*@
+                    <input type="text" class="k-textbox" id="DateFilter" name="DateFilter" />
+                    <span class="text-danger" id="tripSignOnErrorMsg"></span>
+                    <button id="filterByDate" class="k-button">@Resources.Filter</button>
+                    <button id="clear-form" class="k-button">@Resources.Clear</button>
+                </form>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .FileName("Shipping Company HolidayPay for Members.xlsx")
+        .AllPages(true)
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onShippingCompanyHolidayPayForMemberChange").DataBound("onShippingCompanyHolidayPayForMemberDataBound").DataBinding("onShippingCompanyHolidayPayForMemberDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("ShippingCompanyHolidayPayForMembers_Read", "ShippingCompany", new { id = @Model.Id }))
+    )
+)
+<script>
+
+    function onShippingCompanyHolidayPayForMemberChange(arg) {
+        shippingCompanyHolidayPayForMemberGridHandler.onChange(arg);
+        @*var id = shippingCompanyHolidayPayForMemberGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);*@
+    }
+
+    function onShippingCompanyHolidayPayForMemberDataBound(e) {
+        shippingCompanyHolidayPayForMemberGridHandler.onDataBound(e);
+    }
+
+    function onShippingCompanyHolidayPayForMemberDataBinding(e) {
+        shippingCompanyHolidayPayForMemberGridHandler.onDataBinding(e);
+    }
+
+    var shippingCompanyHolidayPayForMemberGridHandler;
+    $(function () {
+
+        shippingCompanyHolidayPayForMemberGridHandler = new GridHandler("#gridShippingCompanyHolidayPayForMember");
+        shippingCompanyHolidayPayForMemberGridHandler.onDoubleClick = function (item) {
+            //navigate('/Ship/Details/' + item.Id);
+        };
+        shippingCompanyHolidayPayForMemberGridHandler.onItemOpen = function (item) {
+            //navigate('/Ship/Details/' + item.Id);
+        };
+        //shippingCompanyHolidayPayForMemberGridHandler.onItemDelete = function (item) {
+        //    //console.log(item);
+        //    $(".delete-action").filter(":visible").click();
+        //};
+
+        ParseInputDate("#DateFilter");
+
+        $("#filterByDate").click(function (e) {
+            e.preventDefault();
+            var date = $("#DateFilter").val();
+            shippingCompanyHolidayPayForMemberGridHandler.filter({ operator: "eq", value: date });
+            return false;
+        });
+        $("#clear-form").click(function (e) {
+            e.preventDefault();
+            $("#DateFilter").val("");
+            shippingCompanyHolidayPayForMemberGridHandler.filter({ operator: "eq", value: "01-01-1970" });
+            return false;
+        });
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

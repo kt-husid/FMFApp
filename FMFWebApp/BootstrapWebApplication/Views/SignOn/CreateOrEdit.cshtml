@@ -1,0 +1,193 @@
+﻿@model BootstrapWebApplication.Models.TripSignOnCreateEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@BootstrapResources.Resources.Create</h2>
+}
+@{
+    int tripId = -1;
+    if (@Request != null)
+    {
+        int.TryParse(@Request.QueryString["tripId"], out tripId);
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.SignOn</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="TripId" value="@tripId" />
+        <input type="hidden" name="MemberId" data-bind="value: selectedMember" />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Member.Person, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="find-member-by-person-name" class="form-control" />
+                <select data-bind="options: Members, optionsText: 'MemberFullName', value: selectedOption, optionsCaption: '@Resources.Choose'" id="members" class="form-control"></select>
+                @Html.ValidationMessageFor(model => model.Member.Person, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.From, new { @class = "datefield form-control" })
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.To, new { @class = "datefield form-control" })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobCode, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.JobCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.JobCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PART, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PART, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PART, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TIL_PR_DG, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.TIL_PR_DG, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TIL_PR_DG, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KR_IALT, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.KR_IALT, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KR_IALT, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <script>
+
+            var pvm;
+            $(function () {
+                //pvm = new DetailsViewModel();
+                //pvm.add("Members", []);
+
+                ko.bindingHandlers.option = {
+                    update: function (element, valueAccessor) {
+                        var value = ko.utils.unwrapObservable(valueAccessor());
+                        ko.selectExtensions.writeValue(element, value);
+                    }
+                };
+
+                // http://jsfiddle.net/rniemeyer/aCS7D/
+                function ViewModel() {
+                    this.Members = ko.observableArray([]);
+                    this.selectedOption = ko.observable();
+                    this.selectedMember = ko.computed(function () {
+                        var selected = this.selectedOption();
+                        //if (selected) {
+                        //    console.log(selected.Person.FullName);
+                        //}
+                        return selected ? selected.Id : '@Resources.Unknown';
+                    }, this);
+                    return this;
+                };
+
+                var viewModel = new ViewModel();
+
+                $('#find-member-by-person-name').keyup(function (e) {
+                    var personName = $(this).val();
+                    console.log(personName);
+                    FindMembers(personName, function (members) {
+                        //console.log(members);
+                        if (members !== undefined) {
+                            viewModel.Members(members);
+                            //console.log(members);
+                            //ko.utils.arrayForEach(members, function (member) {
+                            //    var person = member.Person;
+                            //    if (person != null) {
+                            //        console.log(person.FullName);
+                            //        viewModel.Members.push(member);
+                            //    }
+                            //});
+                            //pvm.load("Members", person.FullName);
+                        }
+                    });
+                });
+
+                var node = $('#modalCRUD').find(".modal-body")[0];
+                // Remove the bindings before using 'applyBindings' again !
+                // Catuion: It will also remove other bindings such as those made by jQuery (e.g. click events)
+                //ko.cleanNode(node);
+                //ko.applyBindings(pvm, node);
+                ko.applyBindings(viewModel, node);
+            });
+
+            //setTimeout(function () { pvm.apply(); }, 1000);
+
+            function FindMembers(filter, onSuccess) {
+                if (filter.length >= 3) {
+                    var url = '/api/Member/Find';
+                    var data = {
+                        'filter': filter,
+                        'type': 'json'
+                    };
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: data,
+                        success: function (json) {
+                            if (onSuccess) {
+                                onSuccess(json);
+                            }
+                            else {
+                                console.log("Missing onSuccess callback function!");
+                            }
+                        },
+                        error: function (error) {
+                            $.showError(error, url);
+                            console.log(error);
+                        }
+                    });
+                }
+            }
+        </script>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

@@ -1,0 +1,493 @@
+﻿@model BootstrapWebApplication.Models.TripViewModel
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">...</a></li>
+        </ul>
+    }*@
+@{
+    var controllerName = ViewContext.GetControllerName();
+    var holidayPayFromYear = @DateTime.Now.Year - 6;
+    var holidayPayToYear = @DateTime.Now.Year - 1;
+}
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Trip + " #" + @Model.TripId;
+}
+<style>
+    .dl-horizontal dt {
+         min-width:250px; 
+         text-align:right;
+         padding-right:5px;
+    }
+    .dl-horizontal dl {
+         min-width:250px; 
+         text-align:left;
+         padding-left:5px;
+    }
+</style>
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        @*@Html.Partial("_EditBackToListPartial", Model)*@
+    }
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>@ViewBag.Title</strong>
+                        @if (!@Request.IsAjaxRequest())
+                        {
+                            <span class="pull-right">
+                                @Html.ActionLink(@Resources.Back, "Details", "Ship", new { @id = Model.Ship.Id }, null)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.From)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.From)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.To)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.To)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Days)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Days)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Crew)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Crew)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.CrewIncludingStayingAtHome)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.CrewIncludingStayingAtHome)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.PortOfLanding)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.PortOfLanding.Code) - @Html.DisplayFor(model => model.PortOfLanding.Name)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DateOfLanding)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.DateOfLanding, "DateTime2")
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.CrewSharePercentage)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.CrewSharePercentage)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.VIDAR)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.VIDAR)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ShipType)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.ShipTypeCode) @Html.DisplayFor(model => model.ShipType.Description)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Ship)
+                        </dt>
+
+                        <dd>
+                            <a href="/Ship/Details/@Model.Ship.Id">@Html.DisplayFor(model => model.Ship.Code) @Html.DisplayFor(model => model.Ship.Name)</a>
+                        </dd>
+
+                        @{
+                            if (Model.PairShip != null)
+                            {
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.PairShip)
+                                </dt>
+
+                                <dd>
+                                    <a href="/Ship/Details/@Model.PairShip.Id">@Html.DisplayFor(model => model.PairShip.Code) @Html.DisplayFor(model => model.PairShip.Name)</a>
+                                </dd>
+                            }
+                        }
+
+                        @*<dt>
+                                @Html.DisplayNameFor(model => model.TotalWeight)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.TotalWeight)
+                            </dd>*@
+
+                        @*<dt>
+                                @Html.DisplayNameFor(model => model.TotalAmount)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.TotalAmount)
+                            </dd>*@
+                    </dl>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@Resources.Information</strong></h3>
+                </div>
+                <div class="panel-body">
+
+                    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+
+                    <hr />
+
+                    <h4><strong>@Resources.TripLines</strong></h4>
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Resources.TotalAmount
+                            @*@Html.DisplayNameFor(model => model.TotalAmountCalculated)*@
+                        </dt>
+
+                        <dd>
+                            <span id="TripLinesTotalCost">
+                                @string.Format("{0:C}", @Model.TotalAmountCalculated)
+                            </span>
+                        </dd>
+
+                        <dt>
+                            @Resources.TotalWeight
+                            @*@Html.DisplayNameFor(model => model.TotalWeightCalculated)*@
+                        </dt>
+
+                        <dd>
+                            <span id="TripLinesTotalWeight">
+                                @string.Format("{0:N}", @Model.TotalWeightCalculated)
+                            </span>
+                        </dd>
+
+                        <dt>
+                            @Resources.Average @Resources.Price.ToLower()
+                        </dt>
+
+                        <dd>
+                            <span id="TripLinesAveragePrice">
+                                @string.Format("{0:N}", (@Model.TotalWeightCalculated != 0 ? (@Model.TotalAmountCalculated / @Model.TotalWeightCalculated) : 0m))
+                            </span>
+                        </dd>
+                    </dl>
+
+                    <h4><strong>@Resources.Deductions</strong></h4>
+
+                    <dl class="dl-horizontal">
+
+                        <dt>
+                            @Resources.Deduction @Resources.Total
+                        </dt>
+
+                        <dd>
+                            <span id="TripDeductionTotalCost">-</span>
+                        </dd>
+
+                        <dt>
+                            @Resources.Deduction @Resources.TotalAmount2
+                        </dt>
+
+                        <dd>
+                            <span id="TripDeductionTotalWeight">-</span>
+                        </dd>
+
+                        <dt>
+                            @Resources.Average @Resources.Price.ToLower()
+                        </dt>
+
+                        <dd>
+                            <span id="TripDeductionAveragePrice">
+                                -
+                            </span>
+                        </dd>
+
+                    </dl>
+
+                    <h4><strong>@Resources.CrewShare</strong></h4>
+
+                    <dl class="dl-horizontal">
+                        @{
+                            var crewAmountToShare = @Model.TotalAmountCalculated.Value - @Model.DeductionsTotal;
+                        }
+                        <dt>
+                            Eftir at býta
+                        </dt>
+
+                        <dd>
+                            @String.Format("{0:C}", @crewAmountToShare)
+                        </dd>
+
+                        <dt>
+                            Manninging eigur
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Crew) PARTAR á @Html.DisplayFor(model => model.CrewSharePercentage) % av @String.Format("{0:C}", @crewAmountToShare)
+                            <br />
+                            @String.Format("{0:C}", @Model.CrewShareMoneyCalculated)
+                        </dd>
+
+                        <dt>
+                            Manningarpartur (inntastaður)
+                        </dt>
+
+                        <dd>
+                            @string.Format("{0:C}", Model.MANN_PART)
+                        </dd>
+
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.CrewSharePerCrewMember)*@
+                            Manningarpartur (útroknaður)
+                        </dt>
+
+                        <dd>
+                            <span id="TripPartSharePerCrewMember">
+                                @*@String.Format("{0:N}", @Model.MANN_PART)*@
+                                @{
+                                    var mann_part = Model.MANN_PART.HasValue ? Model.MANN_PART.Value : 0m;
+                                    var difference = Math.Abs(Model.CrewSharePerCrewMember.Value - mann_part);
+                                    var tolerance = 0.25m;
+                                    @*<label>MANN_PART: @String.Format("{0:N}", @mann_part)</label><br />
+                                    <label>CrewSharePerCrewMember: @String.Format("{0:N}", @Model.CrewSharePerCrewMember)</label><br />
+                                    <label>difference: @difference</label><br />*@
+                                    <label>@String.Format("{0:C}", @Model.CrewSharePerCrewMember)</label>
+                                    if (Model.MANN_PART.HasValue && difference < tolerance)
+                                    {
+                                            <label class="label label-success">OK</label>
+                                    }
+                                    else
+                                    {
+                                        if (!Model.MANN_PART.HasValue)
+                                        {
+                                            <label class="label label-warning">Manningarpartur manglar at ásetast</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="label label-warning">Stemmar ikki við inntastaða manningarpart. Munur: @difference</label>
+                                        }
+                                    }
+}
+                                @*@String.Format("{0:N}", @Model.CrewSharePerCrewMember)
+                                <br />
+                                @String.Format("{0:N}", @Model.TotalAmount)
+                                <br />
+                                @String.Format("{0:N}", @Model.TotalAmountCalculated)
+                                <br />
+                                @String.Format("{0:N}", @Model.MANN_PART)*@
+                            </span>
+                        </dd>
+
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.CrewSharePerCrewMember)*@
+                            Pr mann
+                        </dt>
+
+                        <dd>
+                            <span id="TripPartPerCrewMember">
+                                @String.Format("{0:C2}", @Model.CrewPartPerCrewMember)
+                            </span>
+                        </dd>
+
+                        <dt>
+                            @Html.Label(@Resources.HolidayPay)
+                        </dt>
+
+                        <dd>
+                            @String.Format("{0:C2}", @Model.CrewPartPerCrewMember * 0.12m)
+                        </dd>
+
+                        <dt>
+                            @Html.Label(@Resources.PerDay)
+                        </dt>
+
+                        <dd>
+                            @String.Format("{0:C}", @Model.PerDay)
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (!@Request.IsAjaxRequest())
+    {
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#triplines" role="tab" data-toggle="tab">@Resources.TripLines</a></li>
+            <li><a href="#deductions" role="tab" data-toggle="tab">@Resources.Deductions</a></li>
+            <li><a href="#signons" role="tab" data-toggle="tab">@Resources.SignOns</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="triplines">@Html.Action("TripLines", "TripLine", @Model)</div>
+            <div class="tab-pane" id="deductions">@Html.Action("TripDeductions", "TripDeduction", @Model)</div>
+            <div class="tab-pane" id="signons">@Html.Action("TripSignOns", "SignOn", @Model)</div>
+        </div>
+
+    @section Scripts {
+        @Scripts.Render("~/js/signalr")
+        @Scripts.Render("~/signalr/hubs")
+    }
+        <script>
+            var pageNeedsReload = false; // hack (workaround)
+
+            $(function () {
+                
+                var connection = $.hubConnection();
+                var contosoChatHubProxy = connection.createHubProxy('messageHub');
+                contosoChatHubProxy.on('updateProgress', function (progress) {
+                    $('#copy-last-signons-progress').text(progress + "%");
+                });
+                connection.start()
+                    .done(function () { console.log('Now connected, connection ID=' + connection.id); })
+                    .fail(function () { console.log('Could not connect'); });
+
+                $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+                    "<a href='#' class='edit-action' data-toggle='modal' data-controller-name='Trip' data-action-name='Edit?id=@Model.Id&shipId=@Model.ShipId' data-model-name='Trip'>@Resources.Edit</a>"
+                ]);
+
+
+                $(document).on("modalClosed", function (e, d) {
+                    setTimeout(function () {
+                        //console.log(e); console.log(d);
+                        console.log(d.modelName);
+                        console.log(d.data);
+                        if (d.modelName == "Trip") {
+                            //alert("Síðan verður lisin innaftur og heintar nýggjastu dátu. Trýst síðan umaftur á 'Mynstringar'");
+                            //reload the page to retreive new data from server
+                            location.reload();
+                        }
+                    }, 1000);
+                });
+
+                $('#tabs a').click(function (e) {
+                    e.preventDefault();
+                    var self = $(this);
+                    var id = self.attr('href').replace("#", "");
+                    var url = "";
+                    var data = null;
+                    switch (id) {
+                        case "triplines":
+                            url = '@Url.Action("TripLines", "TripLine")'; data = { id: '@Model.Id' };
+                            break;
+                        case "deductions":
+                            url = '@Url.Action("TripDeductions", "TripDeduction")'; data = { id: '@Model.Id' };
+                            break;
+                        case "signons":
+                            if (pageNeedsReload) {
+                                alert("Síðan verður lisin innaftur og heintar nýggjastu dátu. Trýst síðan umaftur á 'Mynstringar'");
+                                location.reload();
+                            }
+                            @*console.log('@Model.CrewSharePerCrewMember');
+                    $.ajax({
+                        url: "/Trip/GetCrewSharePerCrewMember",
+                        type: "GET",
+                        dataType: "json",
+                        data: {
+                            tripId: "@Model.Id"
+                        },
+                        success: function (json) {
+                            console.log(json);
+                        }
+                    });*@
+                            url = '@Url.Action("TripSignOns", "SignOn")'; data = { id: '@Model.Id' };
+                            break;
+                    }
+                    //if ($("#" + id).html().trim().length == 0) {
+                    //    $("#" + id).html('<p style="margin-top:50px; text-align:center;"><img src="/Content/kendo/2015.1.408/styles/Uniform/loading-image.gif" /></p>');
+                    //    $.get(url, data, function (html) {
+                    //        $("#" + id).html(html);
+                    //    });
+                    //}
+                    self.tab('show');
+                });
+
+                //setTimeout(function () {
+                //    LoadTripInfo();
+                //}, 250);
+            });
+
+            function LoadTripInfo() {
+                $.getDataAsJson('/api/Trip/GetInfo', {
+                    'tripId': '@Model.Id',
+                    'type': 'json'
+                }, function (json) {
+                    //println(json);
+                    var tripLinesTotalCost = parseFloat(json.TripLinesTotalCost);
+                    var tripLinesTotalWeight = parseFloat(json.TripLinesTotalWeight);
+                    
+                    $("#TripLinesTotalCost").html(kendo.toString(tripLinesTotalCost, "c"));
+                    $("#TripLinesTotalWeight").html(kendo.toString(tripLinesTotalWeight, "n"));
+
+                    if (tripLinesTotalWeight != 0) {
+                        var tripLinesAveragePrice = tripLinesTotalCost / tripLinesTotalWeight;
+                        $("#TripLinesAveragePrice").html(kendo.toString(tripLinesAveragePrice, "c"));
+                    }
+
+
+                    var tripDeductionTotalCost = parseFloat(json.TripDeductionTotalCost);
+                    var tripDeductionTotalWeight = parseFloat(json.TripDeductionTotalWeight);
+
+                    $("#TripDeductionTotalCost").html(kendo.toString(tripDeductionTotalCost, "c"));
+                    $("#TripDeductionTotalWeight").html(kendo.toString(tripDeductionTotalWeight, "n"));
+
+                    if (tripLinesTotalWeight != 0) {
+                        var tripDeductionAveragePrice = tripDeductionTotalCost / tripDeductionTotalWeight;
+                        $("#TripDeductionAveragePrice").html(kendo.toString(tripDeductionAveragePrice, "c"));
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+            }
+</script>
+    }
+</div>

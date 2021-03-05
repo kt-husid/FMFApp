@@ -1,0 +1,25 @@
+﻿@model BootstrapWebApplication.Models.Ship
+
+<dl class="dl-horizontal">
+    <dt>
+        @Resources.Label
+    </dt>
+
+    <dd>
+        @{
+            if (Model.ETI_DATO.HasValue)
+            {
+                @Resources.PrintedOn <strong>@Html.DisplayFor(model => model.ETI_DATO, "DateTime2")</strong>
+            }
+            if (!String.IsNullOrEmpty(Model.ETI_ID))
+            {
+                <br />
+                @Resources.PrintedBy    <strong>@Html.DisplayFor(model => model.ETI_ID)</strong>
+            }
+            if (!Model.ETI_DATO.HasValue && String.IsNullOrEmpty(Model.ETI_ID))
+            {
+                <strong>@Resources.NotYetPrinted</strong>
+            }
+        }
+    </dd>
+</dl>

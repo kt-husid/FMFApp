@@ -1,0 +1,104 @@
+﻿@model BootstrapWebApplication.Models.TripDeductionCreateOrEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@BootstrapResources.Resources.Create</h2>
+}
+@{
+    int tripId = -1;
+    if (@Request != null)
+    {
+        //int.TryParse(@Request.QueryString["id"], out tripId);
+        int.TryParse(@Request.QueryString["tripId"], out tripId);
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Deduction</h4>
+            <hr />
+        }
+
+        @Html.ValidationSummary(true)
+
+        <input type="hidden" name="TripId" value="@tripId" />
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeductionTypeCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DeductionTypeId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DeductionTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Amount, new { data_bind = "value: Amount", @class = "form-control" })
+                @*<input name="TripLine.Amount" type="text" value="" data-bind="value: Amount" class="form-control" />*@
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Price, new { data_bind = "value: Price", @class = "form-control" })
+                @*<input name="TripLine.Price" type="text" value="" data-bind="value: Price" class="form-control" />*@
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalPrice, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*<input name="TripLine.KR" type="text" value="" data-bind="value: KR" class="form-control" />*@
+                @Html.TextBoxFor(model => model.TotalPrice, new { data_bind = "value: KR", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TotalPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <script>
+            function ViewModel() {
+                var self = this;
+                self.Amount = ko.observable();
+                self.Price = ko.observable();
+                self.KR = ko.pureComputed(function () {
+                    return self.Amount() * self.Price();
+                }, self);
+                return self;
+            };
+            var node = $('#modalCRUD').find(".modal-body")[0];
+            // Remove the bindings before using 'applyBindings' again !
+            // Catuion: It will also remove other bindings such as those made by jQuery (e.g. click events)
+            ko.cleanNode(node);
+            ko.applyBindings(new ViewModel(), node);
+
+            $(function () {
+
+            });
+        </script>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="20.0002999655322cm" Culture="fo-FO" Name="MemberSignOnsReport" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.9">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT        &#xD;&#xA;&#x9;dbo.Member.Id, &#xD;&#xA;&#x9;dbo.Person.FirstName, dbo.Person.MiddleName, dbo.Person.LastName, dbo.Person.Birthday, &#xD;&#xA;&#x9;so.[From], so.[To], so.PART, &#xD;&#xA;&#x9;dbo.Ship.Name AS ShipName, &#xD;&#xA;&#x9;dbo.Trip.TripId, dbo.Trip.CrewShareMoney, dbo.Trip.Crew, dbo.Trip.MinimumWage, dbo.Trip.MANN_PART_I,  dbo.Trip.MANN_PART, &#xD;&#xA;&#x9;dbo.Postal.CityName, &#xD;&#xA;&#x9;dbo.Job.Code AS JobCode,&#xD;&#xA;&#x9;dbo.[Address].AddressLine1&#xD;&#xA;&#x9;--dbo.Phone.RawNumber&#xD;&#xA;FROM          dbo.SignOn as so INNER JOIN&#xD;&#xA;                         dbo.Member ON so.MemberId = dbo.Member.Id INNER JOIN&#xD;&#xA;                         dbo.Person ON dbo.Member.PersonId = dbo.Person.Id INNER JOIN&#xD;&#xA;                         dbo.Trip ON so.TripId = dbo.Trip.Id INNER JOIN&#xD;&#xA;                         dbo.Job ON dbo.Job.Id = so.JobWhileSignedOnId INNER JOIN&#xD;&#xA;                         dbo.Ship ON dbo.Trip.ShipId = dbo.Ship.Id LEFT OUTER JOIN&#xD;&#xA;                         dbo.[Address] ON dbo.Person.EntityId = dbo.[Address].EntityId LEFT OUTER JOIN&#xD;&#xA;                         dbo.Postal ON dbo.[Address].PostalId = dbo.Postal.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; dbo.ChangeEvent as ce ON so.ChangeEventId = ce.Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; --LEFT OUTER JOIN&#xD;&#xA;       --                  dbo.Phone ON dbo.Person.EntityId = dbo.Phone.EntityId&#xD;&#xA;WHERE        (dbo.Member.Id = @MemberId) AND (so.[From] &gt;= @From) AND (so.[To] &lt;= @To) AND (dbo.[Address].IsPrimary = 'TRUE') AND (ce.DeletedOn IS NULL)&#xD;&#xA;--AND (dbo.Phone.IsPrimary = 'TRUE')&#xD;&#xA;ORDER BY so.[From] ASC" Name="sqlDataSource1" ParameterValues="{&quot;@MemberId&quot;:&quot;12010&quot;,&quot;@From&quot;:&quot;01-01-2013&quot;,&quot;@To&quot;:&quot;31-12-2015&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@MemberId">
+          <Value>
+            <String>= Parameters.MemberId.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@From">
+          <Value>
+            <String>= Parameters.From.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@To">
+          <Value>
+            <String>= Parameters.To.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+      <CalculatedFields>
+        <CalculatedField Name="FullName" Expression="= Fields.FirstName + IIf(Len(MiddleName)&gt;0,&quot; &quot; + Fields.MiddleName,&quot; &quot;) + Fields.LastName">
+          <DataType>System.String</DataType>
+        </CalculatedField>
+        <CalculatedField Name="TimeSpan" Expression="=Fields.To.Date - Fields.From.Date">
+          <DataType>System.Object</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Days" Expression="=Fields.TimeSpan.Days + 1">
+          <DataType>System.Int32</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Supplement" Expression="=Fields.Days * Fields.MinimumWage">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="HolidayPay" Expression="= (Fields.MANN_PART_I + Fields.Supplement) * 0.12">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Total" Expression="= Fields.MANN_PART_I + Fields.Supplement + Fields.HolidayPay">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="HolidayPay2" Expression="=(Fields.MANN_PART + Fields.Supplement) * 0.12">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+        <CalculatedField Name="Total2" Expression="=Fields.MANN_PART + Fields.Supplement + Fields.HolidayPay2">
+          <DataType>System.Decimal</DataType>
+        </CalculatedField>
+      </CalculatedFields>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="0.500300116928018cm" Name="detailSection1">
+      <Style>
+        <Font Name="Courier New" Size="9pt" />
+      </Style>
+      <Items>
+        <Panel Width="19.9999995962779cm" Height="0.500100274480574cm" Left="0.00019943872532746cm" Top="0cm" Name="panel2">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.24230861663818cm" Height="0.500000178813934cm" Left="0.0000999212206807cm" Top="0cm" Value="= Format(&quot;{0:dd'/'MM'/'yyy}&quot;,  Fields.From.Date)" Format="{0:d}" Name="textBox13">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.05739140510559cm" Height="0.500000178813934cm" Left="2.24260854721069cm" Top="0cm" Value="= Format(&quot;{0:dd'/'MM'/'yyy}&quot;,  Fields.To.Date)" Format="{0:d}" Name="textBox14">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.23844063261452cm" Height="0.500000178813934cm" Left="4.30019998550415cm" Top="0cm" Value="= Fields.TripId" Format="" Name="textBox16">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.11224900894005cm" Height="0.500000178813934cm" Left="5.53884124755859cm" Top="0cm" Value="= Fields.ShipName" Format="" TextWrap="False" Name="textBox17">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="0.848509613584569cm" Height="0.500000178813934cm" Left="8.65128993988037cm" Top="0cm" Value="= Fields.Days" Format="" Name="textBox18">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.19979877399901cm" Height="0.500000178813934cm" Left="9.50000072934054cm" Top="0cm" Value="= Fields.JobCode" Format="" TextWrap="False" Name="textBox19">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="0.999900612902781cm" Height="0.500000178813934cm" Left="10.700099971689cm" Top="0cm" Value="= Fields.PART" Format="" TextWrap="False" Name="textBox29">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.89980043935275cm" Height="0.500000178813934cm" Left="13.6997994339478cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.Supplement)" Format="" TextWrap="False" Name="textBox30">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Size="8pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.76420794434501cm" Height="0.500000178813934cm" Left="15.599801614309cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.HolidayPay2)" Format="" TextWrap="False" Name="textBox31">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Size="8pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="0.42116980421206cm" Height="0.500000178813934cm" Left="17.3640098571777cm" Top="0cm" Value="= IIf(Fields.MANN_PART &gt; 0, &quot;*&quot;, &quot;&quot;)" Format="" Name="textBox32">
+              <Style TextAlign="Center">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.21482154725492cm" Height="0.500000178813934cm" Left="17.7851791381836cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.Total2)" Format="" TextWrap="False" Name="textBox33">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Size="8pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.99960131009971cm" Height="0.500000178813934cm" Left="11.7002001349076cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Fields.MANN_PART)" Format="" TextWrap="False" Name="textBox11">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Default="Solid" Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Default="0pt" Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Size="8pt" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="1.90040016174316cm" Name="pageHeaderSection1">
+      <Items>
+        <TextBox Width="19.9681613293696cm" Height="0.800000190734863cm" Left="0.00010002215276472cm" Top="0cm" Value="= &quot;Mynstringar frá &quot; + Format(&quot;{0:dd/MM/yyy}&quot;, Parameters.From.Value) + &quot; til &quot; +  Format(&quot;{0:dd/MM/yyyy}&quot;, Parameters.To.Value)" Culture="fo-FO" Name="ReportNameTextBox">
+          <Style TextAlign="Left" VerticalAlign="Middle">
+            <Font Name="Courier New" Size="14pt" Bold="True" Underline="False" />
+          </Style>
+        </TextBox>
+        <Panel Width="19.9946208065258cm" Height="0.500100324945838cm" Left="0.00557943964379598cm" Top="1.4002998646017cm" Name="panel1">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.23692868509927cm" Height="0.500000178813934cm" Left="0.00009971936378861cm" Top="0cm" Value="Frá" Format="" Name="textBox44">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.05739131960337cm" Height="0.500000178813934cm" Left="2.23722852841775cm" Top="0cm" Value="Til" Format="{0:d}" Name="textBox43">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.23843977980554cm" Height="0.500000178813934cm" Left="4.2948200938553cm" Top="0cm" Value="Id" Format="{0:d}" Name="textBox42">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="3.10686983714325cm" Height="0.500000178813934cm" Left="5.53346134688763cm" Top="0cm" Value="Skip" Format="{0:d}" Name="textBox41">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="0.853989026968509cm" Height="0.500000178813934cm" Left="8.64591016880127cm" Top="0cm" Value="Dg" Format="{0:d}" Name="textBox40">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.19432020147345cm" Height="0.500000178813934cm" Left="9.50009976982793cm" Top="0cm" Value="Starv" Format="" TextWrap="False" Name="textBox39">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.00537919347424cm" Height="0.5cm" Left="10.6947199707705cm" Top="0cm" Value="Part" Format="" TextWrap="False" Name="textBox38">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.89980053228485cm" Height="0.500000178813934cm" Left="13.69989982645cm" Top="0cm" Value="Viðbøtur" Format="{0:d}" TextWrap="False" Name="textBox37">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.74417046838639cm" Height="0.500000178813934cm" Left="15.5999000787763cm" Top="0cm" Value="frt-løn" Format="" TextWrap="False" Name="textBox36">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.21472144126892cm" Height="0.500000178813934cm" Left="17.7799995054404cm" Top="0cm" Value="íalt" Format="" TextWrap="False" Name="textBox34">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="0.421169817447662cm" Height="0.500000178813934cm" Left="17.3566661838823cm" Top="0cm" Value="" Format="" Name="textBox35">
+              <Style>
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.99940105677203cm" Height="0.500000178813934cm" Left="11.7002993170365cm" Top="0cm" Value="i-m.part" Format="" TextWrap="False" Name="textBox10">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="10pt" Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <Panel Width="20.0000012111663cm" Height="0.500099870758458cm" Left="0.00029956181010782cm" Top="0.900000151395793cm" Name="panel3">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.24220823885815cm" Height="0.499999949534735cm" Left="0.00009992122372211cm" Top="0cm" Value="= Fields.Birthday.Date" Format="{0:d}" Name="textBox2">
+              <Style VerticalAlign="Top">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="6.40848199979714cm" Height="0.500000151395793cm" Left="2.24250840625144cm" Top="0cm" Value="= Fields.FirstName + IIf(Len(Fields.MiddleName) &gt; 0, &quot; &quot; + Fields.MiddleName, &quot;&quot;) + &quot;, &quot; + Fields.LastName" Name="textBox1">
+              <Style VerticalAlign="Top">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="11.3488103570872cm" Height="0.499999949534735cm" Left="8.65118923919074cm" Top="0cm" Value="= Fields.CityName" Name="textBox3">
+              <Style TextAlign="Center" VerticalAlign="Top">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="1.29929928980233cm" Name="pageFooterSection1">
+      <Items>
+        <TextBox Width="4.39472072774949cm" Height="0.599999798138942cm" Left="6.14392900466919in" Top="0.69929959259392cm" Value="Síða {PageNumber}" Name="ReportPageNumberTextBox">
+          <Style TextAlign="Right">
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <Panel Width="19.9625826305625cm" Height="0.500100324945838cm" Left="0.0056795627285755cm" Top="0cm" Name="panel4">
+          <Style>
+            <BorderStyle Top="None" Bottom="None" Left="None" Right="None" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.23682803607863cm" Height="0.500000151395794cm" Left="0.00010012308478013cm" Top="0cm" Value="= Format(&quot;íalt {0}&quot;, Count(Fields.Id))" Name="textBox4">
+              <Style VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.0573913748934cm" Height="0.500000178813934cm" Left="2.23712840533297cm" Top="0cm" Value="= Format(&quot;{0} dagar&quot;, Sum(Fields.Days))" Name="textBox5">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.2200010890313cm" Height="0.500000178813934cm" Left="17.7424808017518cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Sum(Fields.Total2))" Name="textBox9">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="8pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.74964862567952cm" Height="0.500000178813934cm" Left="15.5943206391325cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Sum(Fields.HolidayPay2))" Name="textBox8">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="8pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.89431993777893cm" Height="0.500000178813934cm" Left="13.6998013182536cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Sum(Fields.Supplement))" Name="textBox6">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="8pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.99940145015717cm" Height="0.500000178813934cm" Left="11.7001991271973cm" Top="0cm" Value="= Format(&quot;{0:N2}&quot;, Sum(Fields.MANN_PART))" Name="textBox7">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="8pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="7.39980014245963cm" Height="0.500000178813934cm" Left="4.29471997077052cm" Top="0cm" Value="" Name="textBox12">
+              <Style TextAlign="Right" VerticalAlign="Middle">
+                <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                <Font Name="Courier New" Size="9pt" Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="0.5cm" Right="0.5cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="MemberId" Type="Integer">
+      <Value>
+        <String>217</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="From" Type="DateTime" Text="Frá" AutoRefresh="True">
+      <Value>
+        <String>01-06-1999</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="To" Type="DateTime" Text="Til" AutoRefresh="True">
+      <Value>
+        <String>16-10-2015</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

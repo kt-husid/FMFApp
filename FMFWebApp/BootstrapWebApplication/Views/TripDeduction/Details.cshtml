@@ -1,0 +1,138 @@
+﻿@model BootstrapWebApplication.Models.TripDeduction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>@Resources.Deduction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeEvent.CreatedByUserIdCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeEvent.CreatedByUserIdCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Company.CID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company.CID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeductionType.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeductionType.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal.CityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal.CityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ship.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ship.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShippingCompany.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShippingCompany.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Trip.TripId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Trip.TripId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Typa.TEKSTUR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Typa.TEKSTUR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TripNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TripNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ART)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ART)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PortOfLanding)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PortOfLanding)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfLanding)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateOfLanding)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

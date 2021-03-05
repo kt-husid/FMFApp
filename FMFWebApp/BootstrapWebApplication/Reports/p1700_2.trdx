@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource2" Width="19.9999995962779cm" Name="p1700_3" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.8">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT&#xD;&#xA;&#x9;COUNT(*) as &quot;Count&quot;&#xD;&#xA;FROM&#xD;&#xA;&#x9;dbo.Member as m INNER JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id INNER JOIN&#xD;&#xA;&#x9;dbo.ChangeEvent as ce ON m.ChangeEventId = ce.Id INNER JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.Id = m.LastSignOnId&#xD;&#xA;WHERE&#xD;&#xA;&#x9;(m.PostalCode &gt;= @PostalCodeFrom) AND &#xD;&#xA;&#x9;(m.PostalCode &lt;= @PostalCodeTo) AND &#xD;&#xA;&#x9;(m.MemberTypeCode = @MemberTypeCode) AND &#xD;&#xA;&#x9;(ce.DeletedOn IS NULL) AND &#xD;&#xA;&#x9;(p.IsAlive = 'TRUE') AND&#xD;&#xA;&#x9;DATEPART(yyyy, so.[To]) &gt;= @SignOnFrom AND DATEPART(yyyy, so.[To]) &lt;= @SignOnTo&#xD;&#xA;&#x9;AND m.JobCode &gt;= @MemberJobCodeFrom AND m.JobCode &lt;= @MemberJobCodeTo" Name="sqlDataSource2" ParameterValues="{&quot;@PostalCodeFrom&quot;:&quot;340&quot;,&quot;@PostalCodeTo&quot;:&quot;340&quot;,&quot;@MemberTypeCode&quot;:&quot;ff&quot;,&quot;@SignOnFrom&quot;:&quot;2014&quot;,&quot;@SignOnTo&quot;:&quot;2014&quot;,&quot;@MemberJobCodeFrom&quot;:&quot;a&quot;,&quot;@MemberJobCodeTo&quot;:&quot;x&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@PostalCodeFrom">
+          <Value>
+            <String>= Parameters.PostalCodeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@PostalCodeTo">
+          <Value>
+            <String>= Parameters.PostalCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberTypeCode">
+          <Value>
+            <String>= Parameters.MemberTypeCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@SignOnFrom">
+          <Value>
+            <String>= Parameters.SignOnFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeFrom">
+          <Value>
+            <String>= Parameters.MemberJobCodeFrom.value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeTo">
+          <Value>
+            <String>= Parameters.MemberJobCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="SELECT&#xD;&#xA;&#x9;m.Id,&#xD;&#xA;&#x9;m.MemberTypeCode, &#xD;&#xA;&#x9;m.MemberTypeDescription, &#xD;&#xA;&#x9;m.JobCode, &#xD;&#xA;&#x9;m.JobDescription, &#xD;&#xA;&#x9;m.CountryCode, &#xD;&#xA;&#x9;m.CountryName, &#xD;&#xA;&#x9;m.PostalCode, &#xD;&#xA;&#x9;m.CityName,&#xD;&#xA;&#x9;m.AddressLine, &#xD;&#xA;&#x9;m.PhoneCountryCode, &#xD;&#xA;&#x9;m.PhoneNumber, &#xD;&#xA;&#x9;m.GenderCode,&#xD;&#xA;&#x9;p.FirstName, p.MiddleName, p.LastName,&#xD;&#xA;&#x9;p.FullName, &#xD;&#xA;&#x9;p.Birthday,&#xD;&#xA;&#x9;so.[From] as SignOnFrom,&#xD;&#xA;&#x9;so.[To] as SignOnTo,&#xD;&#xA;&#x9;so.ShipCode,&#xD;&#xA;&#x9;so.ShipName,&#xD;&#xA;&#x9;DATEDIFF(year, p.Birthday, getdate()) as Age&#xD;&#xA;FROM&#xD;&#xA;&#x9;dbo.Member as m INNER JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id INNER JOIN&#xD;&#xA;&#x9;dbo.ChangeEvent as ce ON m.ChangeEventId = ce.Id INNER JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.Id = m.LastSignOnId&#xD;&#xA;WHERE&#xD;&#xA;&#x9;(m.PostalCode &gt;= @PostalCodeFrom) AND &#xD;&#xA;&#x9;(m.PostalCode &lt;= @PostalCodeTo) AND &#xD;&#xA;&#x9;(m.MemberTypeCode = @MemberTypeCode) AND &#xD;&#xA;&#x9;(ce.DeletedOn IS NULL) AND &#xD;&#xA;&#x9;DATEPART(yyyy, so.[To]) &gt;= @SignOnFrom AND DATEPART(yyyy, so.[To]) &lt;= @SignOnTo&#xD;&#xA;&#x9;AND m.JobCode &gt;= @MemberJobCodeFrom AND m.JobCode &lt;= @MemberJobCodeTo&#xD;&#xA;ORDER BY m.PostalCode, p.Birthday" Name="sqlDataSource1" ParameterValues="{&quot;@PostalCodeFrom&quot;:&quot;100&quot;,&quot;@PostalCodeTo&quot;:&quot;340&quot;,&quot;@MemberTypeCode&quot;:&quot;ff&quot;,&quot;@SignOnFrom&quot;:&quot;2014&quot;,&quot;@SignOnTo&quot;:&quot;2015&quot;,&quot;@MemberJobCodeFrom&quot;:&quot;a&quot;,&quot;@MemberJobCodeTo&quot;:&quot;d&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@PostalCodeFrom">
+          <Value>
+            <String>= Parameters.PostalCodeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@PostalCodeTo">
+          <Value>
+            <String>= Parameters.PostalCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberTypeCode">
+          <Value>
+            <String>= Parameters.MemberTypeCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@SignOnFrom">
+          <Value>
+            <String>= Parameters.SignOnFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeFrom">
+          <Value>
+            <String>=Parameters.MemberJobCodeFrom.value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@MemberJobCodeTo">
+          <Value>
+            <String>= Parameters.MemberJobCodeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="1.39980030894835cm" Name="detailSection1">
+      <Items>
+        <Table DataSourceName="sqlDataSource1" Width="19.9562502240139cm" Height="1.23812496717641cm" Left="0.00010012308478013cm" Top="0cm" Name="table1" StyleName="Normal.TableNormal">
+          <Body>
+            <Cells>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="2.29104256888417cm" Height="0.5cm" Left="0cm" Top="0cm" Value="= Format(&quot;{0:dd/MM/yyyy}&quot;, Fields.Birthday)" Name="textBox3" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right">
+                      <Font Name="Courier New" Size="10pt" />
+                      <Padding Top="1mm" Bottom="1mm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="8.8791661947358cm" Height="0.5cm" Left="0cm" Top="0cm" Value="= Fields.FirstName + IIf(Len(Fields.MiddleName) &gt; 0, &quot; &quot; + Fields.MiddleName, &quot; &quot;) + Fields.LastName  + &quot;, &quot; + Fields.AddressLine" Name="textBox4" StyleName="Normal.TableBody">
+                    <Style>
+                      <Font Name="Courier New" Size="10pt" />
+                      <Padding Top="1mm" Bottom="1mm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="0.756459414087278cm" Height="0.5cm" Left="0cm" Top="0cm" Value="=Fields.MemberTypeCode" Name="textBox8" StyleName="Normal.TableBody">
+                    <Style>
+                      <Font Name="Courier New" Size="10pt" />
+                      <Padding Top="1mm" Bottom="1mm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.03187172656723cm" Height="0.5cm" Left="0cm" Top="0cm" Value="=Fields.CityName" Name="textBox10" StyleName="Normal.TableBody">
+                    <Style>
+                      <Font Name="Courier New" Size="10pt" />
+                      <Padding Top="1mm" Bottom="1mm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="4" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="4.99770981556184cm" Height="0.5cm" Left="0cm" Top="0cm" Value="=Format(&quot;{0:yy}&quot;, Fields.SignOnFrom) + &quot; &quot; + Fields.ShipCode + &quot; &quot; + Fields.ShipName" Name="textBox12" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                      <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                      <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                      <Font Name="Courier New" Size="10pt" />
+                      <Padding Top="1mm" Bottom="1mm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+            </Cells>
+            <Columns>
+              <Column Width="2.29104262410103cm" />
+              <Column Width="8.87916627267448cm" />
+              <Column Width="0.756460253445088cm" />
+              <Column Width="3.0318708116591cm" />
+              <Column Width="4.99771011344856cm" />
+            </Columns>
+            <Rows>
+              <Row Height="0.500000002446736cm" />
+            </Rows>
+          </Body>
+          <Corner />
+          <RowGroups>
+            <TableGroup Name="Detail">
+              <Groupings>
+                <Grouping />
+              </Groupings>
+            </TableGroup>
+          </RowGroups>
+          <ColumnGroups>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="2.29104262410103cm" Height="0.738125001628671cm" Left="0cm" Top="0cm" Value="árg" Name="textBox1" StyleName="Normal.TableHeader">
+                  <Style VerticalAlign="Middle">
+                    <Font Name="Courier New" />
+                    <Padding Left="5mm" Top="0mm" Bottom="0mm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="8.87916627267449cm" Height="0.738125001628671cm" Left="0cm" Top="0cm" Value="navn" Name="textBox2" StyleName="Normal.TableHeader">
+                  <Style VerticalAlign="Middle">
+                    <Font Name="Courier New" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup Name="group">
+              <ReportItem>
+                <TextBox Width="0.756460253445089cm" Height="0.738125001628671cm" Left="0cm" Top="0cm" Value="ls" Name="textBox5" StyleName="Normal.TableHeader">
+                  <Style VerticalAlign="Middle">
+                    <Font Name="Courier New" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup Name="group1">
+              <ReportItem>
+                <TextBox Width="3.0318708116591cm" Height="0.738125001628671cm" Left="0cm" Top="0cm" Value="bygd" Name="textBox9" StyleName="Normal.TableHeader">
+                  <Style VerticalAlign="Middle">
+                    <Font Name="Courier New" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup Name="group2">
+              <ReportItem>
+                <TextBox Width="4.99771011344856cm" Height="0.738125001628671cm" Left="0cm" Top="0cm" Value="mynstr." Name="textBox11" StyleName="Normal.TableHeader">
+                  <Style VerticalAlign="Middle">
+                    <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+                    <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+                    <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+                    <Font Name="Courier New" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+          </ColumnGroups>
+        </Table>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="1.89999989906947cm" Name="pageHeaderSection1">
+      <Items>
+        <Panel Width="19.9997994521825cm" Height="1.29999971389771cm" Left="0.00010012308478013cm" Top="0.599999899069471cm" Name="Colonna MT">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+            <Font Name="Arial" />
+          </Style>
+          <Items>
+            <TextBox Width="5.89999983986217cm" Height="0.499999761581421cm" Left="0.79989987691522cm" Top="0.400000201861058cm" Value="******* Limir ******" Name="textBox7">
+              <Style>
+                <Font Name="Courier New" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="1.79999949534735cm" Name="pageFooterSection1">
+      <Items>
+        <Panel Width="19.9747911873518cm" Height="1.09999944488209cm" Left="0.00010012308477947cm" Top="0cm" Name="panel2">
+          <Style>
+            <BorderStyle Top="Solid" Bottom="Solid" Left="Solid" Right="Solid" />
+            <BorderColor Top="Black" Bottom="Black" Left="Black" Right="Black" />
+            <BorderWidth Top="1pt" Bottom="1pt" Left="1pt" Right="1pt" />
+          </Style>
+          <Items>
+            <TextBox Width="2.9999992934863cm" Height="0.499999747673678cm" Left="0.299899725519426cm" Top="0.200000302791587cm" Value="tilsamans" Name="textBox6">
+              <Style>
+                <Font Name="Courier New" />
+              </Style>
+            </TextBox>
+            <TextBox Width="2.99999928474426cm" Height="0.499999730189651cm" Left="3.30009926517528cm" Top="0.200000302791587cm" Value="= Fields.Count" Name="textBox13">
+              <Style>
+                <Font Name="Courier New" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="0.5cm" Right="0.5cm" Top="1cm" Bottom="1cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="PostalCodeFrom" Type="Integer" Text="PostalCodeFrom">
+      <Value>
+        <String>100</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="PostalCodeTo" Type="Integer" Text="PostalCodeTo">
+      <Value>
+        <String>999</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="MemberTypeCode" Text="MemberTypeCode">
+      <Value>
+        <String>ff</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnFrom" Type="Integer" Text="SignOnFrom">
+      <Value>
+        <String>1900</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnTo" Type="Integer" Text="SignOnTo">
+      <Value>
+        <String>1992</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="MemberJobCodeFrom">
+      <Value>
+        <String>a</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="MemberJobCodeTo">
+      <Value>
+        <String>x</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

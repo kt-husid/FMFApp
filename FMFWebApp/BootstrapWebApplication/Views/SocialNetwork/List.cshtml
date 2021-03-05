@@ -1,0 +1,36 @@
+﻿@model PagedList.IPagedList<BootstrapWebApplication.Models.SocialNetwork>
+@using PagedList.Mvc;
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().UserName)
+        </th>
+        <th>
+            @Html.ActionLink(HttpUtility.HtmlDecode(@Html.DisplayNameFor(model => model.FirstOrDefault().UriString).ToHtmlString()), "Index", new { sortName = ViewBag.UriSortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td style="max-width: 200px;">
+            @Html.DisplayFor(modelItem => item.UriString)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.Partial("_EditDetailsDeletePartial", new BootstrapCore.Helpers.ActionLinkData() { Model = item, ControllerName = "SocialNetwork", @RouteValues = new { id = @item.Id }, HtmlAttributes = new { @class = "btn btn-default btn-xs" } })
+        </td>
+    </tr>
+}
+</table>
+<br />
+@Html.Partial("_PagedListFooterPartial")

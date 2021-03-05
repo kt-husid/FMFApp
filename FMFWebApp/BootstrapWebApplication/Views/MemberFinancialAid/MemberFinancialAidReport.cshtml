@@ -1,0 +1,41 @@
+﻿@model BootstrapWebApplication.Models.MemberSignOnReportParameters
+@{
+    //ViewBag.Title = @Resources.ReportFor + " " + @Resources.Member + " " + @Resources.FinancialAid;
+    Layout = "~/Views/Shared/_LayoutReporting.cshtml";
+}
+@Html.Partial("_ReportHeaderPartial")
+@{    
+    var reportSource = new UriReportSource() { Uri = "MemberFinancialAidReport.trdx" };
+    reportSource.Parameters.Add("MemberFinancialAidId", @Request.QueryString["MemberFinancialAidId"]);
+    
+
+    //var cultureName = Kthusid.Web.CookieHelper.GetCultureName(Request);
+    //var cultureInfo = new System.Globalization.CultureInfo(cultureName);
+
+    //// Set the language for dynamic text (i.e. date, time, money)   
+    //System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+    //// Set the language for static text (i.e. column headings, titles)
+    //System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
+    //var reportSource = new Telerik.Reporting.TypeReportSource()
+    //{
+        
+    //    ReportDocument = new Report()
+    //    {
+    //        Culture = new System.Globalization.CultureInfo("fo-Fo"),
+            
+    //    }
+    //};
+    //reportSource.Parameters.Add("MemberFinancialAidId", @Request.QueryString["MemberFinancialAidId"]);
+}
+@Html.Partial("_ReportFooterPartial", reportSource)
+<script>
+    function onPrint() {
+        // Optionally implement code to be executed after the print button on the Telerik Report Viewer has been clicked
+        @*$.post("/MemberFinancialAid/PrintReport", {
+            'Id': '@Request.QueryString["MemberFinancialAidId"]'
+        }, function (data) {
+            console.log(data);
+        });*@
+    }
+</script>

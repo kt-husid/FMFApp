@@ -1,0 +1,10 @@
+﻿@model BootstrapWebApplication.Models.BankAccount
+
+@Html.AntiForgeryToken()
+
+@*@Html.Partial("_DeleteHeaderPartial", new BootstrapCore.Helpers.FormDeleteData() { ViewTitle = @Resources.BankAccount })
+@if (!@Request.IsAjaxRequest())
+{
+    // display any information to the user before deleting?
+}
+@Html.Partial("_DeleteFooterPartial", new BootstrapCore.Helpers.FormDeleteData() { Id = @Model.Id })*@

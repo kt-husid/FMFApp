@@ -1,0 +1,15 @@
+﻿@model BootstrapWebApplication.Models.EmailAddress
+@if (Model != null)
+{
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @(!String.IsNullOrEmpty(@Model.Address) ? @Model.Address : "-")
+            </dd>
+        </dl>
+    </div>
+}

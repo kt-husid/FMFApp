@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="sqlDataSource1" Width="20cm" Name="Alkalist_a1709" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2012/3.9">
+  <DataSources>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="update dbo.Member set Age = (select DATEDIFF(year, p.Birthday, getdate()) from dbo.Person as p join dbo.Member as m on p.Id = m.PersonId where m.Id = dbo.Member.Id)-1&#xD;&#xA;&#xD;&#xA;select &#xD;&#xA;&#x9;m.Age, &#xD;&#xA;&#x9;COUNT(distinct m.id) as Amount,&#xD;&#xA;&#x9;(SELECT&#xD;&#xA;&#x9;MIN(m.Age)&#xD;&#xA;FROM           &#xD;&#xA;&#x9;dbo.Member as m JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.MemberId = m.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;WHERE &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND m.Age &gt;= @AgeFrom AND m.Age &lt;= @AgeTo AND (m.GenderCode = @GenderCode) AND (so.[From] &gt;= @SignOnFrom) AND (so.[To] &lt;= @SignOnTo) AND so.HasInsurance = 'TRUE'&#xD;&#xA;&#x9;) as MinAge,&#xD;&#xA;&#x9;(SELECT&#xD;&#xA;&#x9;AVG(m.Age)&#xD;&#xA;FROM           &#xD;&#xA;&#x9;dbo.Member as m JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.MemberId = m.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;WHERE &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND m.Age &gt;= @AgeFrom AND m.Age &lt;= @AgeTo AND (m.GenderCode = @GenderCode) AND (so.[From] &gt;= @SignOnFrom) AND (so.[To] &lt;= @SignOnTo) AND so.HasInsurance = 'TRUE'&#xD;&#xA;&#x9;) as AvgAge,&#xD;&#xA;&#x9;(SELECT&#xD;&#xA;&#x9;MAX(m.Age)&#xD;&#xA;FROM           &#xD;&#xA;&#x9;dbo.Member as m JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.MemberId = m.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;WHERE &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND m.Age &gt;= @AgeFrom AND m.Age &lt;= @AgeTo AND (m.GenderCode = @GenderCode) AND (so.[From] &gt;= @SignOnFrom) AND (so.[To] &lt;= @SignOnTo) AND so.HasInsurance = 'TRUE'&#xD;&#xA;&#x9;) as MaxAge&#xD;&#xA;&#x9;&#xD;&#xA;from &#xD;&#xA;&#x9;dbo.Member as m JOIN&#xD;&#xA;&#x9;dbo.Person as p on m.PersonId = p.Id JOIN&#xD;&#xA;&#x9;dbo.SignOn as so on so.MemberId = m.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;where &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND m.Age &gt;= @AgeFrom AND m.Age &lt;= @AgeTo AND (m.GenderCode = @GenderCode) AND (so.[From] &gt;= @SignOnFrom) AND (so.[From] &lt;= @SignOnTo) AND so.HasInsurance = 'TRUE'&#xD;&#xA;group by m.Age&#xD;&#xA;order by m.Age" Name="sqlDataSource1" ParameterValues="{&quot;@AgeFrom&quot;:&quot;0&quot;,&quot;@AgeTo&quot;:&quot;99&quot;,&quot;@GenderCode&quot;:&quot;M&quot;,&quot;@SignOnFrom&quot;:&quot;01-01-2015&quot;,&quot;@SignOnTo&quot;:&quot;31-03-2015&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@AgeFrom">
+          <Value>
+            <String>= Parameters.AgeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@AgeTo">
+          <Value>
+            <String>= Parameters.AgeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@GenderCode">
+          <Value>
+            <String>= Parameters.GenderCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnFrom">
+          <Value>
+            <String>= Parameters.SignOnFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+    <SqlDataSource ConnectionString="FMFReportingContext" SelectCommand="update dbo.Member set Age = (select DATEDIFF(year, p.Birthday, getdate()) from dbo.Person as p join dbo.Member as m on p.Id = m.PersonId where m.Id = dbo.Member.Id)-1&#xD;&#xA;&#xD;&#xA;--Min, Max and Avg year of members&#xD;&#xA;SELECT&#xD;&#xA;&#x9;MIN(m.Age) as MinAgeFooter,&#xD;&#xA;&#x9;MAX(m.Age) as MaxAgeFooter,&#xD;&#xA;&#x9;AVG(m.Age) as AvgAgeFooter&#xD;&#xA;FROM           &#xD;&#xA;&#x9;dbo.Member as m JOIN&#xD;&#xA;&#x9;dbo.Person as p ON m.PersonId = p.Id JOIN&#xD;&#xA;&#x9;dbo.SignOn as so ON so.MemberId = m.Id LEFT OUTER JOIN&#xD;&#xA;&#x9;ChangeEvent as ce ON m.ChangeEventId = ce.Id&#xD;&#xA;WHERE        &#xD;&#xA;&#x9;ce.DeletedOn IS NULL AND m.Age &gt;= @AgeFrom AND m.Age &lt;= @AgeTo AND (m.GenderCode = @genderCode) AND  (so.[From] &gt;= @SignOnFrom) AND (so.[To] &lt;= @SignOnTo) AND so.HasInsurance = 'TRUE'" Name="sqlDataSource2" ParameterValues="{&quot;@AgeFrom&quot;:&quot;0&quot;,&quot;@AgeTo&quot;:&quot;99&quot;,&quot;@genderCode&quot;:&quot;M&quot;,&quot;@SignOnFrom&quot;:&quot;01-01-2015&quot;,&quot;@SignOnTo&quot;:&quot;31-03-2015&quot;}">
+      <Parameters>
+        <SqlDataSourceParameter DbType="Int32" Name="@AgeFrom">
+          <Value>
+            <String>= Parameters.AgeFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="Int32" Name="@AgeTo">
+          <Value>
+            <String>= Parameters.AgeTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="String" Name="@genderCode">
+          <Value>
+            <String>= Parameters.GenderCode.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnFrom">
+          <Value>
+            <String>= Parameters.SignOnFrom.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+        <SqlDataSourceParameter DbType="DateTime" Name="@SignOnTo">
+          <Value>
+            <String>= Parameters.SignOnTo.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <DetailSection Height="0.400000384797642cm" Name="detailSection1">
+      <Style>
+        <Font Name="Courier New" />
+      </Style>
+      <Items>
+        <TextBox Width="5.39999888976418cm" Height="0.400000334332378cm" Left="0.100000050465265cm" Top="0cm" Value="=&quot;Aldur:       &quot; + Fields.Age" Name="textBox5">
+          <Style TextAlign="Left" VerticalAlign="Top">
+            <Font Size="9pt" />
+          </Style>
+        </TextBox>
+        <TextBox Width="3.10000045418738cm" Height="0.400000403722116cm" Left="5.50019948919059cm" Top="0cm" Value="= Fields.Amount" Name="textBox1">
+          <Style TextAlign="Left" />
+        </TextBox>
+      </Items>
+    </DetailSection>
+    <PageHeaderSection Height="0.999999899069471cm" Name="pageHeaderSection1">
+      <Items>
+        <TextBox Width="16.4999961141746cm" Height="0.499999949534735cm" Left="0.0999999495347355cm" Top="0.500000151395794cm" Value="= &quot;Dato &quot; + Format(&quot;{0:dd/MM/yyyy}&quot;,Parameters.SignOnFrom.Value) + &quot; - &quot;  + Format(&quot;{0:dd/MM/yyyy}&quot;,Parameters.SignOnTo.Value) + &quot;   Kota: Trygging    Kyn: &quot; + Parameters.GenderCode.Value" Name="textBox2">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageHeaderSection>
+    <PageFooterSection Height="1.00000010093053cm" Name="pageFooterSection1">
+      <Items>
+        <TextBox Width="13.9000002523263cm" Height="0.500000151395794cm" Left="0.0999999495347355cm" Top="0.499999949534735cm" Value="= &quot;Miðal: &quot; + First(Fields.AvgAge) + &quot; Minimum: &quot; + First(Fields.MinAge) + &quot; Maximum: &quot; + First(Fields.MaxAge)" Name="textBox3">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+        <TextBox Width="13.9000005722046cm" Height="0.500000178813934cm" Left="0cm" Top="0cm" Value="=&quot;--------------------------&quot;+ Sum(Fields.Amount)" Name="textBox4">
+          <Style>
+            <Font Name="Courier New" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style Color="Black">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="Table" StyleName="Normal.TableNormal" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="10pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Black" />
+        <BorderWidth Default="1px" />
+        <Font Name="Tahoma" Size="9pt" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <PageSettings>
+    <PageSettings PaperKind="A4" Landscape="False">
+      <Margins>
+        <MarginsU Left="0.5cm" Right="0.5cm" Top="0.5cm" Bottom="0.5cm" />
+      </Margins>
+    </PageSettings>
+  </PageSettings>
+  <ReportParameters>
+    <ReportParameter Name="AgeFrom" Type="Integer" Text="AgeFrom">
+      <Value>
+        <String>15</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="AgeTo" Type="Integer" Text="AgeTo">
+      <Value>
+        <String>70</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="GenderCode" Text="GenderCode">
+      <Value>
+        <String>M</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnFrom" Text="SignOnFrom">
+      <Value>
+        <String>26-12-2014</String>
+      </Value>
+    </ReportParameter>
+    <ReportParameter Name="SignOnTo" Text="SignOnTo">
+      <Value>
+        <String>31-12-2015</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

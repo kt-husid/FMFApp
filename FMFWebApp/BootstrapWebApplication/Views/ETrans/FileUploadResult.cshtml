@@ -1,0 +1,22 @@
+﻿@{
+    var etransList = TempData["ETransList"] as ICollection<BootstrapWebApplication.BLL.ETrans>;
+    if (etransList != null && etransList.Count() > 0)
+    {
+        foreach (var item in etransList)
+        {
+            @Html.Raw("Name: " + item.FirstName + " " + item.LastName + "<br />");
+        }
+    }
+    else
+    {
+        @Html.Raw("Invalid request");
+    }
+}
+<button id="saveETrans" class="btn-primary">@Resources.Save</button>
+<script>
+    $(function () {
+        $('#saveETrans').click(function () {
+
+        });
+    });
+</script>

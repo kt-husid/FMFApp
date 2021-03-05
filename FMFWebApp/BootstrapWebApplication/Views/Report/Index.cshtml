@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Telerik HTML5 Report Viewer";
+}
+
+@section head
+{
+    @Scripts.Render("~/Content/telerik/reporting/js/telerikReportViewer-8.2.14.1204.min.js")
+    @Styles.Render("~/Content/telerik/reporting/styles/telerikReportViewer-8.2.14.1204.css")
+@*@Styles.Render("~/Content/kendo/styles/kendo.metro.min.css")*@
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <style>
+        #reportViewer1 {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            min-height: 800px;
+            overflow: hidden;
+            font-family: Verdana, Arial;
+        }
+    </style>
+}
+@{
+    var reportSource = new UriReportSource() { Uri = "Report1.trdx" };
+    reportSource.Parameters.Add(new Parameter() { Name = "Member_NR", Value = 2535 });
+}
+@(
+ Html.TelerikReporting().ReportViewer()
+    .Id("reportViewer1")
+    .ServiceUrl("/api/reports/")
+    .TemplateUrl("/Content/telerik/reporting/templates/telerikReportViewerTemplate-8.2.14.1204.html")
+    .ReportSource(reportSource)
+    .ViewMode(ViewModes.INTERACTIVE)
+    .ScaleMode(ScaleModes.FIT_PAGE_WIDTH)
+    .Scale(1.0)
+)

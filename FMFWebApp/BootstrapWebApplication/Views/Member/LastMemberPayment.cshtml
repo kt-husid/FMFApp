@@ -1,0 +1,50 @@
+﻿@model BootstrapWebApplication.Models.Member
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.LastUsedBankAccount)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.LastUsedBankAccount.RegNumber) - @Html.DisplayFor(model => model.LastUsedBankAccount.AccountNumber)
+    </dd>
+
+    <dt>
+        @Resources.Gross:
+    </dt>
+
+    <dd>
+        <span id="LastPayment_HolidayPay"></span>
+    </dd>
+
+    <dt>
+        @Resources.Misc:
+    </dt>
+
+    <dd>
+        <span id="LastPayment_LGJ"></span>
+    </dd>
+    <dt>
+        @Resources.Net:
+    </dt>
+
+    <dd>
+        <span id="LastPayment_Price"></span>
+    </dd>
+</dl>
+
+<script>
+    $(function () {
+        $.getDataAsJson('/api/Member/GetLastPayment', {
+            'id': '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            //println(json, "GetLastPayment");
+            $('#LastPayment_HolidayPay').html(json.HolidayPay);
+            $('#LastPayment_LGJ').html(json.LGJ);
+            $('#LastPayment_Price').html(kendo.toString(json.Price, "n2"));
+        }, function (error) {
+            console.log(error);
+        });
+    });
+</script>

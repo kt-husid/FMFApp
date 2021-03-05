@@ -1,0 +1,758 @@
+﻿@model BootstrapWebApplication.Models.Trip
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.TripTripSignOnViewModel>()
+    .Name("gridTripSignOns")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id);
+        columns.Bound(p => p.TripId).Hidden();
+        columns.Bound(p => p.PersonNumber).ClientTemplate("<text><a href='/Member/Details/#= MemberId #'>#= PersonNumber # </a></text>").Title("nr");
+        columns.Bound(p => p.PersonFullName).Title(@Resources.FullName);
+        columns.Bound(p => p.Birthday).Format("{0:d}").Title(@Resources.Birthday);
+        columns.Bound(p => p.From).Format("{0:d}").Title(@Resources.From);
+        columns.Bound(p => p.To).Format("{0:d}").Title(@Resources.To);
+        columns.Bound(p => p.JobCode).Title(@Resources.Job + " " + @Resources.Code);
+        columns.Bound(p => p.PART);
+        columns.Bound(p => p.PART_NotAdjusted).Hidden();
+        columns.Bound(p => p.TIL_PR_DG).Title("Til per. dag").Format("{0:C2}");
+        columns.Bound(p => p.TIL_PR_TUR).Title("Til per. túr").Format("{0:C2}");
+        columns.Bound(p => p.KR_IALT).Title("KR tils.").Format("{0:C2}").ClientFooterTemplate("<text>#= kendo.toString(sum, 'C2') #</text>");
+        columns.Bound(p => p.HasInsurance).ClientTemplate("<text>#if(HasInsurance){#<span>Ja</span>#}else{#<span>Nei</span>#}#</text>").Title(@Resources.HasInsurance);
+        columns.Bound(p => p.MembershipPayment).Title("Limagjald").Format("{0:C2}").ClientFooterTemplate("<text>#= kendo.toString(sum, 'C2') #</text>");
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="width:100%;">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+
+                <form class="form-inline" id="tripSignOnCreateForm">
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(false)*@
+                    <input type="hidden" name="Id" id="SignOnId" value="-1" />
+                    <input type="hidden" name="TripId" value="@Model.Id" />
+                    <input type="hidden" name="ChangeEventId" value="@Model.ChangeEventId" />
+                    <input name="MemberId" id="MemberId" type="hidden" class="k-textbox" />
+                    <input name="MemberLookup" id="MemberLookup" type="text" class="k-textbox" placeholder="@Resources.Member" style="width:300px;" />
+                    <input name="From" id="From" type="text" class="k-textbox" placeholder="@Resources.From" style="width:110px;" />
+                    <input name="To" id="To" type="text" class="k-textbox" placeholder="@Resources.To" style="width:110px;" />
+                    <input name="JobCode" id="JobCode" type="text" class="k-textbox" placeholder="@Resources.Job" style="width:150px;" />
+                    <input name="PART" id="PART" class="k-textbox" placeholder="@Resources.CrewShare" style="width:150px;" />
+                    <input name="TIL_PR_DG" id="TIL_PR_DG" type="text" class="k-textbox" placeholder="TIL_PR_DG" style="width:100px;" />
+                    <input name="TIL_PR_TUR" id="TIL_PR_TUR" type="text" class="k-textbox" placeholder="TIL_PR_TUR" style="width:100px;" />
+                    <input name="KR_IALT" id="KR_IALT" type="text" class="k-textbox" placeholder="@Resources.TotalAmount" />
+                    <span class="text-danger" id="tripSignOnErrorMsg"></span>
+                    <button class="clear-form k-button">@Resources.Clear</button>
+                    <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='Member' data-action-name='Create' data-model-name='Member'>@Resources.CreateMember</button>
+                    <button class="delete-action k-button" data-toggle='modal' data-controller-name='SignOn' data-action-name='' data-model-name='SignOn'>@Resources.Delete</button>
+                    <button class="copy-last-signons k-button">@Resources.CopyLastSignOns</button>
+                    <label id="copy-last-signons-progress">..</label>
+                </form>
+
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    //.Scrollable()
+    .Navigatable()
+        //.Groupable()
+    .Selectable()
+    .Events(events => events.Change("onTripSignOnChange").DataBound("onTripSignOnDataBound").DataBinding("onTripSignOnDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("TripTripSignOn_Create", "Trip"))
+        .Read(read => read.Action("Read", "SignOn", new { id = @Model.Id }))
+        .Aggregates(aggregates =>
+        {
+            aggregates.Add(p => p.KR_IALT).Sum();
+            aggregates.Add(p => p.MembershipPayment).Sum();
+        })
+        //.Update(update => update.Action("TripTripSignOn_Update", "Trip"))
+        //.Destroy(update => update.Action("TripTripSignOn_Destroy", "Trip"))
+    )
+)
+<script>
+    //function onOpen() {
+    //    if ("kendoConsole" in window) {
+    //        kendoConsole.log("event :: open");
+    //    }
+    //}
+
+    //function onClose() {
+    //    if ("kendoConsole" in window) {
+    //        kendoConsole.log("event :: close");
+    //    }
+    //}
+
+    //function onChange() {
+    //    if ("kendoConsole" in window) {
+    //        kendoConsole.log("event :: change");
+    //    }
+    //}
+
+    //function onSelect(e) {
+    //    if ("kendoConsole" in window) {
+    //        var dataItem = this.dataItem(e.item.index());
+    //        kendoConsole.log("event :: select (" + dataItem + ")");
+    //    }
+    //}
+
+    //function onDataBound(e) {
+    //    if ("kendoConsole" in window) {
+    //        kendoConsole.log("event :: dataBound");
+    //    }
+    //}
+
+    //function onFiltering() {
+    //    if ("kendoConsole" in window) {
+    //        kendoConsole.log("event: filtering");
+    //    }
+    //}
+
+    var inputIdTriggerSave = "KR_IALT";
+
+    var isTripSignOnEditMode = false;
+
+    var PART_NotAdjusted = null;
+    var partAdjusted = null;
+
+    function onTripSignOnChange(arg) {
+        tripSignOnGridHandler.onChange(arg);
+        var item = tripSignOnGridHandler.currentItem();
+
+        currentMemberId = item.MemberId;
+        currentMemberJobTitle = item.JobCode;// currentMember.JobTitle;
+        //println(item);
+        var id = item.Id;
+        
+        $("#SignOnId").val(id);
+        $("#MemberId").val(item.MemberId);
+        $("#MemberLookup").val(item.PersonFullName);
+        $("#From").val(kendo.toString(item.From, "d"));
+        $("#To").val(kendo.toString(item.To, "d"));
+        $("#JobCode").val(item.JobCode);
+        PART_NotAdjusted = item.PART_NotAdjusted;
+        $("#PART").val(item.PART);
+        $("#TIL_PR_DG").val(item.TIL_PR_DG);
+        $("#TIL_PR_TUR").val(item.TIL_PR_TUR);
+        $("#KR_IALT").val(item.KR_IALT);
+
+        isTripSignOnEditMode = true;
+
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&tripId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&tripId=" + @Model.Id);
+    }
+
+    function onTripSignOnDataBound(e) {
+        tripSignOnGridHandler.onDataBound(e);
+        LoadTripInfo();
+    }
+
+    function onTripSignOnDataBinding(e) {
+        tripSignOnGridHandler.onDataBinding(e);
+    }
+
+    var tripSignOnGridHandler;
+    $(function () {
+
+        tripSignOnGridHandler = new GridHandler("#gridTripSignOns");
+        tripSignOnGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        tripSignOnGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+            clearTripSignOnForm();
+        };
+
+        $("form").submit(function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+    });
+
+    var crewSharePrMemberBase = 0;
+
+    var tripSignOnForm;
+
+    function onAdditionalData() {
+        return {
+            text: $("#memberId").val()
+        };
+    }
+
+    function clearTripSignOnForm() {
+        isTripSignOnEditMode = false;
+        resetForm("#tripSignOnCreateForm"); //$("#tripSignOnCreateForm")[0].reset();
+        $("#MemberLookup").focus();
+    }
+
+    $(function() {
+        
+
+        crewSharePrMemberBase = ParseDecimal("@Model.MANN_PART"); @*ParseDecimal("@Model.CrewSharePerCrewMember");*@
+        console.log("crewSharePrMemberBase: " + crewSharePrMemberBase);
+
+        tripSignOnForm = $("#tripSignOnCreateForm");
+
+        tripSignOnForm.keydown(function(e) {
+            var keyCode = e.keyCode || e.which;
+            if(keyCode == 13) {
+                var evt = jQuery.Event("keydown");
+                evt.which = 9; // tab
+                $(this).trigger(evt);
+            }
+        });
+
+        tripSignOnForm.find(".clear-form").click(function(e){
+            e.preventDefault();
+            clearTripSignOnForm();
+            return false;
+        });
+
+        tripSignOnForm.find(".copy-last-signons").click(function(e){
+            @*if(confirm("@HttpUtility.HtmlDecode(Resources.ConfirmCopyLastSignOns)")) {*@
+            if(confirm("Er tú vísur í at tú ynskir at avrita mynstringarnar frá seinasta túri?")) {
+                var data = {
+                    tripId: '@Model.Id',
+                    shipId: '@Model.ShipId'
+                };
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: "/Trip/CopyLastSignOns",
+                    data: data,
+                    success: function (json) {
+                        println("Mynstringar eru avritaðar");
+                        println(json);
+                        tripSignOnGridHandler.reload();
+                    },
+                    error: function (error) {
+                        println("error");
+                        println(error);
+                    }
+                });
+            }
+        });
+
+        var memberLookupDataSource = new kendo.data.DataSource({
+            type: "json",
+            serverFiltering: true,
+            serverPaging: true,
+            pageSize: 10,
+            //filter: { field: "filter", operator: "eq", value: $("#MemberId").val() },
+            //filtering: function(e) {
+            //    //get filter descriptor
+            //    var filter = e.filter;
+            //    console.log(filter);
+            //},
+            transport: {
+                //data : {
+                read: {
+                    url: "/Member/Find",
+                    data: {
+                        filter: function () { return $("#MemberLookup").data("kendoAutoComplete").value(); }
+                    },
+                    dataType: "json",
+                    type: "GET"
+                    //data: {
+                    //    //filter: { operator: "eq", value: $("#MemberId").val() },
+                    //    filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+                    //}
+                    //maxRows: 10
+                }
+            }
+        });
+
+        $(".delete-action").filter(":visible").click(function(){
+            clearTripSignOnForm();
+        });
+
+        $("#From, #To").keyup(function(){
+            ParseInputDate("#From, To");
+            var days = getDayDiff();
+            var maxDays = '@((int)Model.Days)';
+           // console.log(days + " / " + maxDays);
+            if(days > 0 && days <= maxDays) {
+                //console.log("PART_NotAdjusted: " + PART_NotAdjusted);
+                var part = PART_NotAdjusted != null ? PART_NotAdjusted : 1;
+                var partAdjusted = setPART(part);
+                setCrewSharePrMember(partAdjusted);
+                showError("");
+            }
+            else {
+                showError("Dagatal er skeivt ásett " + days + " / " + maxDays);
+            }
+        }).focus(function() {
+            $(this).select();
+        });
+
+        $("#TIL_PR_DG, #TIL_PR_TUR").keyup(function(){
+            //var part = PART_NotAdjusted != null ? PART_NotAdjusted : 1;
+            //var partAdjusted = ParseDecimal($("#PART").val());//setPART(part);
+            setCrewSharePrMember(partAdjusted);
+        }).focus(function() {
+            $(this).select();
+        });
+
+        $("#KR_IALT").focus(function() {
+            $(this).select();
+        });
+
+        $("#PART").keyup(function(){
+            var self = $(this);
+            partAdjusted = ParseDecimal(self.val());
+            setCrewSharePrMember(partAdjusted);
+        }).focus(function() {
+            $(this).select();
+        });
+
+        
+        $("#JobCode").keydown(function(e) {
+            var self = $(this);
+            var keyCode = e.keyCode || e.which;
+            var value = self.val().trim();
+            if(value.length > 0) {
+                if(keyCode == 13) {
+                    $("#PART").focus();
+                }
+            }
+        }).focus(function() {
+            $(this).select();
+        });
+
+        var currentMemberId = null;
+        var currentMemberJobTitle = null;
+
+        $("#MemberLookup").kendoAutoComplete({
+            minLength: 6,
+            delay: 250,
+            dataTextField: "FullName",
+            template: '#: moment(data.Birthday).format("L") # - #: data.SSN # (#: data.FullName #)',
+            //template: '#: kendo.toString(new Date(parseInt((""+data.Birthday).replace(/[A-Za-z$--/]/g, ""))),"d")# (#: data.FullName#)',
+            //template: '#: kendo.toString(new Date(parseInt(data.Birthday.replace(/[A-Za-z$--/]/g, ""))),"d")# (#: data.FullName#)',
+            highlightFirst: true,
+            ignoreCase: true,
+            //suggest: true,
+            dataSource: memberLookupDataSource,
+            //placeholder: "@Resources.Search",
+            select: function(e) {
+                //var item = e.item;
+                //var text = item.text();
+                //console.log(item.text());
+                var dataItem = this.dataItem(e.item.index());
+                currentMemberId = dataItem.Id;
+                currentMemberJobTitle = dataItem.JobTitle;
+
+                if(dataItem.Birthday == null) {
+                    alert("Okkurt er galið við føðingardegnum fyri " + dataItem.FullName)
+                }
+                //console.log(dataItem);
+                $("#MemberId").val(dataItem.Id);
+                crewSharePrMemberBase = ParseDecimal("@Model.MANN_PART"); @*ParseDecimal("@Model.CrewSharePerCrewMember");*@
+
+                var fromFormat = fromFormat ? fromFormat : "DDMMYYYY";
+                var toFormat = toFormat ? toFormat : "DD-MM-YYYY";
+                var tripFrom = moment("@Model.From", fromFormat);
+                tripFrom = tripFrom.format(toFormat);
+                var tripTo = moment("@Model.To", fromFormat);
+                tripTo = tripTo.format(toFormat);
+                // bug: why doesn't this work???: kendo.toString(tripTo, "d");
+
+                $("#From").val(tripFrom);
+                $("#To").val(tripTo);
+
+                //println("currentMemberId: " + currentMemberId);
+                //println("currentMemberJobTitle: " + currentMemberJobTitle);
+
+                $.get("/SignOn/GetJobFromLastSignOn", { memberId: currentMemberId }, function(json) {
+                    var jobCode = json.trim();
+                    if(jobCode.length > 0) {
+                        $("#JobCode").val(json);
+                    }
+                    //println("called /SignOn/GetJobFromLastSignOn");
+                    //println("jobCode: " + jobCode);
+                    $.get("/Job/GetFromCode", { "code" : jobCode }, function(job) {
+                        println("Result from /Job/GetFromCode");
+                        println(job);
+                        if(jobCode.length == 0) {
+                            $("#JobCode").val(job.Code);
+                        }
+
+                        $("#TIL_PR_DG").val(job.TIL_DG != undefined ? job.TIL_DG : 0);
+                        $("#TIL_PR_TUR").val(job.TIL_TUR != undefined ? job.TIL_TUR : 0);
+
+                        //$("#TIL_PR_DG").val(job.TIL_DG.trim().length > 0 ? job.TIL_DG : 0);
+                        //$("#TIL_PR_TUR").val(job.TIL_TUR.trim().length > 0 ? job.TIL_TUR : 0);
+                        crewSharePrMemberBase = ParseDecimal("@Model.MANN_PART"); @*ParseDecimal("@Model.CrewSharePerCrewMember");*@
+                        var part = job.PART != 0 ? job.PART : 1;
+                        PART_NotAdjusted = part;
+                        var partAdjusted = setPART(part);
+                        setCrewSharePrMember(partAdjusted);
+
+                        //setTimeout(function() {
+                        //    $("#From").focus();
+                        //},10);
+                    });
+                });
+
+            }
+        })
+        .keyup(function(e) {
+            var self = $(this);
+            var keyCode = e.keyCode || e.which;
+            var value = self.val().trim();
+            if(value.length > 0) {
+                if(keyCode == 13) {
+                    $("#From").focus();
+                }
+                else if(keyCode == 46)
+                {
+                    clearTripSignOnForm();
+                }
+            }
+        });
+
+        var jobDataSource = null;
+
+        CreateLocalDataSource("/Job/GetAll", "#JobCode", "Jobs", jobDataSource, function (dataSource) {
+            jobDataSource = dataSource;
+            SetupAutoComplete($("#JobCode"), "Code", '#: data.Code# (#: data.Description#)', jobDataSource, function (item) {
+                setTimeout(function() {
+                    console.log("isTripSignOnEditMode: " + isTripSignOnEditMode);
+                    //if(!isTripSignOnEditMode)
+                    {
+                        var jobCode = item.Code;
+                        $("#JobCode").val(jobCode);
+                        //if(!isTripSignOnEditMode) 
+                        {
+                            $("#TIL_PR_DG").val(item.TIL_DG != undefined ? item.TIL_DG : 0);
+                            $("#TIL_PR_TUR").val(item.TIL_TUR != undefined ? item.TIL_TUR : 0);
+                        }
+                        //$("#PART").val(json.PART != 0 ? json.PART : 1);
+                        var part = item.PART;
+                        PART_NotAdjusted = part;
+                        var partAdjusted = setPART(part);
+                        setCrewSharePrMember(partAdjusted);
+                        if(currentMemberJobTitle != jobCode) {
+                            if(confirm("Ynskir tú at dagføra starvskotuna?")) {
+                                //var newJobCode = null;
+                                //if(currentMember.JobTitle.trim().length > 0){
+                                //    newJobCode  = currentMember.JobTitle;
+                                //}
+                                //if(newJobCode == null && currentmember.Job != null) {
+                                //    newJobCode = currentMember.Job.Code;
+                                //}
+                                currentMemberJobTitle = jobCode;
+                                $.ajax({
+                                    url: "/Member/UpdateJobCode",
+                                    type: "POST",
+                                    data: {
+                                        memberId: currentMemberId,
+                                        jobCode: jobCode
+                                    },
+                                    dataType: "json",
+                                    success: function (json) {
+                                        console.log("Updated jobcode...");
+                                        console.log(json);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                },10);
+            });
+        });
+
+        //var jobCodeLookupDataSource = new kendo.data.DataSource({
+        //    type: "json",
+        //    serverFiltering: true,
+        //    serverPaging: true,
+        //    pageSize: 10,
+        //    //filter: { field: "filter", operator: "eq", value: $("#MemberId").val() },
+        //    //filtering: function(e) {
+        //    //    //get filter descriptor
+        //    //    var filter = e.filter;
+        //    //    console.log(filter);
+        //    //},
+        //    transport: {
+        //        //data : {
+        //        read: {
+        //            url: "/Job/Find",
+        //            data: {
+        //                filter: function () { return $("#JobCode").data("kendoAutoComplete").value(); }
+        //            },
+        //            dataType: "json",
+        //            type: "GET"
+        //            //data: {
+        //            //    //filter: { operator: "eq", value: $("#MemberId").val() },
+        //            //    filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+        //            //}
+        //            //maxRows: 10
+        //        }
+        //    }
+        //});
+
+        @*$("#JobCode").kendoAutoComplete({
+            minLength: 1,
+            delay: 250,
+            dataTextField: "Code",
+            template: '#: data.Code# (#: data.Description#)',
+            highlightFirst: true,
+            ignoreCase: true,
+            //suggest: true,
+            dataSource: jobCodeLookupDataSource,
+            //placeholder: "@Resources.Search"
+            select: function(e) {
+                //var item = e.item;
+                //var text = item.text();
+                //console.log(item.text());
+                var dataItem = this.dataItem(e.item.index());
+                //console.log(dataItem);
+                setTimeout(function() {
+                    console.log("isTripSignOnEditMode: " + isTripSignOnEditMode)
+
+                    if(!isTripSignOnEditMode) {
+                        $("#JobCode").val(dataItem.Code);
+                        //$("#TIL_PR_DG").val(dataItem.TIL_DG);
+                        //$("#TIL_PR_TUR").val(dataItem.TIL_TUR);
+                        //$("#PART").val(json.PART != 0 ? json.PART : 1);
+                        var part = dataItem.PART;
+                        PART_NotAdjusted = part;
+                        var partAdjusted = setPART(part);
+                        setCrewSharePrMember(partAdjusted);
+                    }
+                },10);
+            }
+        });*@
+
+        // Remove the bindings before using 'applyBindings' again !
+        // Catuion: It will also remove other bindings such as those made by jQuery (e.g. click events)
+        //ko.cleanNode(tripSignOnForm[0]);
+        //viewModel = new TripDeductionVM();
+        //ko.applyBindings(viewModel, tripSignOnForm[0]);
+
+        //$.getDataAsJson('/api/TripLine/GetTripLineCreateRelatedDataListViewModel', {
+        //    'type': 'json'
+        //}, function (json) {
+        //    ko.mapping.fromJS(json.FishSpecies, {}, viewModel.FishSpecies);
+        //    fishSpecies = Rx.Observable.fromArray(json.FishSpecies);
+        //    $("#FishSpeciesId, #FishSpeciesCode").prop('disabled', false);
+        //    setTimeout(function () {
+        //        AddInputCodeFilter('#FishSpeciesCode', fishSpecies, function (x, y) { return x.Code == y; }, function (z) { viewModel.SelectedFishSpecies(z); /*('#FishSpeciesId').val(z.Id);*/ });
+        //        AddDropdownFilter('#FishSpeciesId', fishSpecies, function (x, y) { return x.Id == y; }, function (z) { println(z); $('#FishSpeciesCode').val(z.Code); });
+
+        //        $("#FishSpeciesCode").prop('disabled', false).val('').keyup();
+        //    }, 100);
+        //}, function (error) {
+        //    console.log(error);
+        //});
+
+        var lastInput = null;
+
+        //$('input,textarea').keypress(function(e){
+        //    if(e.keyCode==13) {
+        //        lastInput = lastInput !== null ? lastInput : $(this).parent();
+        //        console.log(lastInput);
+        //        var nextInput = lastInput.next('input,textarea').first();
+        //        console.log(nextInput);
+        //        nextInput.focus();
+        //        e.preventDefault();
+        //        return false;
+        //    }
+        //});
+
+        @*$.getDataAsJson('/TripDeduction/GetCreateData', {
+            'tripId' : '@Model.Id',
+            'type': 'json'
+        }, function (json) {
+            println(json.CompanyId);
+            println(json.DateOfLanding);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+        //$("form").keydown(function(e){
+        //    if(e.keyCode === 13) {
+        //        e.preventDefault();
+        //        return false;
+        //    }
+        //});
+
+
+        //$(document).on("modalClosed", function (e, d) {
+        //    console.log(e);
+        //    console.log(d);
+        //    console.log(d.data);
+        //    //console.log(d.modelName);
+        //    //console.log(d.data);
+        //});
+
+        tripSignOnForm.find("#" + inputIdTriggerSave).keydown(function (e) {
+            //console.log(e.keyCode);
+            var id = $(this).attr("id")
+            if ((e.keyCode == 9 || e.keyCode == 13) && id == inputIdTriggerSave) {
+                if(!e.shiftKey) {
+                    //tripSignOnForm.find("#PART").prop("disabled", true);
+                    e.preventDefault();
+                    var data = tripSignOnForm.serialize();
+                    $("#tripSignOnCreateForm > #" + inputIdTriggerSave).filter(":visible").prop('disabled', true);
+                    console.log(data);
+                    var url = "/SignOn";
+                    if(isTripSignOnEditMode) {
+                        url += "/Edit";
+                    }
+                    else {
+                        url += "/Create";
+                    }
+                    //alert(url);
+                    //alert(data);
+                    clearTripSignOnForm();
+                    $("#tripSignOnCreateForm > #" + inputIdTriggerSave).filter(":visible").prop('disabled', false);
+
+                    $.post(url, data, function (d, s, xhr) {
+                        //console.log(d);
+                        //console.log(s);
+                        //console.log(xhr);
+                        //console.log(xhr.responseJSON);
+                        var json = xhr.responseJSON;
+                        if (json) { // has json object data
+                            println(json);
+                            @*println('@((int) BootstrapWebApplication.Controllers.SignOnStatusCode.TripSignOnsIsFull)');*@
+                            if(json == '@((int) BootstrapWebApplication.Controllers.SignOnStatusCode.TripSignOnsIsFull)')
+                            {
+                                showError("@Resources.TripSignOnIsFull");
+                                clearTripSignOnForm();
+                            }
+                            else if(json == '@((int) BootstrapWebApplication.Controllers.SignOnStatusCode.MemberAlreadySignedOn)')
+                            {
+                                showError("@Resources.MemberAlreadySignedOn");
+                                clearTripSignOnForm();
+                            }
+                            //UpdateVisibleGrids();
+                            tripSignOnGridHandler.reload();
+                            //clearTripSignOnForm();
+                            //$("#tripSignOnCreateForm > #" + inputIdTriggerSave).filter(":visible").prop('disabled', false);
+                            LoadTripInfo();
+                        }
+                        else {
+                            showError("@Resources.Error");
+                            clearTripSignOnForm();
+                        }
+                    })
+                    .fail(function (error) {
+                        showError("@Resources.Error", error);
+                        clearTripSignOnForm();
+                    });
+                }
+            }
+        });
+
+    });
+
+    function setCrewSharePrMember(partAdjusted) {
+        var days = getDayDiff();
+        //console.log("days: " + days);
+        var til_pr_dg_total = ParseDecimal($("#TIL_PR_DG").val()) * days;
+        var til_pr_tur = ParseDecimal($("#TIL_PR_TUR").val());
+        var crewSharePrMember = MathRound(partAdjusted * crewSharePrMemberBase + til_pr_dg_total + til_pr_tur, 2);
+        //console.log("til_pr_dg_total: " + til_pr_dg_total);
+        //console.log("til_pr_tur: " + til_pr_tur);
+        console.log("partAdjusted: " + partAdjusted + ", crewSharePrMemberBase: " + crewSharePrMemberBase + ", crewSharePrMember: " + crewSharePrMember + ", til_pr_dg_total: " + til_pr_dg_total + ", til_pr_tur: " + til_pr_tur);
+        $("#KR_IALT").val(crewSharePrMember);
+    }
+
+    function getDaysAdjusted() {
+        var days = getDayDiff();
+        return parseFloat(days) / parseFloat('@Model.Days');
+    }
+
+    function setPART(part) {
+        var daysAdjust = getDaysAdjusted();
+        partAdjust = part * daysAdjust;
+        //console.log("daysAdjust: " + daysAdjust + ", partAdjust: " + partAdjust);
+        $("#PART").val(MathRound(partAdjust, 2));
+        return partAdjust;
+    }
+
+    function getDayDiff() {
+        var from = parseDate($("#From").val());
+        var to = parseDate($("#To").val());
+        var tripToDate = parseDate('@Model.To.Value');
+        if(to > tripToDate){
+            $("#To").val(kendo.toString(kendo.parseDate('@Model.To.Value'), 'd'));
+        }
+        to = to <= tripToDate ? to : tripToDate;
+        var timeDiff = to - from;
+        var longd =  Math.round(timeDiff / (1000*60*60*24)) + 1;
+        return longd;
+    }
+
+    function showError(message, error) {
+        if(message.trim().length > 0) {
+            $("#tripSignOnErrorMsg").html(message);
+            console.log("Error msg: " + message);
+            $("#" + inputIdTriggerSave).prop('disabled', true);
+        }
+        else {
+            $("#tripSignOnErrorMsg").html("");
+            $("#" + inputIdTriggerSave).prop('disabled', false);
+        }
+        if(error && error.length > 0) {
+            console.log("Error: " + error);
+        }
+    }
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

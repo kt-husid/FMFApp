@@ -1,0 +1,620 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB9C2C24-5EFC-44EB-B582-4544323D08A6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BootstrapWebApplication</RootNamespace>
+    <AssemblyName>BootstrapModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\ChangeEventHandler.cs" />
+    <Compile Include="BLL\ContextManager.cs" />
+    <Compile Include="BLL\CountryHandler.cs" />
+    <Compile Include="BLL\PersonGenderHandler.cs" />
+    <Compile Include="BLL\PersonTitleHandler.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
+    <Compile Include="Interfaces\IHasChangeEvent.cs" />
+    <Compile Include="Interfaces\IModel.cs" />
+    <Compile Include="Interfaces\ViewModelBaseWithChangeEvent.cs" />
+    <Compile Include="Interfaces\ViewModelBase.cs" />
+    <Compile Include="Migrations\201412091559519_InitialDbV3.0.cs" />
+    <Compile Include="Migrations\201412091559519_InitialDbV3.0.Designer.cs">
+      <DependentUpon>201412091559519_InitialDbV3.0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412101336540_RemovedUnusedPropertiesFromSignOn.cs" />
+    <Compile Include="Migrations\201412101336540_RemovedUnusedPropertiesFromSignOn.Designer.cs">
+      <DependentUpon>201412101336540_RemovedUnusedPropertiesFromSignOn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412112154485_AddedFishPrice.cs" />
+    <Compile Include="Migrations\201412112154485_AddedFishPrice.Designer.cs">
+      <DependentUpon>201412112154485_AddedFishPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412170942000_UpdatedAppSettings.cs" />
+    <Compile Include="Migrations\201412170942000_UpdatedAppSettings.Designer.cs">
+      <DependentUpon>201412170942000_UpdatedAppSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412291533391_AddedChangeEventItem_ChangedDecimalPrecision.cs" />
+    <Compile Include="Migrations\201412291533391_AddedChangeEventItem_ChangedDecimalPrecision.Designer.cs">
+      <DependentUpon>201412291533391_AddedChangeEventItem_ChangedDecimalPrecision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412291637582_UpdatedChangeEventItem.cs" />
+    <Compile Include="Migrations\201412291637582_UpdatedChangeEventItem.Designer.cs">
+      <DependentUpon>201412291637582_UpdatedChangeEventItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412301340254_UpdatedChangeEventItem2.cs" />
+    <Compile Include="Migrations\201412301340254_UpdatedChangeEventItem2.Designer.cs">
+      <DependentUpon>201412301340254_UpdatedChangeEventItem2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501121305036_AddedIsAlivePropertyToPerson.cs" />
+    <Compile Include="Migrations\201501121305036_AddedIsAlivePropertyToPerson.Designer.cs">
+      <DependentUpon>201501121305036_AddedIsAlivePropertyToPerson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501121517476_UpdatedDb1.cs" />
+    <Compile Include="Migrations\201501121517476_UpdatedDb1.Designer.cs">
+      <DependentUpon>201501121517476_UpdatedDb1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501151629334_RemovedSignOnTrans.cs" />
+    <Compile Include="Migrations\201501151629334_RemovedSignOnTrans.Designer.cs">
+      <DependentUpon>201501151629334_RemovedSignOnTrans.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501201811197_RemovedRequiredTitleAttrInPerson.cs" />
+    <Compile Include="Migrations\201501201811197_RemovedRequiredTitleAttrInPerson.Designer.cs">
+      <DependentUpon>201501201811197_RemovedRequiredTitleAttrInPerson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501231239254_AddedIsPrimaryToEntityStuff.cs" />
+    <Compile Include="Migrations\201501231239254_AddedIsPrimaryToEntityStuff.Designer.cs">
+      <DependentUpon>201501231239254_AddedIsPrimaryToEntityStuff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501231512519_RemovedLAST_DATOFromMember.cs" />
+    <Compile Include="Migrations\201501231512519_RemovedLAST_DATOFromMember.Designer.cs">
+      <DependentUpon>201501231512519_RemovedLAST_DATOFromMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501231557199_AddedMaternityPaymentPercentageToAppSetttings.cs" />
+    <Compile Include="Migrations\201501231557199_AddedMaternityPaymentPercentageToAppSetttings.Designer.cs">
+      <DependentUpon>201501231557199_AddedMaternityPaymentPercentageToAppSetttings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501260907032_AddedLaborInsurancePercentageToAppSetttings.cs" />
+    <Compile Include="Migrations\201501260907032_AddedLaborInsurancePercentageToAppSetttings.Designer.cs">
+      <DependentUpon>201501260907032_AddedLaborInsurancePercentageToAppSetttings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501261005127_RenamedStatusToMemberTypeInSignOn.cs" />
+    <Compile Include="Migrations\201501261005127_RenamedStatusToMemberTypeInSignOn.Designer.cs">
+      <DependentUpon>201501261005127_RenamedStatusToMemberTypeInSignOn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501261030300_UpdatedDecimalPrecision.cs" />
+    <Compile Include="Migrations\201501261030300_UpdatedDecimalPrecision.Designer.cs">
+      <DependentUpon>201501261030300_UpdatedDecimalPrecision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501261520279_AddedMemberFinancialAidPaymentPerDayToAppSetttings.cs" />
+    <Compile Include="Migrations\201501261520279_AddedMemberFinancialAidPaymentPerDayToAppSetttings.Designer.cs">
+      <DependentUpon>201501261520279_AddedMemberFinancialAidPaymentPerDayToAppSetttings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501291500300_UpdatedFishSpecies.cs" />
+    <Compile Include="Migrations\201501291500300_UpdatedFishSpecies.Designer.cs">
+      <DependentUpon>201501291500300_UpdatedFishSpecies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502051143388_AddedHasInsuranceToJobAndSignOn.cs" />
+    <Compile Include="Migrations\201502051143388_AddedHasInsuranceToJobAndSignOn.Designer.cs">
+      <DependentUpon>201502051143388_AddedHasInsuranceToJobAndSignOn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502051410123_RemovedAppSettings.cs" />
+    <Compile Include="Migrations\201502051410123_RemovedAppSettings.Designer.cs">
+      <DependentUpon>201502051410123_RemovedAppSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502051827331_AddedIsOnYearListBooleanToStatus.cs" />
+    <Compile Include="Migrations\201502051827331_AddedIsOnYearListBooleanToStatus.Designer.cs">
+      <DependentUpon>201502051827331_AddedIsOnYearListBooleanToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502091303471_ChangedYearListFromStringToBoolean.cs" />
+    <Compile Include="Migrations\201502091303471_ChangedYearListFromStringToBoolean.Designer.cs">
+      <DependentUpon>201502091303471_ChangedYearListFromStringToBoolean.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503031152536_AddedMinimumWage.cs" />
+    <Compile Include="Migrations\201503031152536_AddedMinimumWage.Designer.cs">
+      <DependentUpon>201503031152536_AddedMinimumWage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503031308274_RenamedMINLON_to_MinimumWage_in_Trip.cs" />
+    <Compile Include="Migrations\201503031308274_RenamedMINLON_to_MinimumWage_in_Trip.Designer.cs">
+      <DependentUpon>201503031308274_RenamedMINLON_to_MinimumWage_in_Trip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503031407302_Renamed_TRYG_KR.cs" />
+    <Compile Include="Migrations\201503031407302_Renamed_TRYG_KR.Designer.cs">
+      <DependentUpon>201503031407302_Renamed_TRYG_KR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503061136301_Renamed_Trip_MANNING_I_to_CrewIncludingStayingAtHome.cs" />
+    <Compile Include="Migrations\201503061136301_Renamed_Trip_MANNING_I_to_CrewIncludingStayingAtHome.Designer.cs">
+      <DependentUpon>201503061136301_Renamed_Trip_MANNING_I_to_CrewIncludingStayingAtHome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503181357096_Added_CrewSharePart_to_Trip.cs" />
+    <Compile Include="Migrations\201503181357096_Added_CrewSharePart_to_Trip.Designer.cs">
+      <DependentUpon>201503181357096_Added_CrewSharePart_to_Trip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503251145576_AddedDuplicateFieldsToMemberAndSignOnForFasterSQL.cs" />
+    <Compile Include="Migrations\201503251145576_AddedDuplicateFieldsToMemberAndSignOnForFasterSQL.Designer.cs">
+      <DependentUpon>201503251145576_AddedDuplicateFieldsToMemberAndSignOnForFasterSQL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503251249290_AddedDuplicateField_GenderCode_ToMember.cs" />
+    <Compile Include="Migrations\201503251249290_AddedDuplicateField_GenderCode_ToMember.Designer.cs">
+      <DependentUpon>201503251249290_AddedDuplicateField_GenderCode_ToMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503251912422_Added_Age_toMemberV2.cs" />
+    <Compile Include="Migrations\201503251912422_Added_Age_toMemberV2.Designer.cs">
+      <DependentUpon>201503251912422_Added_Age_toMemberV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503261400429_AddedStatusToMember.cs" />
+    <Compile Include="Migrations\201503261400429_AddedStatusToMember.Designer.cs">
+      <DependentUpon>201503261400429_AddedStatusToMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504091124287_AddedShipTypePropertyToTrip.cs" />
+    <Compile Include="Migrations\201504091124287_AddedShipTypePropertyToTrip.Designer.cs">
+      <DependentUpon>201504091124287_AddedShipTypePropertyToTrip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504091230224_UpdatedShipTypeCodePropertyInTrip.cs" />
+    <Compile Include="Migrations\201504091230224_UpdatedShipTypeCodePropertyInTrip.Designer.cs">
+      <DependentUpon>201504091230224_UpdatedShipTypeCodePropertyInTrip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504131038019_UpdatedTripLineUnitPricePrecision.cs" />
+    <Compile Include="Migrations\201504131038019_UpdatedTripLineUnitPricePrecision.Designer.cs">
+      <DependentUpon>201504131038019_UpdatedTripLineUnitPricePrecision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504221252401_AddedPropertiesToShip.cs" />
+    <Compile Include="Migrations\201504221252401_AddedPropertiesToShip.Designer.cs">
+      <DependentUpon>201504221252401_AddedPropertiesToShip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504221325596_AddedGenericAddressProperties.cs" />
+    <Compile Include="Migrations\201504221325596_AddedGenericAddressProperties.Designer.cs">
+      <DependentUpon>201504221325596_AddedGenericAddressProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models.Old\Converted\DEB_CON.cs" />
+    <Compile Include="Models.Old\Converted\FRT_HOVD.cs" />
+    <Compile Include="Models.Old\Converted\FRT_LON.cs" />
+    <Compile Include="Models.Old\Converted\LGJALD.cs" />
+    <Compile Include="Models.Old\Converted\LGJALD2.cs" />
+    <Compile Include="Models.Old\Converted\LO_LINE.cs" />
+    <Compile Include="Models.Old\Converted\P400.cs" />
+    <Compile Include="Models.Old\Converted\PTXT.cs" />
+    <Compile Include="Models.Old\Converted\TLF_IN.cs" />
+    <Compile Include="Models.Old\Converted\TRANSPRT.cs" />
+    <Compile Include="Models.Old\Converted\TRANS_P.cs" />
+    <Compile Include="Models.Old\Converted\TRANS_TP.cs" />
+    <Compile Include="Models.Old\Converted\UM_LINE.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\ADRESS.cs" />
+    <Compile Include="Models.Old\ARBTYPER.cs" />
+    <Compile Include="Models.Old\AR_LOG.cs" />
+    <Compile Include="Models.Old\DUMMY.cs" />
+    <Compile Include="Models.Old\F100.cs" />
+    <Compile Include="Models.Old\FAXNR.cs" />
+    <Compile Include="Models.Old\FF_GR.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\FIRMA.cs" />
+    <Compile Include="Models.Old\Converted\FISKART.cs" />
+    <Compile Include="Models.Old\FISKKODE.cs" />
+    <Compile Include="Models.Old\Converted\FISKPRI.cs" />
+    <Compile Include="Models.Old\FLEXERR.cs" />
+    <Compile Include="Models.Old\Converted\FRAD_ART.cs" />
+    <Compile Include="Models.Old\FRM_LINK.cs" />
+    <Compile Include="Models\MinimumWage.cs" />
+    <Compile Include="Models\Temp\FishSpeciesFromFile.cs" />
+    <Compile Include="Models\Bank.cs" />
+    <Compile Include="Models\BankAccount.cs" />
+    <Compile Include="Models\ChangeEventItem.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CompanyComment.cs" />
+    <Compile Include="Models\DeductionType.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\FishPrice.cs" />
+    <Compile Include="Models\HolidayPay_HOVD.cs" />
+    <Compile Include="Models.Old\FRT_LINK.cs" />
+    <Compile Include="Models\HolidayPay.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\frt_lon7.cs" />
+    <Compile Include="Models.Old\FRT_TOT.cs" />
+    <Compile Include="Models.Old\Converted\Not in use %28no data in db%29\FR_LINE.cs" />
+    <Compile Include="Models.Old\FR_TMP.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\G100.cs" />
+    <Compile Include="Models.Old\HOVD.cs" />
+    <Compile Include="Models.Old\INFOSY.cs" />
+    <Compile Include="Models.Old\KONTTXT.cs" />
+    <Compile Include="Models.Old\K_DATO.cs" />
+    <Compile Include="Models.Old\LEV.cs" />
+    <Compile Include="Models\ShipComment.cs" />
+    <Compile Include="Models\MemberPayment.cs" />
+    <Compile Include="Models\MemberPayment2.cs" />
+    <Compile Include="Models.Old\Converted\Probably not in use\LG_TXT.cs" />
+    <Compile Include="Models.Old\LIMAGJ.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\LIMART.cs" />
+    <Compile Include="Models.Old\Converted\Probably not in use\LINE.cs" />
+    <Compile Include="Models.Old\LOYVIR.cs" />
+    <Compile Include="Models.Old\Converted\LO_HOVD.cs" />
+    <Compile Include="Models\UncertainToBeUsed\LO_LINE.cs" />
+    <Compile Include="Models.Old\Converted\LSLAG.cs" />
+    <Compile Include="Models.Old\MANGLA.cs" />
+    <Compile Include="Models.Old\MANNING.cs" />
+    <Compile Include="Models.Old\Converted\Probably not in use\MA_LINE.cs" />
+    <Compile Include="Models.Old\MDAGAR.cs" />
+    <Compile Include="Models\DEB_CON.cs" />
+    <Compile Include="Models\FishSpecies.cs" />
+    <Compile Include="Models\Job.cs" />
+    <Compile Include="Models\UncertainToBeUsed\LO_HOVD.cs" />
+    <Compile Include="Models\MemberType.cs" />
+    <Compile Include="Models\Member.cs" />
+    <Compile Include="Models.Old\MI2_HOVD.cs" />
+    <Compile Include="Models.Old\Converted\MINLON.cs" />
+    <Compile Include="Models.Old\Converted\Probably not in use\MI_HNOT.cs" />
+    <Compile Include="Models.Old\Converted\MI_HOVD.cs" />
+    <Compile Include="Models.Old\MI_TMP.cs" />
+    <Compile Include="Models.Old\Converted\MI_TXT.cs" />
+    <Compile Include="Models.Old\Model.cs" />
+    <Compile Include="Models.Old\Model.designer.cs">
+      <DependentUpon>Model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models.Old\MUNUR.cs" />
+    <Compile Include="Models.Old\NOTEPAD.cs" />
+    <Compile Include="Models.Old\Converted\P100.cs" />
+    <Compile Include="Models.Old\P1_NOT.cs" />
+    <Compile Include="Models.Old\Converted\P200.cs" />
+    <Compile Include="Models.Old\P2000.cs" />
+    <Compile Include="Models.Old\Converted\P300.cs" />
+    <Compile Include="Models.Old\Converted\P600.cs" />
+    <Compile Include="Models.Old\PASSORD.cs" />
+    <Compile Include="Models.Old\PCTST.cs" />
+    <Compile Include="Models.Old\Converted\POSTNR.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\REDERI.cs" />
+    <Compile Include="Models.Old\Converted\REG_NR.cs" />
+    <Compile Include="Models.Old\Converted\REIDARI.cs" />
+    <Compile Include="Models.Old\REMINDER.cs" />
+    <Compile Include="Models.Old\S100.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\SB.cs" />
+    <Compile Include="Models.Old\SHAG.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\SKIB.cs" />
+    <Compile Include="Models.Old\SKIBMAN.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\SKIP.cs" />
+    <Compile Include="Models.Old\SKIPMAN.cs" />
+    <Compile Include="Models.Old\SKIPTYPA.cs" />
+    <Compile Include="Models.Old\SKIPTYPE.cs" />
+    <Compile Include="Models.Old\SKOTA.cs" />
+    <Compile Include="Models.Old\Converted\STARV.cs" />
+    <Compile Include="Models.Old\Converted\STAT.cs" />
+    <Compile Include="Models.Old\Converted\STUDART.cs" />
+    <Compile Include="Models.Old\STUDDATO.cs" />
+    <Compile Include="Models.Old\Converted\STUDPRI.cs" />
+    <Compile Include="Models.Old\STUDTYPE.cs" />
+    <Compile Include="Models.Old\STXFI.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\STXSK.cs" />
+    <Compile Include="Models.Old\STXT.cs" />
+    <Compile Include="Models.Old\TELUP.cs" />
+    <Compile Include="Models.Old\TLF_TMP.cs" />
+    <Compile Include="Models.Old\TMP_522.cs" />
+    <Compile Include="Models.Old\tmp_byt2.cs" />
+    <Compile Include="Models.Old\TMP_BYTI.cs" />
+    <Compile Include="Models.Old\TMP_UTS.cs" />
+    <Compile Include="Models.Old\TRANS_LG.cs" />
+    <Compile Include="Models.Old\Converted\TRANS_MI.cs" />
+    <Compile Include="Models.Old\TRANS_R.cs" />
+    <Compile Include="Models.Old\TRANS_S.cs" />
+    <Compile Include="Models.Old\Converted\TRANS_TR.cs" />
+    <Compile Include="Models.Old\TRANS_V.cs" />
+    <Compile Include="Models.Old\Converted\TR_HOVD.cs" />
+    <Compile Include="Models.Old\Converted\TR_KRED.cs" />
+    <Compile Include="Models.Old\Converted\TR_LINE.cs" />
+    <Compile Include="Models.Old\Converted\TR_STUD.cs" />
+    <Compile Include="Models.Old\Converted\TR_STUDM.cs" />
+    <Compile Include="Models.Old\Converted\TR_STUDS.cs" />
+    <Compile Include="Models.Old\Converted\TR_TXT.cs" />
+    <Compile Include="Models.Old\Uncertain if to be used\TURHEAD.cs" />
+    <Compile Include="Models.Old\Converted\TYPA.cs" />
+    <Compile Include="Models.Old\VARETXT.cs" />
+    <Compile Include="Models.Old\VHAG.cs" />
+    <Compile Include="Models.Old\VIRKI.cs" />
+    <Compile Include="Models.Old\VTXT.cs" />
+    <Compile Include="Models\Address.cs" />
+    <Compile Include="DAL\BootstrapConfiguration.cs" />
+    <Compile Include="DAL\BootstrapContext.cs" />
+    <Compile Include="DAL\BootstrapInitializer.cs" />
+    <Compile Include="Models\ChangeEvent.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\CompanyType.cs" />
+    <Compile Include="Models\Company.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Currency.cs" />
+    <Compile Include="Models\EmailAddress.cs" />
+    <Compile Include="Models\PersonGender.cs" />
+    <Compile Include="Interfaces\IPerson.cs" />
+    <Compile Include="Models\MI2_HOVD.cs" />
+    <Compile Include="Models\P400.cs" />
+    <Compile Include="Models\MemberComment.cs" />
+    <Compile Include="Models\Ship.cs" />
+    <Compile Include="Models\ShippingCompany.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\PersonTitle.cs" />
+    <Compile Include="Models\Phone.cs" />
+    <Compile Include="Models\Postal.cs" />
+    <Compile Include="Models\SignOn.cs" />
+    <Compile Include="Models\SocialNetwork.cs" />
+    <Compile Include="Models\Status.cs" />
+    <Compile Include="Models\AidType.cs" />
+    <Compile Include="Models\Studpris.cs" />
+    <Compile Include="Models\TLF_IN.cs" />
+    <Compile Include="Models\UncertainToBeUsed\TRANSPRT.cs" />
+    <Compile Include="Models\Trip.cs" />
+    <Compile Include="Models\TripDeduction.cs" />
+    <Compile Include="Models\TripLine.cs" />
+    <Compile Include="Models\TripCrewAid.cs" />
+    <Compile Include="Models\TripShipAid.cs" />
+    <Compile Include="Models\UncertainToBeUsed\TR_TXT.cs" />
+    <Compile Include="Models\ShipType.cs" />
+    <Compile Include="Models\MemberFinancialAid.cs" />
+    <Compile Include="Models\Website.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\WebAppCommon\WebAppCommon\BootstrapResources\BootstrapResources.csproj">
+      <Project>{fde67905-7fba-47a9-a905-2f40a3dc6d42}</Project>
+      <Name>BootstrapResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WebAppCommon\WebAppCommon\KTHusidLibrary\KTHusidLibrary.csproj">
+      <Project>{5add69f6-0d68-4581-8b36-78f149c6fb6b}</Project>
+      <Name>KTHusidLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412091559519_InitialDbV3.0.resx">
+      <DependentUpon>201412091559519_InitialDbV3.0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412101336540_RemovedUnusedPropertiesFromSignOn.resx">
+      <DependentUpon>201412101336540_RemovedUnusedPropertiesFromSignOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412112154485_AddedFishPrice.resx">
+      <DependentUpon>201412112154485_AddedFishPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412170942000_UpdatedAppSettings.resx">
+      <DependentUpon>201412170942000_UpdatedAppSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412291533391_AddedChangeEventItem_ChangedDecimalPrecision.resx">
+      <DependentUpon>201412291533391_AddedChangeEventItem_ChangedDecimalPrecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412291637582_UpdatedChangeEventItem.resx">
+      <DependentUpon>201412291637582_UpdatedChangeEventItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412301340254_UpdatedChangeEventItem2.resx">
+      <DependentUpon>201412301340254_UpdatedChangeEventItem2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501121305036_AddedIsAlivePropertyToPerson.resx">
+      <DependentUpon>201501121305036_AddedIsAlivePropertyToPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501121517476_UpdatedDb1.resx">
+      <DependentUpon>201501121517476_UpdatedDb1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501151629334_RemovedSignOnTrans.resx">
+      <DependentUpon>201501151629334_RemovedSignOnTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501201811197_RemovedRequiredTitleAttrInPerson.resx">
+      <DependentUpon>201501201811197_RemovedRequiredTitleAttrInPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501231239254_AddedIsPrimaryToEntityStuff.resx">
+      <DependentUpon>201501231239254_AddedIsPrimaryToEntityStuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501231512519_RemovedLAST_DATOFromMember.resx">
+      <DependentUpon>201501231512519_RemovedLAST_DATOFromMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501231557199_AddedMaternityPaymentPercentageToAppSetttings.resx">
+      <DependentUpon>201501231557199_AddedMaternityPaymentPercentageToAppSetttings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501260907032_AddedLaborInsurancePercentageToAppSetttings.resx">
+      <DependentUpon>201501260907032_AddedLaborInsurancePercentageToAppSetttings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501261005127_RenamedStatusToMemberTypeInSignOn.resx">
+      <DependentUpon>201501261005127_RenamedStatusToMemberTypeInSignOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501261030300_UpdatedDecimalPrecision.resx">
+      <DependentUpon>201501261030300_UpdatedDecimalPrecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501261520279_AddedMemberFinancialAidPaymentPerDayToAppSetttings.resx">
+      <DependentUpon>201501261520279_AddedMemberFinancialAidPaymentPerDayToAppSetttings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501291500300_UpdatedFishSpecies.resx">
+      <DependentUpon>201501291500300_UpdatedFishSpecies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502051143388_AddedHasInsuranceToJobAndSignOn.resx">
+      <DependentUpon>201502051143388_AddedHasInsuranceToJobAndSignOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502051410123_RemovedAppSettings.resx">
+      <DependentUpon>201502051410123_RemovedAppSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502051827331_AddedIsOnYearListBooleanToStatus.resx">
+      <DependentUpon>201502051827331_AddedIsOnYearListBooleanToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502091303471_ChangedYearListFromStringToBoolean.resx">
+      <DependentUpon>201502091303471_ChangedYearListFromStringToBoolean.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503031152536_AddedMinimumWage.resx">
+      <DependentUpon>201503031152536_AddedMinimumWage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503031308274_RenamedMINLON_to_MinimumWage_in_Trip.resx">
+      <DependentUpon>201503031308274_RenamedMINLON_to_MinimumWage_in_Trip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503031407302_Renamed_TRYG_KR.resx">
+      <DependentUpon>201503031407302_Renamed_TRYG_KR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503061136301_Renamed_Trip_MANNING_I_to_CrewIncludingStayingAtHome.resx">
+      <DependentUpon>201503061136301_Renamed_Trip_MANNING_I_to_CrewIncludingStayingAtHome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503181357096_Added_CrewSharePart_to_Trip.resx">
+      <DependentUpon>201503181357096_Added_CrewSharePart_to_Trip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503251145576_AddedDuplicateFieldsToMemberAndSignOnForFasterSQL.resx">
+      <DependentUpon>201503251145576_AddedDuplicateFieldsToMemberAndSignOnForFasterSQL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503251249290_AddedDuplicateField_GenderCode_ToMember.resx">
+      <DependentUpon>201503251249290_AddedDuplicateField_GenderCode_ToMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503251912422_Added_Age_toMemberV2.resx">
+      <DependentUpon>201503251912422_Added_Age_toMemberV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503261400429_AddedStatusToMember.resx">
+      <DependentUpon>201503261400429_AddedStatusToMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504091124287_AddedShipTypePropertyToTrip.resx">
+      <DependentUpon>201504091124287_AddedShipTypePropertyToTrip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504091230224_UpdatedShipTypeCodePropertyInTrip.resx">
+      <DependentUpon>201504091230224_UpdatedShipTypeCodePropertyInTrip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504131038019_UpdatedTripLineUnitPricePrecision.resx">
+      <DependentUpon>201504131038019_UpdatedTripLineUnitPricePrecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504221252401_AddedPropertiesToShip.resx">
+      <DependentUpon>201504221252401_AddedPropertiesToShip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504221325596_AddedGenericAddressProperties.resx">
+      <DependentUpon>201504221325596_AddedGenericAddressProperties.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63103</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:63103/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

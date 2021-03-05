@@ -1,0 +1,267 @@
+﻿@model BootstrapWebApplication.Models.ShipCreateOrEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Edit;
+    <h2>@Resources.Edit</h2>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateOrEditShip" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Ship</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ShipCode, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ShipCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactCompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactCompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactCompanyName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactPersonName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactPersonName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tonnage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Tonnage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Tonnage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HK, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HK, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HK, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.ShippingCompanyCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="ShippingCompanyId" id="ShippingCompanyId" type="hidden" />
+                <input name="ShippingCompanyCode" id="ShippingCompanyCode" type="text" value="@Model.ShippingCompanyCode" class="form-control" placeholder="@Resources.ShippingCompany" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShipTypeCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="ShipTypeId" id="ShipTypeId" type="hidden" />
+                <input name="ShipTypeCode" id="ShipTypeCode" type="text" value="@Model.ShipTypeCode" class="form-control" placeholder="@Resources.ShipType" />
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShippingCompanyId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="ShippingCompanyCode" name="ShippingCompanyCode" type="text" class="form-control" placeholder="@Resources.ShippingCompany" value='@Model.ShippingCompanyCode' />
+                @*<input id="ShippingCompanyCode" type="text" class="form-control" disabled="disabled" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="ShippingCompanyInfo">@(Model.ShippingCompany != null ? Model.ShippingCompany.Name : "")</span>
+                <input type="hidden" id="ShippingCompanyId" name="ShippingCompanyId" value="@Model.ShippingCompanyId" />
+                @*@Html.DropDownList("ShippingCompanyId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.ShippingCompanyId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShipTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="ShipTypeCode" name="ShipTypeCode" type="text" class="form-control" placeholder="@Resources.ShipTypeCode" value='@Model.ShipTypeCode' />
+                @*<input id="ShipTypeCode" type="text" class="form-control" disabled="disabled" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="ShipTypeInfo">@(Model.ShipType != null ? Model.ShipType.Description : "")</span>
+                <input type="hidden" id="ShipTypeId" name="ShipTypeId" value="@Model.ShipTypeId" />
+                @*@Html.DropDownList("ShipTypeId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.ShipTypeId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+<script>
+    //var shippingCompanies,
+    //    shipTypes;
+
+    $(function () {
+
+        setTimeout(function () {
+            $("#ShipCode").focus();
+        }, 50);
+
+
+        var shippingCompanyDataSource = CreateDataSource(10, "/ShippingCompany/Find", "#ShippingCompanyCode");
+        var shipTypeDataSource = CreateDataSource(10, "/ShipType/Find", "#ShipTypeCode");
+
+        SetupAutoComplete($("#CreateOrEditShip").find("#ShippingCompanyCode"), "Code", '#: data.Code# (#: data.Name#)', shippingCompanyDataSource, function (item) {
+            $("#ShippingCompanyId").val(item.Id);
+            $("#ShippingCompanyInfo").html(item.Name);
+        });
+
+        SetupAutoComplete($("#CreateOrEditShip").find("#ShipTypeCode"), "Code", '#: data.Code# (#: data.Description#)', shipTypeDataSource, function (item) {
+            $("#ShipTypeId").val(item.Id);
+            $("#ShipTypeInfo").html(item.Description);
+        });
+
+
+        @*$.getDataAsJson('/api/Ship/GetShipCreateOrEditDataListViewModel', {
+            'type': 'json'
+        }, function (json) {
+            //console.log(json);
+            shippingCompanies = Rx.Observable.fromArray(json.ShippingCompanies);
+            shipTypes = Rx.Observable.fromArray(json.ShipTypes);
+            $("#ShippingCompanyId, #ShippingCompanyCode, #ShipTypeId, #ShipTypeCode").prop('disabled', false);
+            setTimeout(function () {
+
+                AddInputCodeFilter('#ShippingCompanyCode', shippingCompanies, function (x, y) { return x.Code == y; }, function (z) { $('#ShippingCompanyId').val(z.Id); });
+                AddDropdownFilter('#ShippingCompanyId', shippingCompanies, function (x, y) { return x.Id == y; }, function (z) { $('#ShippingCompanyCode').val(z.Code); });
+
+                AddInputCodeFilter('#ShipTypeCode', shipTypes, function (x, y) { return x.Code == y; }, function (z) { $('#ShipTypeId').val(z.Id); });
+                AddDropdownFilter('#ShipTypeId', shipTypes, function (x, y) { return x.Id == y; }, function (z) { $('#ShipTypeCode').val(z.Code); });
+
+                $("#ShippingCompanyId").prop('disabled', false);
+                $("#ShipTypeId").prop('disabled', false);
+
+                $("#ShippingCompanyCode").prop('disabled', false).val('@Model.ShippingCompanyCode').keyup();
+                $("#ShipTypeCode").prop('disabled', false).val('@Model.ShipTypeCode').keyup();
+            }, 100);
+        }, function (error) {
+            console.log(error);
+        });*@
+
+
+        //var ShippingCompanyCodeDataSource = new kendo.data.DataSource({
+        //    type: "json",
+        //    serverFiltering: true,
+        //    serverPaging: true,
+        //    pageSize: 10,
+        //    transport: {
+        //        read: {
+        //            url: "/ShippingCompany/Find",
+        //            data: {
+        //                filter: function () { return $("#ShippingCompanyCode").data("kendoAutoComplete").value(); }
+        //            },
+        //            dataType: "json",
+        //            type: "GET"
+        //        }
+        //    }
+        //});
+
+        //$("#ShippingCompanyCode").kendoAutoComplete({
+        //    minLength: 1,
+        //    delay: 150,
+        //    dataTextField: "Code",
+        //    template: '#: data.Code# (#: data.Name#)',
+        //    highlightFirst: true,
+        //    ignoreCase: true,
+        //    //suggest: true,
+        //    dataSource: ShippingCompanyCodeDataSource,
+        //    select: function (e) {
+        //        //var item = e.item;
+        //        //var text = item.text();
+        //        //console.log(item.text());
+        //        var dataItem = this.dataItem(e.item.index());
+        //        $("#ShippingCompanyId").val(dataItem.Id);
+        //        //console.log(dataItem);
+        //        //console.log(dataItem.Id);
+        //    }
+        //});
+
+        //var ShipTypeCodeDataSource = new kendo.data.DataSource({
+        //    type: "json",
+        //    serverFiltering: true,
+        //    serverPaging: true,
+        //    pageSize: 10,
+        //    transport: {
+        //        read: {
+        //            url: "/ShipType/Find",
+        //            data: {
+        //                filter: function () { return $("#ShipTypeCode").data("kendoAutoComplete").value(); }
+        //            },
+        //            dataType: "json",
+        //            type: "GET"
+        //        }
+        //    }
+        //});
+
+        //$("#ShipTypeCode").kendoAutoComplete({
+        //    minLength: 1,
+        //    delay: 150,
+        //    dataTextField: "Code",
+        //    template: '#: data.Code# (#: data.Description#)',
+        //    highlightFirst: true,
+        //    ignoreCase: true,
+        //    //suggest: true,
+        //    dataSource: ShipTypeCodeDataSource,
+        //    select: function (e) {
+        //        //var item = e.item;
+        //        //var text = item.text();
+        //        //console.log(item.text());
+        //        var dataItem = this.dataItem(e.item.index());
+        //        $("#ShipTypeId").val(dataItem.Id);
+        //        //console.log(dataItem);
+        //        //console.log(dataItem.Id);
+        //    }
+        //});
+
+    });
+</script>
+
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

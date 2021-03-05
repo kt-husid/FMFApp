@@ -1,0 +1,160 @@
+﻿<script>
+    function onMemberPaymentChange(arg) {
+        memberPaymentGridHandler.onChange(arg);
+        var id = memberPaymentGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);
+    }
+
+    function onMemberPaymentDataBound(e) {
+        memberPaymentGridHandler.onDataBound(e);
+    }
+
+    function onMemberPaymentDataBinding(e) {
+        memberPaymentGridHandler.onDataBinding(e);
+    }
+
+    var memberPaymentGridHandler;
+</script>
+
+@model BootstrapWebApplication.Models.Member
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberPaymentViewModel>()
+    .Name("gridMemberPayment")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id);
+        columns.Bound(p => p.Year).Title(@Resources.Year);//.Filterable(ftb => ftb.Cell(cell => cell.Operator("Contains")));
+        columns.Bound(p => p.BankRegNumber).ClientTemplate("<text>#= BankRegNumber # - #= BankAccountNumber #</text>").Title(@Resources.BankAccount);
+        columns.Bound(p => p.HolidayPay).Title(@Resources.HolidayPay).Format("{0:C2}");
+        columns.Bound(p => p.MembershipPayment).Title(@Resources.MembershipPayment).Format("{0:C2}");
+        columns.Bound(p => p.Code).Title(@Resources.Code);
+        columns.Bound(p => p.Price).Title(@Resources.Price).Format("{0:C2}");
+        columns.Bound(p => p.PaidOn).Format("{0:d}").Title(@Resources.PaidOn);
+        columns.Bound(p => p.PaidById).Title(@Resources.PaidBy);
+        columns.Bound(p => p.LaborInsurance).Title(@Resources.LaborInsurance).Format("{0:C2}");
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //        //.HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy().Text(@Resources.Delete);
+        //        //.HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='MemberPayment' data-action-name='Create?memberId=@Model.Id' data-model-name='MemberPayment'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='MemberPayment' data-action-name='' data-model-name='MemberPayment'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='MemberPayment' data-action-name='' data-model-name='MemberPayment'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .ClientDetailTemplateId("template")
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Limagjøld.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onMemberPaymentChange").DataBound("onMemberPaymentDataBound").DataBinding("onMemberPaymentDataBinding"))
+    .HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(false)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberPayment_Create", "Member", new { id = @Model.Id }))
+        .Read(read => read.Action("Read", "MemberPayment", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberPayment_Update", "Member"))
+        //.Destroy(update => update.Action("MemberPayment_Destroy", "Member"))
+    )
+)
+<script id="template" type="text/kendo-tmpl">
+    @(Html.Kendo().TabStrip()
+        .Name("tabStrip_#=Id#")
+        .SelectedIndex(0)
+        .Animation(animation => animation.Open(open => open.Fade(FadeDirection.In)))
+        .Items(items =>
+        {
+            items.Add().Text(@Resources.MembershipPayment).Content(
+                "<dl class='dl-horizontal'>" +
+                    "<dt>" + @Resources.Gross + ":</dt><dd>#= HolidayPay #</dd>" +
+                    "<dt>" + @Resources.Tax + ":</dt><dd>#= Tax #</dd>" +
+                    "<dt>" + @Resources.LaborInsurance + ":</dt><dd>#= LaborInsurance #</dd>" +
+                    "<dt>" + @Resources.MembershipPayment + ":</dt><dd>#= MembershipPayment #</dd>" +
+                    "<dt>Efth. ??:</dt><dd>?</dd>" +
+                    "<dt>" + @Resources.MaternityPayment + ":</dt><dd>#= MaternityPayment #</dd>" +
+                    "<dt>" + @Resources.Net + ":</dt><dd>#= Price #</dd>" +
+                "</div>"
+            );
+        })
+        .ToClientTemplate())
+</script>
+
+<script>
+    $(function () {
+
+        memberPaymentGridHandler = new GridHandler("#gridMemberPayment");
+        memberPaymentGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        memberPaymentGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

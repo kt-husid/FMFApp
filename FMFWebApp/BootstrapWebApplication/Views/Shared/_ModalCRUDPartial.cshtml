@@ -1,0 +1,44 @@
+﻿<div class='modal fade' id='modalCRUD' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <!--<button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span class='sr-only'>{1}</span></button>-->
+                <h4 class='modal-title'></h4>
+            </div>
+            <div class='modal-body'>
+
+            </div>
+            <div class='modal-footer'>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+    $(function () {
+        $.modalCRUD("#modalCRUD", "@ViewContext.GetControllerName()", { /* Add more data here if needed (to be used in the post req.) */ }, "/Content/kendo/2015.1.408/styles/Uniform/loading-image.gif", { //"/Content/images/ajax-loader.gif", {
+            "create": {
+                'btnText': "@Resources.Create",
+                'urlPostfix': '/create'
+            },
+            "edit": {
+                'btnText': "@Resources.Edit",
+                'urlPostfix': '/edit'
+            },
+            "details": {
+                'btnText': "@Resources.Details",
+                'urlPostfix': '/details'
+            },
+            "delete": {
+                'btnText': "@Resources.Delete",
+                'urlPostfix': '/delete'
+            },
+            "close": {
+                'btnText': "@Resources.Close"
+            }
+        }, "@Resources.LoadingPleaseWait");
+    });
+</script>

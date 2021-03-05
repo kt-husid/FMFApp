@@ -1,0 +1,93 @@
+﻿@model BootstrapWebApplication.Models.Address
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @Resources.Details;
+    <h2>@Resources.Details</h2>
+}
+
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        <h4>@Resources.Address</h4>
+        <hr />
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal.CityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal.CityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CareOf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CareOf)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLine1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddressLine1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLine2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddressLine2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPrimary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPrimary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StateProvinceRegion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StateProvinceRegion)
+        </dd>
+
+    </dl>
+</div>
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_EditBackToListPartial", Model)
+}

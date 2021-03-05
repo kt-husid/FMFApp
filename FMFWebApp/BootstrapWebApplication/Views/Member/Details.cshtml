@@ -1,0 +1,228 @@
+﻿@model BootstrapWebApplication.Models.Member
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active">
+                <!-- todo: make the Request method POST -->
+                <a href="#" id="print-envelope" class="btn btn-default btn-xs">@Resources.PrintEnvelope</a>
+            </li>
+        </ul>
+    }*@
+@{
+    var controllerName = "Member";// ViewContext.GetControllerName();
+    var holidayPayFromYear = @DateTime.Now.Year - 6;
+    var holidayPayToYear = @DateTime.Now.Year - 1;
+}
+@*@if (!@Request.IsAjaxRequest())*@
+@{
+    ViewBag.Title = @Resources.Member + " #" + @Model.Id + " - " + @Model.Person.FullName;
+}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <strong>@ViewBag.Title</strong>
+                        @if (!@Request.IsAjaxRequest())
+                        {
+                            <span class="pull-right">
+                                @Html.Partial("_BackToListPartial", Model)
+                            </span>
+                        }
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.Action("PersonInfo", @Model)
+                            </div>
+                            <div class="col-md-6">
+                                @*@Html.Partial("_QRCodePartial", "http://skipast.cloud.fo/Member/Details/" + @Model.Id)*@
+                            </div>
+                        </div>
+                    </div>
+                    @*@Html.Action("PersonInfo", @Model)*@
+                </div>
+            </div>
+            @Html.Action("HolidayPaysForPeriod", @controllerName, @Model)
+            <br />
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@Resources.Information</strong></h3>
+                </div>
+                <div class="panel-body">
+                    @Html.Action("DetailsCompact", "ChangeEvent", @Model.ChangeEvent)
+                    <hr />
+                    @Html.Action("Statistics", @Model)
+                    <hr />
+                    @Html.Action("LabelInfo", @Model)
+                    <hr />
+                    @Html.Action("LastMemberPayment", @Model)
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @if (!@Request.Browser.IsMobileDevice)
+    {
+        @*@if (!@Request.IsAjaxRequest()) {
+            }*@
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+            @*<li class="active"><a href="#employments" role="tab" data-toggle="tab">@Resources.Employment</a></li>*@
+            <li class="active"><a href="#sign-ons" role="tab" data-toggle="tab">@Resources.SignOns</a></li>
+            <li><a href="#tripInfoForYear" role="tab" data-toggle="tab">@Resources.Trips</a></li>
+            <li><a href="#financial-aids" role="tab" data-toggle="tab">@Resources.FinancialAid</a></li>
+            <li><a href="#insurances" role="tab" data-toggle="tab">@Resources.LaborInsurance</a></li>
+            <li><a href="#holidaypays" role="tab" data-toggle="tab">@Resources.HolidayPays</a></li>
+            <li><a href="#payments" role="tab" data-toggle="tab">@Resources.Payments</a></li>
+            <li><a href="#comments" role="tab" data-toggle="tab">@Resources.Comments</a></li>
+            <li><a href="#bank-accounts" role="tab" data-toggle="tab">@Resources.BankAccounts</a></li>
+            <li><a href="#addresses" role="tab" data-toggle="tab">@Resources.Addresses</a></li>
+            <li><a href="#phoneNumbers" role="tab" data-toggle="tab">@Resources.Phones</a></li>
+            <li><a href="#emailAddresses" role="tab" data-toggle="tab">@Resources.EmailAddresses</a></li>
+            <li><a href="#log" role="tab" data-toggle="tab">@Resources.Log</a></li>
+        </ul>
+    <!-- Tab panes -->
+        <div class="tab-content">
+            @*<div class="tab-pane active" id="employments">@Html.Action("Employments", @controllerName, @Model)</div>*@
+            <div class="tab-pane active" id="sign-ons">@Html.Action("SignOns", @controllerName, @Model)</div>
+            <div class="tab-pane" id="tripInfoForYear">@*@Html.Action("TripInfoForPeriod", @controllerName, @Model)*@</div>
+            <div class="tab-pane" id="financial-aids">@*@Html.Action("MemberFinancialAids", "MemberFinancialAid", @Model)*@</div>
+            <div class="tab-pane" id="insurances">@*@Html.Action("Insurances", @controllerName, @Model)*@</div>
+            <div class="tab-pane" id="holidaypays">@*@Html.Action("HolidayPays", "HolidayPay", @Model)*@</div>
+            <div class="tab-pane" id="payments">@*@Html.Action("MemberPayments", "MemberPayment", @Model)*@</div>
+            <div class="tab-pane" id="comments">@*@Html.Action("Comments", "MemberComment", @Model)*@</div>
+            <div class="tab-pane" id="bank-accounts">@*@Html.Action("BankAccounts", "BankAccount", @Model)*@</div>
+            <div class="tab-pane" id="addresses">@*@Html.Action("Addresses", "Address", @Model)*@</div>
+            <div class="tab-pane" id="phoneNumbers">@*@Html.Action("Phones", "Phone", @Model)*@</div>
+            <div class="tab-pane" id="emailAddresses"></div>
+            <div class="tab-pane" id="log">@*@Html.Action("Logs", "Log", @Model.Person.Entity)*@</div>
+        </div>
+    }
+</div>
+
+<script>
+    $(function () {
+        $.navbarContextMenu("@Resources.Functions <span class='caret'></span>", [
+            "<a href='#' class='edit-action'  data-toggle='modal' data-controller-name='Member' data-action-name='Edit?id=@Model.Id' data-model-name='Member'>@Resources.Edit</a>",
+            "<a href='#' id='print-envelope'>@Resources.PrintEnvelope</a>"
+        ]);
+
+        $(".person-details").click(function (e) {
+            e.preventDefault();
+            var personId = $(this).attr("id");
+            $.getDataAsJson("/Person/Details", { 'id': personId }, function (data) {
+                $.showModal("<h4>@Resources.Person</h4>", data, null, {
+                    keyboard: true
+                });
+            }, function (error) {
+
+            });
+        });
+
+        @*//todo: make the Request method POST
+        $('#print-envelope').click(function () {
+            var url = '/api/Member/PrintEnvelope';
+            var data = {
+                'id': '@Model.Id',
+                'paperSize': 'C5',
+                'xPos': 50,
+                'yPos': 60,
+                'fontFamily': 'Times New Roman',
+                'fontSize': 12,
+                'fontStyle': 'bold',
+                'type': 'json'
+            };
+            $.getDataAsJson(url, data, function (json) {
+                console.log(JSON.stringify(json));
+            }, function (error) {
+                $.showError(error, url);
+                console.log(error);
+            });
+        });*@
+
+        $('#print-envelope').click(function () {
+            window.open('/Member/MemberEnvelope?MemberId=@Model.Id');
+        });
+
+
+        $(document).on("modalClosed", function (e, d) {
+            //setTimeout(function () {
+            //}, 1000);
+        });
+
+        $('#tabs a').click(function (e) {
+            e.preventDefault();
+            var self = $(this);
+            var id = self.attr('href').replace("#", "");
+            var url = "";
+            var data = null;
+            switch (id) {
+                @*case "employments":
+                    url = '@Url.Action("Employments", @controllerName)'; data = { id: '@Model.Id' };
+                    break;*@
+                case "sign-ons":
+                    url = '@Url.Action("SignOns", @controllerName)'; data = { id: '@Model.Id' };
+                    break;
+                case "financial-aids":
+                    url = '@Url.Action("MemberFinancialAids", "MemberFinancialAid")'; data = { id: '@Model.Id' };
+                    break;
+                case "insurances":
+                    url = '@Url.Action("Insurances", @controllerName)'; data = { id: '@Model.Id' };
+                    break;
+                case "holidaypays":
+                    url = '@Url.Action("HolidayPays", "HolidayPay")'; data = { id: '@Model.Id' };
+                    break;
+                case "payments":
+                    url = '@Url.Action("MemberPayments", "MemberPayment")'; data = { id: '@Model.Id' };
+                    break;
+                case "comments":
+                    url = '@Url.Action("Comments", "MemberComment")'; data = { id: '@Model.Id' };
+                    break;
+                case "bank-accounts":
+                    url = '@Url.Action("BankAccounts", "BankAccount")'; data = { id: '@Model.Id' };
+                    break;
+                case "addresses":
+                    url = '@Url.Action("Addresses", "Address")'; data = { id: '@Model.Id' };
+                    break;
+                case "phoneNumbers":
+                    url = '@Url.Action("Phones", "Phone")'; data = { id: '@Model.Id' };
+                    break;
+                case "emailAddresses":
+                    url = '@Url.Action("EmailAddresses", "EmailAddress")'; data = { id: '@Model.Id' };
+                    break;
+                case "log":
+                    url = '@Url.Action("Logs", "Log")'; data = { id: '@Model.Person.EntityId' };
+                    break;
+                case "tripInfoForYear":
+                    url = '@Url.Action("TripInfoForPeriod", @controllerName)'; data = { id: '@Model.Id' };
+                    break;
+            }
+            //alert(id + " " + url);
+            if ($("#" + id).html().trim().length == 0) {
+                $("#" + id).html('<p style="margin-top:50px; text-align:center;"><img src="/Content/kendo/2015.1.408/styles/Uniform/loading-image.gif" /></p>');
+                $.get(url, data, function (html) {
+                    $("#" + id).html(html);
+                });
+            }
+            self.tab('show');
+        });
+
+        @*$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //console.log(e.target);
+            var targetTab = e.target.href.split('#')[1];
+            $.get('/Member/SignOns', { 'id': '@Model.Id' }).done(function (data) {
+                //console.log(data);
+                $("#"+targetTab).html(data);
+            });
+            //console.log(targetTab);
+            //e.target // newly activated tab
+            //e.relatedTarget // previous active tab
+        });*@
+
+    });
+
+</script>

@@ -1,0 +1,608 @@
+﻿<div class="container-fluid">
+    <div class="row" style="padding-bottom:5px;">
+        <div class="col-md-6">
+            <form method="post" action='@Url.Action("Submit")' class="form-inline">
+                @(Html.Kendo().Upload()
+                    .Name("files")
+                    .HtmlAttributes(new { accept = "text/plain" })
+                    .Multiple(false)
+                    .ShowFileList(false)
+                    .Async(a => a
+                        .Save("Save", "ETrans")
+                        //.Remove("Remove", "ETrans")
+                        .AutoUpload(true)
+                    ).Messages(m => m
+                        .Select("Viðfest")
+                        .Cancel("Ógilda")
+                        .Retry("Royn aftur")
+                        .StatusUploading("Leggur út fílu")
+                        .StatusUploaded("Fíla er løgd út")
+                        .Remove("Strika")
+                        .UploadSelectedFiles("Legg út valdu fílur")
+                        .DropFilesHere("Hála og slepp fílu/r her")
+                        .HeaderStatusUploaded("Liðugt")
+                        .HeaderStatusUploading("Leggur út fílu/r")
+                        .StatusFailed("Miseydnaðist")
+                    )
+                    .Events(events => events
+                        .Cancel("onCancel")
+                        .Complete("onComplete")
+                        .Error("onError")
+                        .Progress("onProgress")
+                        .Remove("onRemove")
+                        .Select("onSelect")
+                        .Success("onSuccess")
+                        .Upload("onUpload")
+                    )
+                )
+                @*<input type="submit" value="@Resources.UploadFile" class="btn btn-default" />*@
+            </form>
+        </div>
+        <div class="col-md-6">
+            <style scoped>
+                #etransDate {
+                    margin-top: 7px;
+                }
+                #statusMsg {
+                    margin-top: 7px;
+                    padding-left:7px;
+                }
+            </style>
+            <h1 id="etransDate"></h1>
+            <div class="clearfix"></div>
+            <span id="statusMsg"></span>
+            <span id="progress">...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <span id="statusMsg"></span>
+
+            <ul id="tabs" class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#itemstoValidate" role="tab" data-toggle="tab">At leggja inn</a></li>
+                <li><a href="#itemsAlreadyAdded" role="tab" data-toggle="tab">Longu lagt inn</a></li>
+                <li><a href="#itemsAdded" role="tab" data-toggle="tab">Lagt inn</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="itemstoValidate">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.Models.ETrans>()
+                    .Name("gridETrans")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).ClientTemplate("#= kendo.toString(kendo.parseDate(Birthday), 'd') #");
+                        //columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(Birthday.replace(/[A-Za-z$--/]/g, ''))),'d') #");
+                        columns.Bound(p => p.FirstName).Title(@Resources.FirstName);
+                        columns.Bound(p => p.LastName).Title(@Resources.LastName);
+                        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber).Width(100);
+                        //columns.Bound(p => p.ETransDate).Title(@Resources.Date).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(ETransDate.replace(/[A-Za-z$--/]/g, ''))),'d') #");
+                        columns.Bound(p => p.BankAccount).Title(@Resources.BankAccount).Width(100);
+                        columns.Bound(p => p.BankAccountFF).Title(@Resources.BankAccount + " FF").Width(100);
+                        columns.Bound(p => p.TransferDate).Title(@Resources.HolidayPayDate).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(TransferDate.replace(/[A-Za-z$--/]/g, ''))),'d') #").Width(100);
+                        columns.Bound(p => p.HolidayPayAmount).Title(@Resources.HolidayPay).Width(100);
+                        columns.Bound(p => p.ART).Title("R").Width(10);
+                        //columns.Bound(p => p.IsReverse).Title("R").Width(10);
+                        columns.Bound(p => p.PostalCode).Title(@Resources.Postal).Width(50);
+                        columns.Bound(p => p.AddressLine1).Title(@Resources.AddressLine1);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                                //.Sortable()
+                                //.Scrollable()
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ETrans - At leggja inn.xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+                    .Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px; display:none;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(1000)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.Id))
+                        //.Read(read => read.Action("Index", "ETrans").Data("getETransData"))
+                        .Read(read => read.Data("getETransData"))
+                    ))
+                </div>
+                <div class="tab-pane" id="itemsAlreadyAdded">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.Models.ETrans>()
+                    .Name("gridETransAlreadyAdded")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).ClientTemplate("#= kendo.toString(kendo.parseDate(Birthday), 'd') #");
+                        //columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(Birthday.replace(/[A-Za-z$--/]/g, ''))),'d') #");
+                        columns.Bound(p => p.FirstName).Title(@Resources.FirstName);
+                        columns.Bound(p => p.LastName).Title(@Resources.LastName);
+                        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber).Width(100);
+                        columns.Bound(p => p.BankAccount).Title(@Resources.BankAccount).Width(100);
+                        columns.Bound(p => p.BankAccountFF).Title(@Resources.BankAccount + " FF").Width(100);
+                        columns.Bound(p => p.TransferDate).Title(@Resources.HolidayPayDate).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(TransferDate.replace(/[A-Za-z$--/]/g, ''))),'d') #").Width(100);
+                        columns.Bound(p => p.HolidayPayAmount).Title(@Resources.HolidayPay).Width(100);
+                        columns.Bound(p => p.ART).Title("R").Width(10);
+                        columns.Bound(p => p.PostalCode).Title(@Resources.Postal).Width(50);
+                        columns.Bound(p => p.AddressLine1).Title(@Resources.AddressLine1);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ETrans - Longu lagt inn.xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+                    //.Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px; display:none;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(1000)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.Id))
+                        .Read(read => read.Data("getETransDataAlreadyInDb"))
+                    ))
+                </div>
+                <div class="tab-pane" id="itemsAdded">
+                    @(Html.Kendo().Grid<BootstrapWebApplication.Models.ETrans>()
+                    .Name("gridETransAdded")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).ClientTemplate("#= kendo.toString(kendo.parseDate(Birthday), 'd') #");
+                        //columns.Bound(p => p.Birthday).Title(@Resources.Birthday).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(Birthday.replace(/[A-Za-z$--/]/g, ''))),'d') #");
+                        columns.Bound(p => p.FirstName).Title(@Resources.FirstName);
+                        columns.Bound(p => p.LastName).Title(@Resources.LastName);
+                        columns.Bound(p => p.EmployerNumber).Title(@Resources.EmployerNumber).Width(100);
+                        columns.Bound(p => p.BankAccount).Title(@Resources.BankAccount).Width(100);
+                        columns.Bound(p => p.BankAccountFF).Title(@Resources.BankAccount + " FF").Width(100);
+                        columns.Bound(p => p.TransferDate).Title(@Resources.HolidayPayDate).Width(70).Format("{0:d}").ClientTemplate("#= kendo.toString(new Date(parseInt(TransferDate.replace(/[A-Za-z$--/]/g, ''))),'d') #").Width(100);
+                        columns.Bound(p => p.HolidayPayAmount).Title(@Resources.HolidayPay).Width(100);
+                        columns.Bound(p => p.ART).Title("R").Width(10);
+                        columns.Bound(p => p.PostalCode).Title(@Resources.Postal).Width(50);
+                        columns.Bound(p => p.AddressLine1).Title(@Resources.AddressLine1);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="toolbar">
+                                @Html.ExportToExcelButton("Excel")
+                            </div>
+                        </text>);
+                    })
+                    .Reorderable(reorderable => reorderable.Columns(false))
+                    .Navigatable()
+                    .Selectable()
+                    .Excel(excel => excel
+                        .AllPages(true)
+                        .FileName("ETrans - Lagt inn.xlsx")
+                        .Filterable(true)
+                        .ProxyURL(Url.Action("ExportToExcel"))
+                    )
+                    //.Events(events => events.Change("onChange").DataBound("onDataBound").DataBinding("onDataBinding"))
+                    .HtmlAttributes(new { style = "min-height:550px; display:none;" })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(1000)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.Id))
+                        .Read(read => read.Data("getETransDataAdded"))
+                    ))
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/js/signalr")
+    @Scripts.Render("~/signalr/hubs")
+}
+
+<script>
+    var etransData = null;
+    var etransDataSavedToDb = null;
+    var etransDataAlreadyInDb = null;
+
+    var gridHandler,
+        gridHandlerItemsSavedToDb,
+        gridHandlerItemsAlreadyInDb;
+
+    var selectedItem = null;
+
+    function onChange(arg) {
+        gridHandler.onChange(arg);
+        selectedItem = gridHandler.currentItem();
+        var id = selectedItem.Id;
+        //console.log(selectedItem);
+    }
+
+    function onDataBound(e) {
+        gridHandler.onDataBound(e);
+        //console.log(e);
+        //setDataSource(false);
+        //gridHandler.reload();
+    }
+
+    function onDataBinding(e) {
+        gridHandler.onDataBinding(e);
+        //console.log(e);
+        //alert(JSON.stringify(e));
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+    function setDataSource(inputData, refresh, _gridHandler, updateList) {
+        if (inputData) {
+            var dataSource = new kendo.data.DataSource({
+                //schema: {
+                //    //model: {
+                //    //    fields: {
+
+                //    //        Status: { type: "string" },
+                //    //        Name: { type: "string" }
+
+                //    //    }
+                //    //},
+                //    //data: function (data) {
+                //    //    alert(JSON.stringify(data.data));
+                //    //    //return data.data;
+                //    //},
+                //    total: function (data) {
+                //        alert(JSON.stringify(data));
+                //        //alert(_.size(data));
+                //        return _.size(data);
+                //    }
+                //},
+                data: inputData,
+                pageSize: 1000,
+                serverFiltering: false,
+                serverPaging: false
+            });
+            if (updateList)
+            {
+                updateList(dataSource);
+            }
+            //etransData = dataSource;
+            _gridHandler.setDataSource(dataSource);
+            if (refresh) {
+                _gridHandler.reload();
+            }
+            //alert("data source set!");
+        }
+    }
+
+    function setETransDate(text) {
+        $("#etransDate").html(text);
+    }
+
+    function setStatusMessage(text, color) {
+        color = color ? color : "#000000";
+        $("#statusMsg").html(text).css("color", color);
+    }
+
+    function openItem(item) {
+        $.ajax({
+            url: "/ETrans/ChooseAlternative",
+            type: "POST",
+            data: {
+                Id: item.Id,
+                FirstName: item.FirstName,
+                LastName: item.LastName,
+                Birthday: kendo.parseDate(item.Birthday).toISOString(),
+                EmployerNumber: item.EmployerNumber,
+                PostalCode: item.PostalCode,
+                AddressLine1: item.AddressLine1,
+                Gender: item.Gender,
+                ChangeEvent: item.ChangeEvent,
+                BankRegNumber: item.BankRegNumber,
+                BankAccount: item.BankAccount,
+                BankRegNumberFF: item.BankRegNumberFF,
+                BankAccountFF: item.BankAccountFF,
+                TransferDate: kendo.parseDate(item.TransferDate).toISOString(),
+                HolidayPayAmount: item.HolidayPayAmount,
+                ART: item.ART,
+                ETransDate: new Date(parseInt(item.ETransDate.replace(/[A-Za-z$--/]/g, ''))).toISOString(),
+                EmployerNumber: item.EmployerNumber
+            },
+            success: function (result) {
+                var header = '<p><h4>@Resources.Member</h4></p>';
+                var footer = '<button type="button" class="btn btn-primary save-modal">@Resources.Save</button><button type="button" class="btn btn-default close-modal" data-dismiss="modal">@Resources.Close</button>';
+                $.showModal(header, result, footer, {
+                    keyboard: true
+                });
+            },
+            error: function (jqXHR, textStatus, ex) {
+                console.log("error: " + textStatus + "," + ex + "," + jqXHR.responseText);
+            }
+        });
+    }
+
+    function saveOnModalClose() {
+        var countBefore = _.size(gridHandler.grid.dataSource.data());
+        //gridHandler.grid.dataSource.remove(selectedItem);
+        var raw = gridHandler.grid.dataSource.data();
+        var length = raw.length;
+        var item, i;
+        for (i = length - 1; i >= 0; i--) {
+            item = raw[i];
+            if (item.Id === selectedItem.Id) {
+                //alert(JSON.stringify(item));
+                //alert("removed id: " + item.FirstName);
+                gridHandler.grid.dataSource.remove(item);
+                // send the destroyed data item to the remote service
+                //gridHandler.grid.dataSource.sync();
+                setDataSource(gridHandler.grid.dataSource.data(), true, gridHandler, function (dataSource) {
+                    etransData = dataSource;
+                });
+                //alert(countBefore + " => " + _.size(gridHandler.grid.dataSource.data()));
+                //gridHandler.grid.dataSource.filter({});
+                //gridHandler.grid.dataSource.read();
+                //gridHandler.grid.refresh();
+            }
+        }
+        if (_.size(gridHandler.grid.dataSource.data()) == 0) {
+            $(gridHandler.gridId).slideUp("slow", function () {
+                setETransDate("");
+                //$("#statusMsg").html("<h1>Done</h1>");
+                //alert("@Resources.Done");
+                setStatusMessage("Liðugt!");
+            });
+        }
+    }
+
+    function handleModalClosed(eventType) {
+        //console.log("modal closed");
+        //console.log(d);
+        eventType = eventType ? eventType : "cancel";
+        //alert(eventType);
+        if (eventType == "cancel") {
+            // do nothing
+        }
+        else if (eventType == "save") {
+            saveOnModalClose();
+        }
+        $(".modal").modal('hide');
+        //$(gridHandler.gridId).focus();
+        //gridHandler.changeRow();
+        $(".k-grid table").focus();
+    }
+
+    $(function () {
+        gridHandler = new GridHandler("#gridETrans");
+        gridHandlerItemsSavedToDb = new GridHandler("#gridETransAdded");
+        gridHandlerItemsAlreadyInDb = new GridHandler("#gridETransAlreadyAdded");
+
+        gridHandler.onDoubleClick = function (item) {
+            openItem(item);
+            //navigate('/Member/Details/' + item.Id);
+        };
+        //gridHandler.onItemDelete = function (item) {
+        //    //console.log(item);
+        //    $(".delete-action").filter(":visible").click();
+        //};
+        //gridHandler.onSearching = function () {
+        //  //Override search functionality
+        //};
+        //gridHandler.onKeydown = function (e) {
+        //  //Override default shortcuts
+        //}
+        gridHandler.onItemOpen = function (item) {
+            openItem(item);
+            //navigate('/Member/Details/' + item.Id);
+        };
+
+        $(document).on("modalDebugClosed", function (e, d) {
+            handleModalClosed(d.eventType);
+        });
+        // Don't load list on ESCAPE key
+        $('.modal').keydown(function (e) {
+            if (e.keyCode === 27) {
+                e.preventDefault();
+                handleModalClosed();
+            }
+        });
+
+
+
+        ////console.log($.connection.messageHub);
+        //// Declare a proxy to reference the hub. 
+        //var hub = $.connection.messageHub;
+        //// Create a function that the hub can call to broadcast messages.
+        //hub.client.broadcastProgress = function (progress) {
+        //    $('#progress').text(progress);
+        //};
+        //// Start the connection.
+        //$.connection.hub.start().done(function () {
+        //    setInterval(function () {
+        //        hub.server.send(10);
+        //    }, 1000);
+        //});
+
+        var connection = $.hubConnection();
+        var contosoChatHubProxy = connection.createHubProxy('messageHub');
+        contosoChatHubProxy.on('broadcastProgress', function (progress) {
+            $('#progress').text(progress + "% liðugt");
+        });
+        connection.start()
+            .done(function () { console.log('Now connected, connection ID=' + connection.id); })
+            .fail(function () { console.log('Could not connect'); });
+
+
+    });
+
+    function getETransData() {
+        return etransData;
+    }
+
+    function getETransDataAdded() {
+        return etransDataSavedToDb;
+    }
+
+    function getETransDataAlreadyInDb() {
+        return etransDataAlreadyInDb;
+    }
+
+    function getUpload() {
+        return $("#files").data("kendoUpload");
+    }
+
+    function onSelect(e) {
+        getUpload().disable();
+        setStatusMessage("");
+        //console.log("Select :: " + getFileInfo(e));
+    }
+
+    function onUpload(e) {
+        //console.log("Upload :: " + getFileInfo(e));
+    }
+
+    function onSuccess(e) {
+        //console.log("onSuccess:");
+        //console.log(e);
+        var file = _.size(e.files) >= 1 ? e.files[0] : null;
+        var fileName = file != null ? file.name : "";
+        var itemCount = e.response.ItemCount;
+        var itemsToValidate = e.response.ItemsToValidate;
+        var itemsSavedToDb = e.response.ItemsSavedToDb;
+        var itemsAlreadyAddedBefore = e.response.ItemsAlreadyAddedToDb;
+        var code = parseInt(e.response.StatusCode);
+        var msg = e.response.Message;
+        if (itemsToValidate == null || itemsSavedToDb == null) {
+            getUpload().enable();
+            switch (code) {
+                case 0:
+                    setStatusMessage("");
+                    break;
+                case 1:
+                    setStatusMessage(msg, "#FF0000");
+                    break;
+                case 2:
+                    setStatusMessage("Couldn't parse the file '" + fileName + "'!<br />Message from server: " + msg, "#FF0000");
+                    break;
+            }
+            $('#progress').text("");
+        }
+        else {
+            var responseLength = itemsToValidate.length;
+            var dateString = responseLength > 0 ? ("@Resources.TransactionDate " + kendo.toString(kendo.parseDate(itemsToValidate[0].ETransDate), 'd')) : "";
+            getUpload().enable();
+            setETransDate(dateString);
+            setDataSource(itemsToValidate, true, gridHandler, function (dataSource) {
+                etransData = dataSource;
+            });
+            setDataSource(itemsSavedToDb, true, gridHandlerItemsSavedToDb, function (dataSource) {
+                etransDataAlreadyInDb = dataSource;
+            });
+            setDataSource(itemsAlreadyAddedBefore, true, gridHandlerItemsAlreadyInDb, function (dataSource) {
+                etransDataAlreadyInDb = dataSource;
+            });
+            //console.log("Success (" + e.operation + ") :: " + getFileInfo(e));
+            gridHandler.reload();
+            gridHandlerItemsSavedToDb.reload();
+            gridHandlerItemsAlreadyInDb.reload();
+            var itemsToValidateCount = _.size(itemsToValidate);
+            var itemsSavedCount = _.size(itemsSavedToDb);
+            var itemsAlreadyAddedBeforeCount = _.size(itemsAlreadyAddedBefore);
+            $(gridHandler.gridId).slideDown("slow", function () {
+                var msg = "";
+                var itemCountSum = itemsToValidateCount + itemsSavedCount + itemsAlreadyAddedBeforeCount;
+
+                if (itemCount == itemCountSum) {
+                    msg = "Viðgjørt tilsamans " + itemCount + " frítíðarlønir.<br />";
+                    msg += itemsSavedCount + " nýggjar lagdar inn.<br />";
+                    msg += itemsAlreadyAddedBeforeCount + " vórðu longu í skipanini.<br />";
+                    msg += itemsToValidateCount + " mugu endurskoðast áðrenn tær verða lagdar inn.";
+                }
+                else {
+                    msg = "Okkurt gekk galið. Vinaliga endurinnles síðuna og royn einaferð aftrat. Um tú sært hesi boðini umfatur, vinaliga set teg í smb. við KT Húsið.";
+                }
+                if (responseLength != 0) {
+                    //setStatusMessage(itemsSavedCount + " items have been saved (imported) to the DB! But you need to review the items in the table below and save them manually.");
+                    msg += "<br />GG: Vinaliga endurskoða frítíðarlønir fyri limirnar, ið eru vístir í tabellini. 'Dupult-klikka' á ein lim við músini fyri at viðgera.";
+                }
+                setStatusMessage(msg);
+                $('#progress').text("");
+            });
+            $(gridHandlerItemsSavedToDb.gridId).slideDown("slow", function () {
+
+            });
+
+            $(gridHandlerItemsAlreadyInDb.gridId).slideDown("slow", function () {
+
+            });
+        }
+    }
+
+    function onError(e) {
+        var req = e.XMLHttpRequest;
+        $.showModal("<h4>" + e.status + " " + e.statusText + "</h4>", req.responseText, "", {
+            backdrop: true,
+            keyboard: false
+        })
+        .css({
+            width: '80%'
+        });
+        //console.log("Error (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onComplete(e) {
+        //console.log("Complete");
+        //console.log(e);
+    }
+
+    function onCancel(e) {
+        //console.log("Cancel :: " + getFileInfo(e));
+    }
+
+    function onRemove(e) {
+        //console.log("Remove :: " + getFileInfo(e));
+    }
+
+    function onProgress(e) {
+        //console.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+
+    function getFileInfo(e) {
+        return $.map(e.files, function (file) {
+            var info = file.name;
+
+            // File size is not available in all browsers
+            if (file.size > 0) {
+                info += " (" + Math.ceil(file.size / 1024) + " KB)";
+            }
+            return info;
+        }).join(", ");
+    }
+</script>

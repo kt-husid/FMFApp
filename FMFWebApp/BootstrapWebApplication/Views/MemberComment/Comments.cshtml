@@ -1,0 +1,131 @@
+﻿<script>
+    function onMemberCommentChange(arg) {
+        memberCommentGridHandler.onChange(arg);
+        var id = memberCommentGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&memberId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&memberId=" + @Model.Id);
+    }
+
+    function onMemberCommentDataBound(e) {
+        println(e);
+        memberCommentGridHandler.onDataBound(e);
+    }
+
+    function onMemberCommentDataBinding(e) {
+        println(e);
+        memberCommentGridHandler.onDataBinding(e);
+    }
+
+    var memberCommentGridHandler;
+</script>
+@model BootstrapWebApplication.Models.Member
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.MemberCommentViewModel>()
+    .Name("gridMemberComments")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.Text).Title(@Resources.Comment);
+        //columns.Bound(p => p.ChangeEvent).ClientTemplate("<text> #= kendo.toString(kendo.parseDate(ChangeEvent.UpdatedOn), 'g') # #= ChangeEvent.UpdatedByUserIdCode # </text>").Title(@Resources.ChangeEvent);
+        columns.Bound(p => p.ChangeEventUpdatedOn).Format("{0:g}").Title(@Resources.UpdatedOn);
+        columns.Bound(p => p.ChangeEventUpdatedByUserIdCode).Title(@Resources.UpdatedBy);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //        //.HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy().Text(@Resources.Delete);
+        //    //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                        .HtmlAttributes(new { @class = "create-action" })
+                        .Content(@Resources.Create)
+                        .Name("grid-create-button")
+                        .
+                        .Events(e => e.Click("createComment"))
+                )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='MemberComment' data-action-name='Create?memberId=@Model.Id' data-model-name='MemberComment'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='MemberComment' data-action-name='' data-model-name='MemberComment'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='MemberComment' data-action-name='' data-model-name='MemberComment'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+        //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    .Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima viðmerkingar.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onMemberCommentChange").DataBound("onMemberCommentDataBound").DataBinding("onMemberCommentDataBinding"))
+    //.HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberComment_Create", "Member", new { id = @Model.Id }))
+        .Read(read => read.Action("Read", "MemberComment", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberComment_Update", "Member"))
+        //.Destroy(d => d.Action("MemberComment_Destroy", "Member"))
+    )
+)
+<script>
+    $(function () {
+
+        memberCommentGridHandler = new GridHandler("#gridMemberComments");
+        memberCommentGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        memberCommentGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>

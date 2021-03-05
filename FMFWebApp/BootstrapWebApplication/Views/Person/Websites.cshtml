@@ -1,0 +1,44 @@
+﻿@model BootstrapWebApplication.Models.Person
+@{
+    var pageData = new PageData()
+    {
+        Title = @Resources.Website,
+        Titles = @Resources.Websites
+    };
+    var editDetailsDeleteData = new EditDetailsDelete2Data()
+    {
+        Title = pageData.Title,
+        ControllerName = "Website",
+        ModelName = "Websites"
+    };
+}
+<h2>@pageData.Titles</h2>
+@Html.ActionModalButton2(@editDetailsDeleteData.ControllerName, "", @editDetailsDeleteData.ModelName, @Resources.Create, new { @class = "btn btn-primary btn-xs create-action" })
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Websites.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Websites.FirstOrDefault().Uri)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Websites.FirstOrDefault().Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: pvm.data.Websites">
+        <tr class="data">
+            <td>
+                <a name="Name" href="" class="editable" data-type="text" data-bind="text: Name, attr: { 'data-pk': Id }"></a>
+            </td>
+            <td data-bind="text: Uri"></td>
+            <td data-bind="text: Description"></td>
+            <td class="data" style="width:250px; text-align:left;">
+                @Html.Partial("_EditDetailsDeletePartial2", @editDetailsDeleteData)
+            </td>
+        </tr>
+    </tbody>
+</table>

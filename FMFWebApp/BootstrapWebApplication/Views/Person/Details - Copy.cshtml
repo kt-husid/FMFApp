@@ -1,0 +1,113 @@
+﻿@model BootstrapWebApplication.Models.Person
+@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">...</a></li>
+        </ul>
+    }*@
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Details;
+    <h2>@BootstrapResources.Resources.Details</h2>
+}
+<div>
+    @if (!@Request.IsAjaxRequest())
+    {
+        <h4>@Resources.Person</h4>
+        <hr />
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SSN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SSN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MiddleName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MiddleName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title.Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Birthday)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Birthday)
+        </dd>
+    </dl>
+
+    @if (!@Request.IsAjaxRequest())
+    {
+        @Html.Partial("_EditBackToListPartial", Model)
+        var controllerName = ViewContext.GetControllerName();
+        <hr />
+        <button data-name="websites" class="btn btn-default btn-xs show-hide">@Resources.ShowHide @Resources.Websites</button>
+        <div id="websites" style="display:none;">
+            @Html.Action("Websites", @controllerName, @Model.Id)
+        </div>
+        <hr />
+        <button data-name="phones" class="btn btn-default btn-xs show-hide">@Resources.ShowHide @Resources.PhoneNumbers</button>
+        <div id="phones" style="display:none;">
+            @Html.Action("Phones", @controllerName, @Model.Id)
+        </div>
+        <hr />
+        <button data-name="addresses" class="btn btn-default btn-xs show-hide">@Resources.ShowHide @Resources.Addresses</button>
+        <div id="addresses" style="display:none;">
+            @Html.Action("Addresses", @controllerName, @Model.Id)
+        </div>
+
+        @Scripts.Render("~/Scripts/ViewModel/DetailsViewModel.js");
+        <script>
+            var pvm;
+            $(function () {
+                pvm = new DetailsViewModel();
+                pvm.add("Websites", @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Entity.Websites)));
+                pvm.add("Phones", @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Entity.Phones)));
+                pvm.add("Addresses", @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Entity.Addresses)));
+                pvm.apply();
+                //console.log(pvm.data.Websites());
+                $(document).on("modalClosed", function (e, d) {
+                    console.log(e); console.log(d);
+                    pvm.load(d.modelName, d.data);
+                    @*$.getDataAsJson('/api/person/websites', { 'id': '@Model.Id', 'type':'json'} , function(json){
+                pvm.load("Websites", json.data);
+                //console.log(json);
+                //console.log(json);
+            }, function(error) {
+                console.log(error);
+            });*@
+                });
+            });
+        </script>
+    }
+</div>

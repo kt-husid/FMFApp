@@ -1,0 +1,91 @@
+﻿@model BootstrapWebApplication.Models.StatusCreateEditViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@BootstrapResources.Resources.Create</h2>
+}
+@*@{
+    int memberId = -1;
+    if(@Request != null)
+    {
+        int.TryParse(@Request.QueryString["id"], out memberId);
+    }
+}*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Status</h4>
+            <hr />
+        }
+        
+        @Html.ValidationSummary(true)
+
+        @*<input type="hidden" name="MemberId" value="@memberId" />*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.YearList, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.YearList, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.YearList, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsOnYearList, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsOnYearList, new { htmlAttributes = new { @class = "form-control" } })
+                @*<input type="checkbox" name="IsOnYearList" id="IsOnYearList" />*@
+                @Html.ValidationMessageFor(model => model.IsOnYearList, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+<script>
+    $(function () {
+        @*var switchInstance = $("#IsOnYearList").kendoMobileSwitch({ 
+            checked: '@Model.IsOnYearList',
+            onLabel: '@Resources.Yes', 
+            offLabel: '@Resources.No'
+        });*@
+
+    });
+</script>
+
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}

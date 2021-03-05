@@ -1,0 +1,293 @@
+﻿@model BootstrapWebApplication.Models.MemberCreateViewModel
+
+@if (!@Request.IsAjaxRequest())
+{
+    ViewBag.Title = @BootstrapResources.Resources.Create;
+    <h2>@Resources.Create</h2>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateMember" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (!@Request.IsAjaxRequest())
+        {
+            <h4>@Resources.Member</h4>
+            <hr />
+        }
+        @Html.ValidationSummary(true)
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.PersonId, "PersonId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("PersonId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PersonId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+
+
+        <div class="form-group">
+            @Html.Label(@Resources.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.FirstName } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.MiddleName } })
+                        @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.LastName } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Birthday, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "datefield form-control", @placeholder = @Resources.Birthday } })
+                        @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.SSN, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.SSN } })
+                        @Html.ValidationMessageFor(model => model.SSN, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GenderId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("GenderId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GenderId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.TitleId, "TitleId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("TitleId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="JobCode" name="JobCode" type="text" class="form-control" placeholder="@Resources.Job" />
+                @*<input id="JobCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.Job" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="JobCodeDescription"></span>
+                <input type="hidden" id="JobId" name="JobId" />
+                @*@Html.DropDownList("JobId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MemberTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="MemberTypeCode" name="MemberTypeCode" type="text" class="form-control" placeholder="@Resources.MembershipType" />
+                @*<input id="MemberTypeCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.MembershipType" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="MemberTypeDescription"></span>
+                <input type="hidden"  id="MemberTypeId" name="MemberTypeId" />
+                @*@Html.DropDownList("MemberTypeId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.MemberTypeId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(@Resources.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.AddressLine1 } })
+                @Html.ValidationMessageFor(model => model.AddressLine1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.AddressLine2 } })
+                @Html.ValidationMessageFor(model => model.AddressLine2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostalId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="PostalCode" name="PostalCode" type="text" class="form-control" placeholder="@Resources.Postal" />
+                @*<input id="PostalCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.Postal" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="PostalInfo"></span>
+                <input type="hidden" id="PostalId" name="PostalId" />
+                @*@Html.DropDownList("PostalId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.PostalId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="CountryCode" name="CountryCode" type="text" class="form-control" placeholder="@Resources.CountryCode" />
+                @*<input id="CountryCode" type="text" class="form-control" disabled="disabled" placeholder="@Resources.CountryCode" />*@
+            </div>
+            <div class="col-md-8">
+                <span id="CountryInfo"></span>
+                <input type="hidden" id="CountryId" name="CountryId" />
+                @*@Html.DropDownList("CountryId", null, htmlAttributes: new { @class = "form-control", @tabIndex = -1, @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <input id="BankCode" name="BankCode" type="text" class="form-control" placeholder="@Resources.BankCode" />
+            </div>
+            <div class="col-md-8">
+                <span id="BankInfo"></span>
+                <input type="hidden" id="BankId" name="BankId" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.AccountNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = @Resources.AccountNumber } })
+                        @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.PRI_OWN, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PRI_OWN, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PRI_OWN, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BETALER, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BETALER, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BETALER, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+
+        @if (!@Request.IsAjaxRequest())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (!@Request.IsAjaxRequest())
+{
+    @Html.Partial("_BackToListPartial")
+
+    @section Scripts {
+        @Scripts.Render("~/js/jqueryval")
+    }
+}
+
+<script>
+    //var jobs,
+    //    memberTypes,
+    //    postalCodes,
+    //    countries;
+
+    $(function () {
+        activateDatePicker();
+
+        ParseInputDate("#Birthday");
+
+        //$.getDataAsJson('/api/Member/GetMemberCreateRelatedDataListViewModel', {
+        //    'type': 'json'
+        //}, function (json) {
+        //    console.log(json);
+        //    jobs = Rx.Observable.fromArray(json.Jobs);
+        //    memberTypes = Rx.Observable.fromArray(json.MemberTypes);
+        //    postalCodes = Rx.Observable.fromArray(json.PostalCodes);
+        //    countries = Rx.Observable.fromArray(json.Countries);
+        //    $("#JobId, #JobCode, #MemberTypeId, #MemberTypeCode, #PostalId, #PostalCode, #CountryId, #CountryCode").prop('disabled', false);
+        //    setTimeout(function () {
+        //        AddInputCodeFilter('#JobCode', jobs, function (x, y) { return ("" + x.Code).toLowerCase() == y.toLowerCase(); }, function (z) { console.log(z); $('#JobId').val(z.Id); });
+        //        AddDropdownFilter('#JobId', jobs, function (x, y) { return x.Id == y; }, function (z) { $('#JobCode').val(z.Code); });
+
+        //        AddInputCodeFilter('#MemberTypeCode', memberTypes, function (x, y) { return x.Code.toLowerCase() == y.toLowerCase(); }, function (z) { $('#MemberTypeId').val(z.Id); });
+        //        AddDropdownFilter('#MemberTypeId', memberTypes, function (x, y) { return x.Id == y; }, function (z) { $('#MemberTypeCode').val(z.Code); });
+
+        //        AddInputCodeFilter('#PostalCode', postalCodes, function (x, y) { return x.Code == y; }, function (z) { $('#PostalId').val(z.Id); });
+        //        AddDropdownFilter('#PostalId', postalCodes, function (x, y) { return x.Id == y; }, function (z) { $('#PostalCode').val(z.Code); });
+
+        //        AddInputCodeFilter('#CountryCode', countries, function (x, y) { return x.Code.toLowerCase() == y.toLowerCase(); }, function (z) { $('#CountryId').val(z.Id); });
+        //        AddDropdownFilter('#CountryId', countries, function (x, y) { return x.Id == y; }, function (z) { $('#CountryCode').val(z.Code); });
+
+
+        //    }, 100);
+        //}, function (error) {
+        //    console.log(error);
+        //});
+
+        var jobDataSource = CreateDataSource(10, "/Job/Find", "#JobCode");
+        var memberTypeDataSource = CreateDataSource(10, "/MemberType/Find", "#MemberTypeCode");
+        var postalDataSource = CreateDataSource(10, "/Postal/Find", "#PostalCode");
+        var countryDataSource = CreateDataSource(10, "/Country/Find", "#CountryCode");
+        var bankDataSource = CreateDataSource(10, "/Bank/Find", "#BankCode");
+
+        SetupAutoComplete($("#CreateMember").find("#JobCode"), "Code", '#: data.Code# (#: data.Description#)', jobDataSource, function (item) {
+            $("#JobId").val(item.Id);
+            $("#JobCodeDescription").html(item.Description);
+        });
+
+        SetupAutoComplete($("#CreateMember").find("#MemberTypeCode"), "Code", '#: data.Code# (#: data.Description#)', memberTypeDataSource, function (item) {
+            $("#MemberTypeId").val(item.Id);
+            $("#MemberTypeDescription").html(item.Description);
+        });
+
+        SetupAutoComplete($("#CreateMember").find("#PostalCode"), "Code", '#: data.Code# (#: data.CityName#)', postalDataSource, function (item) {
+            $("#PostalId").val(item.Id);
+            $("#PostalInfo").html(item.CityName);
+        });
+
+        SetupAutoComplete($("#CreateMember").find("#CountryCode"), "Code", '#: data.Code# (#: data.Name#)', countryDataSource, function (item) {
+            $("#CountryId").val(item.Id);
+            $("#CountryInfo").html(item.Name);
+        });
+
+        SetupAutoComplete($("#CreateMember").find("#BankCode"), "Code", '#: data.Code# (#: data.Name#)', bankDataSource, function (item) {
+            $("#BankId").val(item.Id);
+            $("#BankInfo").html(item.Name);
+        });
+
+    });
+</script>

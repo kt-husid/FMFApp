@@ -1,0 +1,71 @@
+﻿<span tabindex="-1" role="presentation" class="k-widget k-autocomplete k-header k-state-default" style="width: 400px;">
+    <input id="MemberId" type="text" />
+</span>
+<script>
+    $(function () {
+
+        var dataSource = new kendo.data.DataSource({
+            type: "json",
+            serverFiltering: true,
+            serverPaging: true,
+            pageSize: 10,
+            //filter: { field: "filter", operator: "eq", value: $("#MemberId").val() },
+            //filtering: function(e) {
+            //    //get filter descriptor
+            //    var filter = e.filter;
+            //    console.log(filter);
+            //},
+            transport: {
+                //data : {
+                read: {
+                    //url: "/api/Member/Find",
+                    url: "/Member/Find",
+                    data: {
+                        //filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+                        filter: function () { return "290884"; }
+                    },
+                    dataType: "json",
+                    type: "GET"
+                    //data: {
+                    //    //filter: { operator: "eq", value: $("#MemberId").val() },
+                    //    filter: function () { return $("#MemberId").data("kendoAutoComplete").value(); }
+                    //}
+                    //maxRows: 10
+                }
+            }
+        });
+
+        //var movies = [{
+        //    title: "Star Wars: A New Hope",
+        //    year: 1977
+        //}, {
+        //    title: "Star Wars: The Empire Strikes Back",
+        //    year: 1980
+        //}, {
+        //    title: "Star Wars: Return of the Jedi",
+        //    year: 1983
+        //}];
+
+        //dataSource = new kendo.data.DataSource({
+        //    data: movies
+        //});
+
+        $("#MemberId").kendoAutoComplete({
+            minLength: 6,
+            delay: 250,
+            dataTextField: "FullName",
+            highlightFirst: true,
+            ignoreCase: true,
+            //suggest: true,
+            dataSource: dataSource,
+            //placeholder: "@Resources.Member..."
+            //,change: function (e) {
+            //    var value = e.sender.value();
+            //    console.log("change", value);
+            //    //$("#MemberId").text(value);
+            //}
+        });
+
+        //$('#MemberId').unbind('keyup');
+    });
+</script>

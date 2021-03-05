@@ -1,0 +1,138 @@
+﻿@*@section SidebarMenu {
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Some nav link</a></li>
+        </ul>
+    }*@
+@{
+    var title = @Resources.ShippingCompany;
+    var controllerName = ViewContext.GetControllerName();
+    ViewBag.Title = title;
+}
+@*<h2>@title</h2>*@
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.ShippingCompanyViewModel>()
+    .Name("gridShippingCompany")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        //columns.Bound(p => p.CID).Title(@Resources.VAT);
+        columns.Bound(p => p.Code).ClientTemplate("<text><a href='/ShippingCompany/Details/#= Id #'>#= Code # </a></text>").Title(@Resources.Code);
+        columns.Bound(p => p.Name).ClientTemplate("<text><a href='/ShippingCompany/Details/#= Id #'>#= Name # </a></text>").Title(@Resources.Name);
+        //columns.Bound(p => p.City).Title(@Resources.City);
+        //columns.Bound(p => p.Postal).Title(@Resources.Postal);
+        //columns.Bound(p => p.Description).Title(@Resources.Description);
+        columns.Bound(p => p.ContactCompanyName).Title(@Resources.ContactCompany);
+        columns.Bound(p => p.ContactPersonName).Title(@Resources.ContactPerson);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit)
+        //        .HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy()
+        //        .HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(120);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                <input type="text" id="GridSearch" class="k-textbox" />
+                <button tabindex="-1" class="create-action k-button" data-toggle='modal' data-controller-name='ShippingCompany' data-action-name='Create' data-model-name='ShippingCompany'>@Resources.Create</button>
+                <button tabindex="-1" class="edit-action k-button" data-toggle='modal' data-controller-name='ShippingCompany' data-action-name='' data-model-name='ShippingCompany'>@Resources.Edit</button>
+                <button tabindex="-1" class="delete-action k-button" data-toggle='modal' data-controller-name='ShippingCompany' data-action-name='' data-model-name='ShippingCompany'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+    .Reorderable(reorderable=>reorderable.Columns(false))
+    //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+    //.Filterable(ftb => ftb.Mode(GridFilterMode.Menu))
+    .Sortable()
+    //.Excel(excel => excel
+    //    .FileName("companies.xlsx")
+    //    .Filterable(true)
+    //    .ProxyURL(Url.Action("ExportToExcel", "Company"))
+    //)
+    //.Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Selectable()
+    .Events(events => events.Change("onShippingCompanyChange").DataBound("onShippingCompanyDataBound").DataBinding("onShippingCompanyDataBinding"))
+    .HtmlAttributes(new { style = "min-height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(true)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Read", "ShippingCompany"))
+    )
+)
+<script>
+    var gridHandler;
+
+    $(function () {
+        gridHandler = new GridHandler("#gridShippingCompany", "#GridSearch");
+        gridHandler.focusSearch();
+        gridHandler.onDoubleClick = function (item) {
+            navigate('/ShippingCompany/Details/' + item.Id);
+        };
+        gridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+        //gridHandler.onSearching = function () {
+        //  //Override search functionality
+        //};
+        //gridHandler.onKeydown = function (e) {
+        //  //Override default shortcuts
+        //}
+        gridHandler.onItemOpen = function (item) {
+            navigate('/ShippingCompany/Details/' + item.Id);
+        };
+    });
+
+    function onShippingCompanyChange(arg) {
+        gridHandler.onChange(arg);
+        var id = gridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id);
+        $(".delete-action").data("action-name", "Delete?id=" + id);
+    }
+
+    function onShippingCompanyDataBound(arg) {
+        gridHandler.onDataBound(arg);
+    }
+
+    function onShippingCompanyDataBinding(e) {
+        gridHandler.onDataBinding(e);
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = @BootstrapResources.Resources.ConfirmAccount;
+}
+
+<h2>@ViewBag.Title</h2>
+<div>
+    <p>
+        @BootstrapResources.Resources.ThankYouForConfirmingYourAccount. @BootstrapResources.Resources.Please @Html.ActionLink(@BootstrapResources.Resources.ClickHereToLogIn, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+    </p>
+</div>

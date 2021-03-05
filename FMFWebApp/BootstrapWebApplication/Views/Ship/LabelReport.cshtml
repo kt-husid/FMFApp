@@ -1,0 +1,22 @@
+﻿@model BootstrapWebApplication.Models.ShipLabelReportParameters
+@{
+    //ViewBag.Title = @Resources.ReportFor + " " + @Resources.Member + " " + @Resources.SignOns;
+    Layout = "~/Views/Shared/_LayoutReporting.cshtml";
+}
+@{
+    var canOpenReport = false;
+    Boolean.TryParse("" + TempData["CanOpenReport"], out canOpenReport);
+    if (canOpenReport)
+    {
+        @Html.Partial("_ReportHeaderPartial")
+        var reportSource = new UriReportSource() { Uri = "p2720.trdx" };
+        reportSource.Parameters.Add("ShipCodeFrom", @Request.QueryString["ShipCodeFrom"]);
+        reportSource.Parameters.Add("ShipCodeTo", @Request.QueryString["ShipCodeTo"]);
+        @Html.Partial("_ReportFooterPartial", reportSource)
+    }
+}
+<script>
+    function onPrint() {
+        // Optionally implement code to be executed after the print button on the Telerik Report Viewer has been clicked
+    }
+</script>

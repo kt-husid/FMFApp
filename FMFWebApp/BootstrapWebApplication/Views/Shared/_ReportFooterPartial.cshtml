@@ -1,0 +1,40 @@
+﻿@model ReportSource
+@(
+ Html.TelerikReporting().ReportViewer()
+    .Id("reportViewer1")
+    .ServiceUrl("/api/reports/")
+    .TemplateUrl("/Content/telerik/reporting/templates/telerikReportViewerTemplate-8.2.14.1204.html")
+    .ReportSource(@Model)
+    .ViewMode(ViewModes.PRINT_PREVIEW)
+    .ScaleMode(ScaleModes.SPECIFIC)
+    .Scale(1.1)
+)
+<script>
+    $(function () {
+
+        window.onbeforeprint = function () {
+            console.log('This will be called before the user prints.');
+        };
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function (mql) {
+            if (mql.matches) {
+                console.log('onbeforeprint equivalent');
+            } else {
+                console.log('onafterprint equivalent');
+            }
+        });
+
+        $(document.body).off("click", ".k-item").on("click", ".k-item", function (e) {
+            var printButton = $(this).find('a')[0];
+            console.log(printButton);
+            var cmd = $(printButton).data('command');
+            console.log(cmd);
+            if (cmd == 'telerik_ReportViewer_print') {
+                console.log('print button clicked');
+                if (onPrint) {
+                    onPrint();
+                }
+            }
+        });
+    });
+</script>

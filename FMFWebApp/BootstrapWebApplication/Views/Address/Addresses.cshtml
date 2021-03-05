@@ -1,0 +1,135 @@
+﻿<script>
+    function onAddressChange(arg) {
+        addressGridHandler.onChange(arg);
+        var id = addressGridHandler.currentItem().Id;
+        $(".edit-action").data("action-name", "Edit?id=" + id + "&parentId=" + @Model.Id);
+        $(".delete-action").data("action-name", "Delete?id=" + id + "&parentId=" + @Model.Id);
+    }
+
+    function onAddressDataBound(arg) {
+        addressGridHandler.onDataBound(arg);
+    }
+
+    function onAddressDataBinding(arg) {
+        addressGridHandler.onDataBinding(arg);
+    }
+
+    var addressGridHandler;
+</script>
+
+@(Html.Kendo().Grid<BootstrapWebApplication.Models.AddressViewModel>()
+    .Name("gridAddress")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Id).Hidden();
+        columns.Bound(p => p.AddressLine1).Title(@Resources.AddressLine1);
+        columns.Bound(p => p.PostalCode).Title(@Resources.Postal);
+        columns.Bound(p => p.City).Title(@Resources.City);
+        columns.Bound(p => p.CountryCode).Title(@Resources.CountryCode);
+        columns.Bound(p => p.CountryName).Title(@Resources.Country);
+        //columns.Bound(p => p.City).Title(@Resources.Postal);
+        //columns.Command(command =>
+        //{
+        //    command
+        //        .Edit().Text(@Resources.Edit);
+        //        //.HtmlAttributes(new { @class = "btn-xs" });
+        //    command
+        //        .Destroy().Text(@Resources.Delete);
+        //        //.HtmlAttributes(new { @class = "hide" });
+        //})
+        //.Width(200);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar">
+                @*@(Html.Kendo().Button()
+                            .HtmlAttributes(new { @class = "create-action" })
+                            .Content(@Resources.Create)
+                            .Name("grid-create-button")
+                            .
+                            .Events(e => e.Click("createComment"))
+                    )*@
+                @Html.ExportToExcelButton("Excel")
+                <button class="create-action k-button" data-toggle='modal' data-controller-name='Address' data-action-name='Create?parentId=@Model.Id' data-model-name='Address'>@Resources.Create</button>
+                <button class="edit-action k-button" data-toggle='modal' data-controller-name='Address' data-action-name='' data-model-name='Address'>@Resources.Edit</button>
+                <button class="delete-action k-button" data-toggle='modal' data-controller-name='Address' data-action-name='' data-model-name='Address'>@Resources.Delete</button>
+            </div>
+        </text>);
+    })
+        //.Reorderable(reorderable => reorderable.Columns(true))
+    //.Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable(pageable => pageable
+        .Messages(m=>
+            m.ItemsPerPage(@Resources.ItemsPerPage)
+            .First(@Resources.First)
+            .Previous(@Resources.Previous)
+            .Next(@Resources.Next)
+            .Last(@Resources.Last)
+            .Refresh(@Resources.Refresh)
+            .Display("{0} - {1} " + @Resources.Of.ToLower() + " {2} " + @Resources.Items.ToLower())
+            .Page(@Resources.Page)
+            .Of(@Resources.Of)
+            .Empty(@Resources.NoItemsToDisplay))
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+    //.Sortable()
+    .Scrollable()
+    .Navigatable()
+    //.Groupable()
+    .Excel(excel => excel
+        .AllPages(true)
+        .FileName("Lima addressur.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("ExportToExcel"))
+    )
+    .Selectable()
+    .Events(events => events.Change("onAddressChange").DataBound("onAddressDataBound").DataBinding("onAddressDataBinding"))
+    //.HtmlAttributes(new { style = "height:410px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .ServerOperation(true)
+        //.Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        //.Create(update => update.Action("MemberBankAccount_Create", "Member"))
+        .Read(read => read.Action("Read", "Address", new { id = @Model.Id }))
+        //.Update(update => update.Action("MemberBankAccount_Update", "Member"))
+        //.Destroy(update => update.Action("MemberBankAccount_Destroy", "Member"))
+    )
+)
+<script>
+    $(function () {
+
+        addressGridHandler = new GridHandler("#gridAddress");
+        addressGridHandler.onDoubleClick = function (item) {
+            //navigate('/{Controller}/Details/' + item.Id);
+        };
+        addressGridHandler.onDoubleClick = function (item) {
+            $(".edit-action").filter(":visible").click();
+        };
+        addressGridHandler.onItemOpen = function (item) {
+            $(".edit-action").filter(":visible").click();
+        };
+        addressGridHandler.onItemDelete = function (item) {
+            //console.log(item);
+            $(".delete-action").filter(":visible").click();
+        };
+    });
+
+    //function error_handler(e) {
+    //    if (e.errors) {
+    //        var message = "Errors:\n";
+    //        $.each(e.errors, function (key, value) {
+    //            if ('errors' in value) {
+    //                $.each(value.errors, function () {
+    //                    message += this + "\n";
+    //                });
+    //            }
+    //        });
+    //        alert(message);
+    //    }
+    //}
+</script>
